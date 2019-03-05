@@ -30,10 +30,7 @@ bool interpret(std::istream &input, const std::string &prefix) noexcept {
       || ((BiOpExpr*) expr)->getOperator() != '=';
 
     // Evaluate as long as expression is different from the evaluated one
-    Expr *oldExpr = expr;
-    while (expr && (expr = expr->eval(gc, env)) != oldExpr) {
-      oldExpr = expr;
-    }
+    expr = eval(gc, env, expr);
 
     // Print the expression
     if (expr && shouldPrint) {

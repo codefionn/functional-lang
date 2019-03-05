@@ -155,4 +155,12 @@ Expr *parse(GCMain &gc, Lexer &lexer);
  */
 Expr *parseRHS(GCMain &gc, Lexer &lexer, Expr *lhs, int prec);
 
+/*!\brief Executes eval function for given expr as long as different expr
+ * is returned.
+ * \param gc
+ * \param env Environment to use
+ * \param expr Expression to evaluate
+ */
+Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env, Expr *expr) noexcept;
+
 #endif /* FUNC_SYNTAX_HPP */

@@ -152,9 +152,9 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
   case '-':
   case '*':
   case '/': {
-              Expr *newlhs = lhs->eval(gc, env);
+              Expr *newlhs = ::eval(gc, env, lhs);
               if (!newlhs) return nullptr; // error forwarding
-              Expr *newrhs = rhs->eval(gc, env);
+              Expr *newrhs = ::eval(gc, env, rhs);
               if (!newrhs) return nullptr; // error forwarding
 
               if (newlhs->getExpressionType() == expr_num
@@ -176,7 +176,7 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
               return new BiOpExpr(gc, op, newlhs, newrhs);
             }
   case ' ': {
-              lhs = lhs->eval(gc, env);
+              lhs = ::eval(gc, env, lhs);
               if (!lhs)
                 return nullptr; // Error forwarding
 
@@ -224,4 +224,13 @@ Expr *IdExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const 
     return newexpr;
 
   return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
+}
+
+// evaluate
+//
+Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env, Expr *expr) noexcept {
+  Expr *oldExpr = expr;
+  while (expr && (expr = expr->eval(gc, env)) != oldExpr) oldExpr = expr;
+
+  return expr;
 }
