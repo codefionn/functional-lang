@@ -21,8 +21,6 @@ public:
   Expr(ExprType type) : type{type} {}
   virtual ~Expr() {}
 
-  virtual std::shared_ptr<Expr> eval() const noexcept
-    { return std::shared_ptr<Expr>(nullptr); }
   virtual std::string toString() const noexcept { return std::string(); }
 
   ExprType getExpressionType() const noexcept { return type; }
@@ -30,10 +28,10 @@ public:
 
 class BiOpExpr : public Expr {
   char op;
-  std::shared_ptr<Expr> lhs, rhs;
+  std::unique_ptr<Expr> lhs, rhs;
 public:
-  BiOpExpr(char op, std::shared_ptr<Expr> lhs,
-                    std::shared_ptr<Expr> rhs)
+  BiOpExpr(char op, std::unique_ptr<Expr> lhs,
+                    std::unique_ptr<Expr> rhs)
     : Expr(expr_biop),
       op{op}, lhs(std::move(lhs)), rhs(std::move(rhs)) {}
   virtual ~BiOpExpr() {}
@@ -42,15 +40,15 @@ public:
   char getOperator() const noexcept { return op; }
 
   //!\return Returns right-hand-side
-  const std::shared_ptr<Expr> getRHS() const noexcept { return rhs; }
+  const Expr& getRHS() const noexcept { return *rhs; }
 
   //!\return Returns left-hand-side
-  const std::shared_ptr<Expr> getLHS() const noexcept { return lhs; }
+  const Expr& getLHS() const noexcept { return *lhs; }
 
   virtual std::string toString() const noexcept override {
     return op + std::string("{ ")
-      + std::shared_ptr<Expr>(lhs)->toString()
-      + ", " + std::shared_ptr<Expr>(rhs)->toString() + " }";
+      + lhs->toString()
+      + ", " + rhs->toString() + " }";
   }
 };
 
@@ -83,25 +81,19 @@ public:
 
 class LambdaExpr : public Expr {
   std::string name;
-  std::shared_ptr<Expr> expr;
+  std::unique_ptr<Expr> expr;
 public:
   LambdaExpr(const std::string &name,
-             std::shared_ptr<Expr> expr)
-    : Expr(expr_lambda), name(name), expr(expr) {}
-
-  LambdaExpr(const LambdaExpr &expr)
-    : Expr(expr_lambda), name(expr.getName()), expr(expr.getExpression()) {}
+             std::unique_ptr<Expr> expr)
+    : Expr(expr_lambda), name(name), expr(std::move(expr)) {}
   virtual ~LambdaExpr() {}
 
   const std::string &getName() const noexcept { return name; }
-  const std::shared_ptr<Expr> getExpression() const noexcept { return expr; }
-
-  virtual std::shared_ptr<Expr> eval() const noexcept override
-    { return std::shared_ptr<Expr>(new LambdaExpr(*this)); }
+  const Expr& getExpression() const noexcept { return *expr; }
 
   virtual std::string toString() const noexcept override {
     return "\\ " + name + " = "
-      + std::shared_ptr<Expr>(expr)->toString();
+      + expr->toString();
   }
 };
 

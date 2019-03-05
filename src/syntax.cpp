@@ -17,8 +17,8 @@ Expr *parsePrimary(Lexer &lexer) {
           if (!result)
             result = new IdExpr(lexer.currentIdentifier());
           else {
-            result = new BiOpExpr(' ', std::shared_ptr<Expr>(result),
-                                  std::shared_ptr<Expr>(new IdExpr(lexer.currentIdentifier())));
+            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
+                                  std::unique_ptr<Expr>(new IdExpr(lexer.currentIdentifier())));
           }
 
           lexer.nextToken(); // eat id
@@ -28,8 +28,8 @@ Expr *parsePrimary(Lexer &lexer) {
           if (!result)
             result = new NumExpr(lexer.currentNumber());
           else
-            result = new BiOpExpr(' ', std::shared_ptr<Expr>(result),
-                std::shared_ptr<Expr>(new NumExpr(lexer.currentNumber())));
+            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
+                std::unique_ptr<Expr>(new NumExpr(lexer.currentNumber())));
 
           lexer.nextToken(); // eat num
           break;
@@ -47,8 +47,8 @@ Expr *parsePrimary(Lexer &lexer) {
           lexer.nextToken(); // eat )
 
           if (oldResult) {
-            result = new BiOpExpr(' ', std::shared_ptr<Expr>(oldResult),
-                                  std::shared_ptr<Expr>(result));
+            result = new BiOpExpr(' ', std::unique_ptr<Expr>(oldResult),
+                                  std::unique_ptr<Expr>(result));
           }
 
           break;
@@ -67,15 +67,18 @@ Expr *parsePrimary(Lexer &lexer) {
 
           lexer.nextToken(); // eat =
 
-          std::shared_ptr<Expr> expr(parse(lexer));
+          Expr *expr = parse(lexer);
           if (!expr)
             return nullptr; // Error forwarding
 
+          Expr *lambdaExpr = new LambdaExpr(idname,
+              std::unique_ptr<Expr>(expr));
+
           if (!result)
-            result = new LambdaExpr(idname, expr);
+            result = lambdaExpr;
           else
-            result = new BiOpExpr(' ', std::shared_ptr<Expr>(result),
-                                  std::shared_ptr<Expr>(new LambdaExpr(idname, expr)));
+            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
+                                  std::unique_ptr<Expr>(lambdaExpr));
 
           break;
         } // end case tok_lambda
@@ -128,8 +131,8 @@ Expr *parseRHS(Lexer &lexer, Expr *lhs, int prec) {
       rhs = parseRHS(lexer, rhs, lexer.currentPrecedence());
     }
 
-    lhs = new BiOpExpr(op, std::shared_ptr<Expr>(lhs),
-                       std::shared_ptr<Expr>(rhs));
+    lhs = new BiOpExpr(op, std::unique_ptr<Expr>(lhs),
+                       std::unique_ptr<Expr>(rhs));
   }
 
   return lhs;
