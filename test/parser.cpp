@@ -9,7 +9,7 @@ int main() {
   Expr *expr = nullptr;
   while (expr = parse(gc, lexer)) {
     std::cout << expr->toString() << std::endl;
-    gc.collect();
+    gc.collect(); // We collect it all
 
     std::cout << "> ";
 

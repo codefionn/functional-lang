@@ -133,3 +133,94 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Expr *lhs, int prec) {
 
   return lhs;
 }
+
+// interpreter stuff
+
+Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+  switch (op) {
+  case '=': {
+              std::string id = ((IdExpr*) lhs)->getName();
+              if (env.find(id) == env.end()) {
+                env.insert(std::pair<std::string, Expr*>(id, rhs));
+                return this;
+              }
+
+              std::cerr << "Variable " << id << " already exists." << std::endl;
+              return nullptr;
+            }
+  case '+':
+  case '-':
+  case '*':
+  case '/': {
+              lhs = lhs->eval(gc, env);
+              if (!lhs) return nullptr; // error forwarding
+              rhs = rhs->eval(gc, env);
+              if (!rhs) return nullptr; // error forwarding
+
+              if (lhs && rhs &&
+                  lhs->getExpressionType() == expr_num
+                  && rhs-> getExpressionType() == expr_num) {
+                double num0 = ((NumExpr*) lhs)->getNumber();
+                double num1 = ((NumExpr*) rhs)->getNumber();
+                switch (op) {
+                case '+': num0 += num1; break;
+                case '-': num0 -= num1; break;
+                case '*': num0 *= num1; break;
+                case '/': num0 /= num1; break;
+                }
+                return new NumExpr(gc, num0);
+              }
+
+              std::cerr << "Invalid '" << op << "'-operation!" << std::endl;
+              return nullptr;
+            }
+  case ' ': {
+              lhs = lhs->eval(gc, env);
+              if (!lhs)
+                return nullptr; // Error forwarding
+
+              if (lhs->getExpressionType() != expr_lambda) {
+                std::cerr << "Invalid function call. Callee not a lambda function." << std::endl;
+                return nullptr;
+              }
+
+              return ((LambdaExpr*)lhs)->replace(gc, rhs);
+            }
+  }
+
+  std::cerr << "Interpreter error." << std::endl;
+  return nullptr;
+}
+
+Expr *IdExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+  if (env.find(getName()) == env.end()) {
+    std::cerr << "Invalid identifier " << getName() << "." << std::endl;
+    return nullptr;
+  }
+
+  return env[getName()];
+}
+
+Expr *LambdaExpr::replace(GCMain &gc, Expr *newexpr) const noexcept {
+  return expr->replace(gc, getName(), newexpr);
+}
+
+Expr *LambdaExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
+  if (name == getName())
+    return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
+
+  return expr->replace(gc, name, newexpr);
+}
+
+Expr *BiOpExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
+  return new BiOpExpr(gc, op,
+      lhs->replace(gc, name, newexpr),
+      rhs->replace(gc, name, newexpr));
+}
+
+Expr *IdExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
+  if (name == getName())
+    return newexpr;
+
+  return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
+}

@@ -9,6 +9,12 @@
 #include "func/lexer.hpp"
 #include "func/gc.hpp"
 
+class Expr;
+class BiOpExpr;
+class NumExpr;
+class IdExpr;
+class LambdaExpr;
+
 enum ExprType : int {
   expr_biop,
   expr_num,
@@ -27,6 +33,14 @@ public:
   virtual std::string toString() const noexcept { return std::string(); }
 
   ExprType getExpressionType() const noexcept { return type; }
+
+  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+    return this;
+  }
+
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept {
+    return const_cast<Expr*>(this);
+  }
 };
 
 class BiOpExpr : public Expr {
@@ -63,6 +77,9 @@ public:
     lhs->mark(gc);
     rhs->mark(gc);
   }
+
+  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 };
 
 class NumExpr : public Expr {
@@ -90,6 +107,9 @@ public:
   virtual std::string toString() const noexcept override {
     return id;
   }
+
+  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 };
 
 class LambdaExpr : public Expr {
@@ -117,6 +137,13 @@ public:
     markSelf(gc);
     expr->mark(gc);
   }
+
+  /*\return Returns expression where getName is replcase by expr.
+   * \param gc
+   * \param expr
+   */
+  Expr *replace(GCMain &gc, Expr *expr) const noexcept;
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);
