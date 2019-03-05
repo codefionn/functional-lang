@@ -209,7 +209,7 @@ Expr *LambdaExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) co
   if (name == getName())
     return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
 
-  return expr->replace(gc, name, newexpr);
+  return new LambdaExpr(gc, getName(), expr->replace(gc, name, newexpr));
 }
 
 Expr *BiOpExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {

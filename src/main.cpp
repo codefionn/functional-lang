@@ -1,14 +1,24 @@
 #include "func/func.hpp"
 
 int main(int vargsc, char * vargs[]) {
-  std::cout << "> ";
   Lexer lexer(std::cin);
-  lexer.nextToken();
 
   GCMain gc;
   std::map<std::string, Expr*> env; // environment
   Expr *expr = nullptr;
-  while (expr = parse(gc, lexer)) {
+  while (true) {
+    std::cout << "> ";
+  	lexer.nextToken();
+	expr = parse(gc, lexer);
+	// Just jump if emtpy
+   if (!expr) { // empty
+	   if (lexer.currentToken() == tok_eof)
+		   break;
+	   if (lexer.currentToken() == tok_err)
+		   std::cout << "Error." << std::endl;
+		continue;
+	}
+
     bool shouldPrint = expr->getExpressionType() != expr_biop
       || ((BiOpExpr*) expr)->getOperator() != '=';
 
@@ -21,13 +31,9 @@ int main(int vargsc, char * vargs[]) {
       std::cout << expr->toString() << std::endl;
     }
 
-    std::cout << "> ";
-
     switch(lexer.currentToken()) {
-    case tok_eol:
     case tok_eof:
-    case tok_err:
-      lexer.nextToken(); // advance to next token
+	  break;
     }
 
     // mark some stuff
