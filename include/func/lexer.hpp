@@ -3,8 +3,8 @@
 
 #include "func/global.hpp"
 
-enum Token {
-  tok_id,
+enum Token : int {
+  tok_id = 256,
   tok_num,
   tok_op,
 
@@ -13,21 +13,20 @@ enum Token {
 
   tok_obrace, //!< (
   tok_cbrace, //!< )
+  tok_lambda, /*!< \\ */
 
   tok_err, //!< Error
 };
 
-enum Operator {
-  op_add, //!< +
-  op_sub, //!< -
-  op_mul, //!< *
-  op_div, //!< /
-  op_asg, //!< =
-
-  op_lambda, /*!< \\ */
+enum Operator : char {
+  op_add = '+', //!< +
+  op_sub = '-', //!< -
+  op_mul = '*', //!< *
+  op_div = '/', //!< /
+  op_asg = '=', //!< =
 };
 
-std::size_t getOperatorPrecedence(Operator op);
+int getOperatorPrecedence(Operator op);
 
 class Lexer {
   std::size_t line;
@@ -56,6 +55,8 @@ public:
   Operator currentOperator() const noexcept;
   double currentNumber() const noexcept;
   const std::string &currentIdentifier() const noexcept;
+
+  int currentPrecedence();
 
   Token reportError(const std::string &msg);
 };

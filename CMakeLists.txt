@@ -5,7 +5,8 @@ include_directories("${func_SOURCE_DIR}/include")
 
 set(func_SOURCES "${func_SOURCE_DIR}/src/func.cpp"
                  "${func_SOURCE_DIR}/src/lexer.cpp"
-                 "${func_SOURCE_DIR}/src/parser.cpp")
+                 "${func_SOURCE_DIR}/src/parser.cpp"
+                 "${func_SOURCE_DIR}/src/syntax.cpp")
 
 add_executable(functional-lang ${func_SOURCES}
                                "${func_SOURCE_DIR}/src/main.cpp")

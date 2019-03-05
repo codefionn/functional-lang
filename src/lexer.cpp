@@ -65,8 +65,7 @@ Token Lexer::nextToken() {
     return curtok = tok_op;
   case '\\': /* eat \ */
     nextChar();
-    curop = op_lambda;
-    return curtok = tok_op;
+    return curtok = tok_lambda;
   case '(':
     nextChar(); // eat (
     return curtok = tok_obrace;
@@ -181,4 +180,28 @@ Token Lexer::reportError(const std::string &msg) {
   column = 0; // Reset column
 
   return tok_err;
+}
+
+int getOperatorPrecedence(Operator op) {
+  switch (op) {
+  case op_asg:
+      return 1;
+  case op_add:
+  case op_sub:
+    return 2;
+  case op_mul:
+  case op_div:
+    return 3;
+  }
+
+  return 0;
+}
+
+int Lexer::currentPrecedence() {
+  switch (currentToken()) {
+  case tok_op:
+    return getOperatorPrecedence(currentOperator());
+  }
+
+  return 0;
 }
