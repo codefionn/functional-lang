@@ -5,7 +5,7 @@ Expr *reportSyntaxError(Lexer &lexer, const std::string &msg) {
   return nullptr;
 }
 
-Expr *parsePrimary(Lexer &lexer) {
+Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
   Expr* result = nullptr;
 
   while (lexer.currentToken() == tok_id
@@ -14,22 +14,22 @@ Expr *parsePrimary(Lexer &lexer) {
       || lexer.currentToken() == tok_lambda) {
     switch (lexer.currentToken()) {
       case tok_id: {
+         IdExpr *idexpr = new IdExpr(gc, lexer.currentIdentifier());
           if (!result)
-            result = new IdExpr(lexer.currentIdentifier());
+            result = idexpr;
           else {
-            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
-                                  std::unique_ptr<Expr>(new IdExpr(lexer.currentIdentifier())));
+            result = new BiOpExpr(gc, ' ', result, idexpr);
           }
 
           lexer.nextToken(); // eat id
           break;
         } // end case tok_id
       case tok_num: {
+          NumExpr *numexpr = new NumExpr(gc, lexer.currentNumber());
           if (!result)
-            result = new NumExpr(lexer.currentNumber());
+            result = numexpr;
           else
-            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
-                std::unique_ptr<Expr>(new NumExpr(lexer.currentNumber())));
+            result = new BiOpExpr(gc, ' ', result, numexpr);
 
           lexer.nextToken(); // eat num
           break;
@@ -37,7 +37,7 @@ Expr *parsePrimary(Lexer &lexer) {
       case tok_obrace: {
           lexer.nextToken(); // eat (
           Expr *oldResult = result;
-          result = parse(lexer);
+          result = parse(gc, lexer);
           if (lexer.currentToken() != tok_cbrace) {
             if (result) delete result; // delete result ?
 
@@ -47,8 +47,7 @@ Expr *parsePrimary(Lexer &lexer) {
           lexer.nextToken(); // eat )
 
           if (oldResult) {
-            result = new BiOpExpr(' ', std::unique_ptr<Expr>(oldResult),
-                                  std::unique_ptr<Expr>(result));
+            result = new BiOpExpr(gc, ' ', oldResult, result);
           }
 
           break;
@@ -67,18 +66,16 @@ Expr *parsePrimary(Lexer &lexer) {
 
           lexer.nextToken(); // eat =
 
-          Expr *expr = parse(lexer);
+          Expr *expr = parse(gc, lexer);
           if (!expr)
             return nullptr; // Error forwarding
 
-          Expr *lambdaExpr = new LambdaExpr(idname,
-              std::unique_ptr<Expr>(expr));
+          Expr *lambdaExpr = new LambdaExpr(gc, idname, expr);
 
           if (!result)
             result = lambdaExpr;
           else
-            result = new BiOpExpr(' ', std::unique_ptr<Expr>(result),
-                                  std::unique_ptr<Expr>(lambdaExpr));
+            result = new BiOpExpr(gc, ' ', result, lambdaExpr);
 
           break;
         } // end case tok_lambda
@@ -90,8 +87,8 @@ Expr *parsePrimary(Lexer &lexer) {
   return result;
 }
 
-Expr *parse(Lexer &lexer) {
-  Expr *primaryExpr = parsePrimary(lexer);
+Expr *parse(GCMain &gc, Lexer &lexer) {
+  Expr *primaryExpr = parsePrimary(gc, lexer);
   if (!primaryExpr)
     return nullptr; // error forwarding
 
@@ -104,11 +101,11 @@ Expr *parse(Lexer &lexer) {
       return primaryExpr;
   }
 
-  return parseRHS(lexer, primaryExpr, 0); // 0 = minimum precedence
+  return parseRHS(gc, lexer, primaryExpr, 0); // 0 = minimum precedence
   // (least binding)
 }
 
-Expr *parseRHS(Lexer &lexer, Expr *lhs, int prec) {
+Expr *parseRHS(GCMain &gc, Lexer &lexer, Expr *lhs, int prec) {
   while (lexer.currentToken() == tok_op && lexer.currentPrecedence() >= prec) {
     char op = lexer.currentOperator();
     int opprec = lexer.currentPrecedence();
@@ -118,7 +115,7 @@ Expr *parseRHS(Lexer &lexer, Expr *lhs, int prec) {
     if (op == '=' && lhs->getExpressionType() != expr_id)
       return reportSyntaxError(lexer, "<id> '=' <expr> expected!");
 
-    Expr *rhs = parsePrimary(lexer);
+    Expr *rhs = parsePrimary(gc, lexer);
     if (!rhs) {
       delete lhs; // cleanup
       return nullptr; // Error forwarding
@@ -128,11 +125,10 @@ Expr *parseRHS(Lexer &lexer, Expr *lhs, int prec) {
         && (lexer.currentPrecedence() > opprec
             || (lexer.currentOperator() == op_asg // left associative
                 && lexer.currentPrecedence() == opprec))) {
-      rhs = parseRHS(lexer, rhs, lexer.currentPrecedence());
+      rhs = parseRHS(gc, lexer, rhs, lexer.currentPrecedence());
     }
 
-    lhs = new BiOpExpr(op, std::unique_ptr<Expr>(lhs),
-                       std::unique_ptr<Expr>(rhs));
+    lhs = new BiOpExpr(gc, op, lhs, rhs);
   }
 
   return lhs;
