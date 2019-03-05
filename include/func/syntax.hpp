@@ -63,9 +63,7 @@ public:
   const Expr& getLHS() const noexcept { return *lhs; }
 
   virtual std::string toString() const noexcept override {
-    return op + std::string("{ ")
-      + lhs->toString()
-      + ", " + rhs->toString() + " }";
+    return "(" + lhs->toString() + " " + op + " " + rhs->toString() + ")";
   }
 
   //!\brief Mark self, rhs and lhs.
@@ -125,7 +123,7 @@ public:
   const Expr& getExpression() const noexcept { return *expr; }
 
   virtual std::string toString() const noexcept override {
-    return "\\ " + name + " = "
+    return "\\" + name + " = "
       + expr->toString();
   }
 
