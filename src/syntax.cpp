@@ -152,16 +152,15 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
   case '-':
   case '*':
   case '/': {
-              lhs = lhs->eval(gc, env);
-              if (!lhs) return nullptr; // error forwarding
-              rhs = rhs->eval(gc, env);
-              if (!rhs) return nullptr; // error forwarding
+              Expr *newlhs = lhs->eval(gc, env);
+              if (!newlhs) return nullptr; // error forwarding
+              Expr *newrhs = rhs->eval(gc, env);
+              if (!newrhs) return nullptr; // error forwarding
 
-              if (lhs && rhs &&
-                  lhs->getExpressionType() == expr_num
-                  && rhs-> getExpressionType() == expr_num) {
-                double num0 = ((NumExpr*) lhs)->getNumber();
-                double num1 = ((NumExpr*) rhs)->getNumber();
+              if (newlhs->getExpressionType() == expr_num
+                  && newrhs-> getExpressionType() == expr_num) {
+                double num0 = ((NumExpr*) newlhs)->getNumber();
+                double num1 = ((NumExpr*) newrhs)->getNumber();
                 switch (op) {
                 case '+': num0 += num1; break;
                 case '-': num0 -= num1; break;
@@ -171,8 +170,10 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
                 return new NumExpr(gc, num0);
               }
 
-              std::cerr << "Invalid '" << op << "'-operation!" << std::endl;
-              return nullptr;
+              if (newlhs == lhs && newrhs == rhs)
+                return this;
+
+              return new BiOpExpr(gc, op, newlhs, newrhs);
             }
   case ' ': {
               lhs = lhs->eval(gc, env);
