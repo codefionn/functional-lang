@@ -56,4 +56,11 @@
  *        distribution.
  */
 
+/*!\brief Interpret characters streamed from input.
+ * \param input
+ * \param prefix Prefix to print in front of every new input line.
+ * \return Returns true on success, false if error occured.
+ */
+bool interpret(std::istream &input, const std::string &prefix) noexcept;
+
 #endif /* FUNC_FUNC_HPP */
