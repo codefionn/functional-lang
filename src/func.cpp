@@ -11,7 +11,7 @@ bool interpret(std::istream &input, const std::string &prefix) noexcept {
   while (true) {
     std::cout << prefix; // print prefix
   	lexer.nextToken(); // aquire next token (if first loop, first token)
-	  expr = parse(gc, lexer);
+	  expr = parse(gc, lexer, env);
 
     // Just jump if emtpy (error recovery and new-line support)
     if (!expr) { // empty

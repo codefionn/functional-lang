@@ -7,7 +7,8 @@ int main() {
 
   GCMain gc;
   Expr *expr = nullptr;
-  while (expr = parse(gc, lexer)) {
+  Environment env;
+  while (expr = parse(gc, lexer, env)) {
     std::cout << expr->toString() << std::endl;
     gc.collect(); // We collect it all
 

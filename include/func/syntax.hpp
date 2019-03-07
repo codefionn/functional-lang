@@ -24,6 +24,7 @@ enum ExprType : int {
   expr_if,
 };
 
+
 /*!\brief Main expression handle (should only be used as parent class).
  */
 class Expr : public GCObj {
@@ -44,6 +45,8 @@ public:
     return const_cast<Expr*>(this);
   }
 };
+
+typedef std::map<std::string, Expr*> Environment;
 
 class BiOpExpr : public Expr {
   Operator op;
@@ -200,15 +203,15 @@ public:
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);
-Expr *parsePrimary(GCMain &gc, Lexer &lexer);
-Expr *parse(GCMain &gc, Lexer &lexer);
+Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env);
+Expr *parse(GCMain &gc, Lexer &lexer, Environment &env);
 
 /*!\brief Parse right-hand-side
  * \param lexer
  * \param lhs Already parsed Left-hand-side
  * \param prec current minimum precedence
  */
-Expr *parseRHS(GCMain &gc, Lexer &lexer, Expr *lhs, int prec);
+Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec);
 
 /*!\brief Executes eval function for given expr as long as different expr
  * is returned.

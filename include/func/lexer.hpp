@@ -15,6 +15,7 @@ enum Token : int {
   tok_cbrace, //!< )
   tok_lambda, /*!< \\ */
   tok_atom, //!< .
+  tok_literal, //!< $
 
   tok_if,
   tok_then,
