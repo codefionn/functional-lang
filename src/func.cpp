@@ -34,7 +34,7 @@ bool interpret(std::istream &input, const std::string &prefix) noexcept {
 
     // Print the expression
     if (expr && shouldPrint) {
-      std::cout << expr->toString() << std::endl;
+      std::cout << "=> " << expr->toString() << std::endl;
     }
 
     // Terminate interpreter if eof occured

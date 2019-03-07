@@ -11,6 +11,8 @@ addone = add 1
 addone 4 -- == 5
 
 if .true then 1 else 0 -- == 1
+
+fib = \x = if x == 0 then 0 else if x == 1 then 1 else fib (x - 1) + fib (x - 2)
 ```
 
 ## Build
