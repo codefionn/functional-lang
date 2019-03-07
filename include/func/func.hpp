@@ -6,7 +6,7 @@
 #include "func/syntax.hpp"
 
 /*!\file func/func.hpp
- * \brief Main file of the project
+ * \brief Main file of the project. You want to include this, nothing else.
  */
 
 /*!\mainpage Functional-Language
@@ -18,6 +18,11 @@
  *             | <num>
  *             | '(' <expr> ')'
  *             | <id> '=' <expr>
+ *             | <expr> '==' <expr>
+ *             | <expr> '<=' <expr>
+ *             | <expr> '>=' <expr>
+ *             | <expr> '<' <expr>
+ *             | <expr> '>' <expr>
  *             | <expr> '+' <expr>
  *             | <expr> '-' <expr>
  *             | <expr> '*' <expr>
@@ -26,14 +31,44 @@
  *             | <expr> <expr>
  *             | '\' <id> '=' <expr>
  *             | '.' <id>
+ *             | '$' <expr>
+ *             | '_'
  *
  * Precedence:
  *
  * - '=': 1
- * - '+', '-': 2
- * - '*', '/': 3
- * - '^': 4
- * - \<expr\> \<expr\>: 5
+ * - '==', '<=', '>=', '<', '>': 2
+ * - '+', '-': 3
+ * - '*', '/': 4
+ * - '^': 5
+ * - \<expr\> \<expr\>: 6
+ *
+ * ## Semantics
+ *
+ *     '(' <expr> ')' evaluates to <expr>.
+ *
+ *     <id> '=' <expr> adds <id> to environment (current scope), which points
+ *     to <expr> . Danger: Evaluates to itself.
+ *
+ *     <expr_0> <expr_1> evaluates <expr_0>. If <expr_0> is a lambda function
+ *     then to substitution (variable of lambda function substituted with
+ *     <expr_1>). If <expr_0> isn't a lambda function, <expr_1> is evaluated
+ *     and <expr_0> (evaluated <expr_1>) is returned.
+ *
+ *     '==' evalutes both expression and then checks if their structures are
+ *     equal (except when '_' is used, where '==' always evaluates to .true).
+ *     If both evaluated expression structures are equal, then .true is
+ *     returned otherwise .false.
+ *
+ *     '$' evaluates <expr> while parsing syntax ("immediatly").
+ *
+ *     '\' <id> '=' <expr> is an lambda function. When substituting every
+ *     identifier in <expr> which is equal to <id> will be substituted, except
+ *     if the <id> is in another lambda function, which has the same <id> as
+ *     the "current" one.
+ *
+ *     '.' <id> is an atom. And I'm already sorry to say this, but an atom is
+ *     an atom. It evaluates to itself and doesn't do anything else.
  *
  * ## License
  *

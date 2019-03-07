@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['numexpr',['NumExpr',['../classNumExpr.html',1,'']]]
+  ['idexpr',['IdExpr',['../classIdExpr.html',1,'']]],
+  ['ifexpr',['IfExpr',['../classIfExpr.html',1,'']]]
 ];

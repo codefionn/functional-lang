@@ -34,19 +34,29 @@ public:
  */
 class GCMain {
   bool markBit; //!< Toggled after every collect() 
+
+  //! All objects available.
   std::vector<GCObj*> marks;
 public:
   GCMain() : markBit(true), marks() {}
   virtual ~GCMain();
 
-  //!\return Returns status of the mark bit.
+  /*!\return Returns status of the mark bit.
+   *
+   * This is a 'hack'. Otherwise the algorithm would be force to reset the
+   * mark bit after every collect. But if a the markbit can be toggled 
+   * (its switched the mark state after collecting), it becomes obsolete.
+   */
   bool getMarkBit() const noexcept;
 
+  /*!\brief Adds obj to all objects available.
+   * \param obj
+   */
   void add(GCObj *obj);
 
   /*!\brief Collects garbage.
    *
-   * Please use mark function of directly reachable objects.
+   * Use mark function of directly reachable objects (roots).
    */ 
   void collect();
 };

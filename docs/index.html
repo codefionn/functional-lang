@@ -67,24 +67,61 @@ $(function() {
 <div class="title">Functional-Language </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Defining a primitive functional language and implementing an interpreter. </p><pre class="fragment">&lt;program&gt; := e | &lt;expr&gt; | &lt;expr&gt; &lt;program&gt;
+<div class="textblock"><p>Defining a primitive functional language and implementing an interpreter. </p><pre class="fragment">&lt;program&gt; := e | &lt;expr&gt; | &lt;expr&gt; &lt;newline&gt; &lt;program&gt;
 &lt;expr&gt; := &lt;id&gt;
         | &lt;num&gt;
         | '(' &lt;expr&gt; ')'
         | &lt;id&gt; '=' &lt;expr&gt;
+        | &lt;expr&gt; '==' &lt;expr&gt;
+        | &lt;expr&gt; '&lt;=' &lt;expr&gt;
+        | &lt;expr&gt; '&gt;=' &lt;expr&gt;
+        | &lt;expr&gt; '&lt;' &lt;expr&gt;
+        | &lt;expr&gt; '&gt;' &lt;expr&gt;
         | &lt;expr&gt; '+' &lt;expr&gt;
         | &lt;expr&gt; '-' &lt;expr&gt;
         | &lt;expr&gt; '*' &lt;expr&gt;
         | &lt;expr&gt; '/' &lt;expr&gt;
+        | &lt;expr&gt; '^' &lt;expr&gt;
         | &lt;expr&gt; &lt;expr&gt;
+        | '\' &lt;id&gt; '=' &lt;expr&gt;
+        | '.' &lt;id&gt;
+        | '$' &lt;expr&gt;
+        | '_'
 </pre><p>Precedence:</p>
 <ul>
 <li>'=': 1</li>
-<li>'+', '-': 2</li>
-<li>'*', '/': 3</li>
-<li>&lt;expr&gt; &lt;expr&gt;: 4</li>
+<li>'==', '&lt;=', '&gt;=', '&lt;', '&gt;': 2</li>
+<li>'+', '-': 3</li>
+<li>'*', '/': 4</li>
+<li>'^': 5</li>
+<li>&lt;expr&gt; &lt;expr&gt;: 6</li>
 </ul>
-<h2>License</h2>
+<h2>Semantics</h2>
+<pre class="fragment">'(' &lt;expr&gt; ')' evaluates to &lt;expr&gt;.
+
+&lt;id&gt; '=' &lt;expr&gt; adds &lt;id&gt; to environment (current scope), which points
+to &lt;expr&gt; . Danger: Evaluates to itself.
+
+&lt;expr_0&gt; &lt;expr_1&gt; evaluates &lt;expr_0&gt;. If &lt;expr_0&gt; is a lambda function
+then to substitution (variable of lambda function substituted with
+&lt;expr_1&gt;). If &lt;expr_0&gt; isn't a lambda function, &lt;expr_1&gt; is evaluated
+and &lt;expr_0&gt; (evaluated &lt;expr_1&gt;) is returned.
+
+'==' evalutes both expression and then checks if their structures are
+equal (except when '_' is used, where '==' always evaluates to .true).
+If both evaluated expression structures are equal, then .true is
+returned otherwise .false.
+
+'$' evaluates &lt;expr&gt; while parsing syntax ("immediatly").
+
+'\' &lt;id&gt; '=' &lt;expr&gt; is an lambda function. When substituting every
+identifier in &lt;expr&gt; which is equal to &lt;id&gt; will be substituted, except
+if the &lt;id&gt; is in another lambda function, which has the same &lt;id&gt; as
+the "current" one.
+
+'.' &lt;id&gt; is an atom. And I'm already sorry to say this, but an atom is
+an atom. It evaluates to itself and doesn't do anything else.
+</pre><h2>License</h2>
 <p>Copyright (c) 2019 Fionn Langhans</p>
 <p>This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.</p>
 <p>Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions: </p><pre class="fragment">1. The origin of this software must not be misrepresented; you must not

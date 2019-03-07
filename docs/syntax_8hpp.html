@@ -69,6 +69,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -76,55 +77,262 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>A syntax parser.  
+<p>A syntax parser/Syntax analysis.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;func/global.hpp&quot;</code><br />
-<code>#include &quot;func/lexer.hpp&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="global_8hpp_source.html">func/global.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="lexer_8hpp_source.html">func/lexer.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="gc_8hpp_source.html">func/gc.hpp</a>&quot;</code><br />
 </div>
 <p><a href="syntax_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html">Expr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main expression handle (should only be used as parent class).  <a href="classExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBiOpExpr.html">BiOpExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Binary operator expression.  <a href="classBiOpExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNumExpr.html">NumExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Floating point number expression.  <a href="classNumExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIdExpr.html">IdExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier expression.  <a href="classIdExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLambdaExpr.html">LambdaExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lambda function expression.  <a href="classLambdaExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAtomExpr.html">AtomExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Atom expression.  <a href="classAtomExpr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIfExpr.html">IfExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">If-then-else expression.  <a href="classIfExpr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAnyExpr.html">AnyExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">any expression  <a href="classAnyExpr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:aa055ed7cafece83fe0bbadb7482cca9a"><td class="memItemLeft" align="right" valign="top"><a id="aa055ed7cafece83fe0bbadb7482cca9a"></a>
+typedef std::map&lt; std::string, <a class="el" href="classExpr.html">Expr</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b></td></tr>
+<tr class="separator:aa055ed7cafece83fe0bbadb7482cca9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memItemLeft" align="right" valign="top"><a id="ac40558a32d8eabc2d4933a043a8cecc3"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>ExprType</b> : int { <b>expr_biop</b>, 
-<b>expr_num</b>, 
-<b>expr_id</b>, 
-<b>expr_lambda</b>
+<tr class="memitem:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> : int { <br />
+&#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b">expr_biop</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339">expr_num</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ac30a228543b3e454debb8b251b4f416e">expr_id</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368">expr_lambda</a>, 
+<br />
+&#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a9fe508b5a98973631eed32523f25c7d6">expr_atom</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292">expr_if</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610">expr_any</a>
+<br />
  }</td></tr>
 <tr class="separator:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a83d70f3c134582f005daf478b55368ee"><td class="memItemLeft" align="right" valign="top"><a id="a83d70f3c134582f005daf478b55368ee"></a>
-<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>reportSyntaxError</b> (<a class="el" href="classLexer.html">Lexer</a> &amp;lexer, const std::string &amp;msg)</td></tr>
-<tr class="separator:a83d70f3c134582f005daf478b55368ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fe57c323303d296743530e5391ae335"><td class="memItemLeft" align="right" valign="top"><a id="a1fe57c323303d296743530e5391ae335"></a>
-<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parsePrimary</b> (<a class="el" href="classLexer.html">Lexer</a> &amp;lexer)</td></tr>
-<tr class="separator:a1fe57c323303d296743530e5391ae335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99a10eb8a56d0c9bac5556fa1c5b8b40"><td class="memItemLeft" align="right" valign="top"><a id="a99a10eb8a56d0c9bac5556fa1c5b8b40"></a>
-<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>parse</b> (<a class="el" href="classLexer.html">Lexer</a> &amp;lexer)</td></tr>
-<tr class="separator:a99a10eb8a56d0c9bac5556fa1c5b8b40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8509f768c106c142a32d8db9a0569c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#ab8509f768c106c142a32d8db9a0569c0">parseRHS</a> (<a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classExpr.html">Expr</a> *lhs, int prec)</td></tr>
-<tr class="memdesc:ab8509f768c106c142a32d8db9a0569c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse right-hand-side.  <a href="#ab8509f768c106c142a32d8db9a0569c0">More...</a><br /></td></tr>
-<tr class="separator:ab8509f768c106c142a32d8db9a0569c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ee867f065f7787a7751f9091d97352"><td class="memItemLeft" align="right" valign="top"><a id="a46ee867f065f7787a7751f9091d97352"></a>
+<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>reportSyntaxError</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, const std::string &amp;msg)</td></tr>
+<tr class="separator:a46ee867f065f7787a7751f9091d97352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a13b5a4a20d9f165d57f0d4236eca24f5">parsePrimary</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env)</td></tr>
+<tr class="memdesc:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses primary expression(s). Also parses lambda function substitutions (so also expressions, not only one primary one).  <a href="#a13b5a4a20d9f165d57f0d4236eca24f5">More...</a><br /></td></tr>
+<tr class="separator:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc172ebba0abe4f88382d10c41bedd93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#afc172ebba0abe4f88382d10c41bedd93">parse</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env, bool topLevel=true)</td></tr>
+<tr class="separator:afc172ebba0abe4f88382d10c41bedd93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e566ebd5da770c0cd558a82573d3c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a43e566ebd5da770c0cd558a82573d3c5">parseRHS</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env, <a class="el" href="classExpr.html">Expr</a> *lhs, int prec)</td></tr>
+<tr class="memdesc:a43e566ebd5da770c0cd558a82573d3c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse right-hand-side.  <a href="#a43e566ebd5da770c0cd558a82573d3c5">More...</a><br /></td></tr>
+<tr class="separator:a43e566ebd5da770c0cd558a82573d3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f9938cd76957bee48537f5ad2fada1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a0f9938cd76957bee48537f5ad2fada1f">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, Environment &amp;env, <a class="el" href="classExpr.html">Expr</a> *expr) noexcept</td></tr>
+<tr class="memdesc:a0f9938cd76957bee48537f5ad2fada1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes eval function for given expr as long as different expr is returned.  <a href="#a0f9938cd76957bee48537f5ad2fada1f">More...</a><br /></td></tr>
+<tr class="separator:a0f9938cd76957bee48537f5ad2fada1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A syntax parser. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="ab8509f768c106c142a32d8db9a0569c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8509f768c106c142a32d8db9a0569c0">&#9670;&nbsp;</a></span>parseRHS()</h2>
+<div class="textblock"><p>A syntax parser/Syntax analysis. </p>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ac40558a32d8eabc2d4933a043a8cecc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac40558a32d8eabc2d4933a043a8cecc3">&#9670;&nbsp;</a></span>ExprType</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> : int</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b"></a>expr_biop&#160;</td><td class="fielddoc"><p>Binary operator. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339"></a>expr_num&#160;</td><td class="fielddoc"><p>Floating-point Number. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3ac30a228543b3e454debb8b251b4f416e"></a>expr_id&#160;</td><td class="fielddoc"><p>Identifier. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368"></a>expr_lambda&#160;</td><td class="fielddoc"><p>Lambda function. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3a9fe508b5a98973631eed32523f25c7d6"></a>expr_atom&#160;</td><td class="fielddoc"><p>Atom. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292"></a>expr_if&#160;</td><td class="fielddoc"><p>If-then-else. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610"></a>expr_any&#160;</td><td class="fielddoc"><p>Any '_'. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a0f9938cd76957bee48537f5ad2fada1f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f9938cd76957bee48537f5ad2fada1f">&#9670;&nbsp;</a></span>eval()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classExpr.html">Expr</a>* eval </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramname"><em>env</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classExpr.html">Expr</a> *&#160;</td>
+          <td class="paramname"><em>expr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Executes eval function for given expr as long as different expr is returned. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
+    <tr><td class="paramname">env</td><td>Environment to use </td></tr>
+    <tr><td class="paramname">expr</td><td>Expression to evaluate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afc172ebba0abe4f88382d10c41bedd93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc172ebba0abe4f88382d10c41bedd93">&#9670;&nbsp;</a></span>parse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classExpr.html">Expr</a>* parse </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classLexer.html">Lexer</a> &amp;&#160;</td>
+          <td class="paramname"><em>lexer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramname"><em>env</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>topLevel</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns nullptr on error, otherwise parsed tokens from lexer.nextToken().</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
+    <tr><td class="paramname">lexer</td><td></td></tr>
+    <tr><td class="paramname">env</td><td>Environment to access variables. </td></tr>
+    <tr><td class="paramname">topLevel</td><td>If top level, nullptr is returned if eol occured. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a13b5a4a20d9f165d57f0d4236eca24f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13b5a4a20d9f165d57f0d4236eca24f5">&#9670;&nbsp;</a></span>parsePrimary()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classExpr.html">Expr</a>* parsePrimary </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classLexer.html">Lexer</a> &amp;&#160;</td>
+          <td class="paramname"><em>lexer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramname"><em>env</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses primary expression(s). Also parses lambda function substitutions (so also expressions, not only one primary one). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
+    <tr><td class="paramname">lexer</td><td></td></tr>
+    <tr><td class="paramname">env</td><td>Environment to access variables. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns nullptr on error, otherwise primary expression(s). </dd></dl>
+
+</div>
+</div>
+<a id="a43e566ebd5da770c0cd558a82573d3c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43e566ebd5da770c0cd558a82573d3c5">&#9670;&nbsp;</a></span>parseRHS()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -132,8 +340,20 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="classExpr.html">Expr</a>* parseRHS </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="classLexer.html">Lexer</a> &amp;&#160;</td>
           <td class="paramname"><em>lexer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramname"><em>env</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -158,12 +378,14 @@ Functions</h2></td></tr>
 <p>Parse right-hand-side. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
     <tr><td class="paramname">lexer</td><td></td></tr>
     <tr><td class="paramname">lhs</td><td>Already parsed Left-hand-side </td></tr>
     <tr><td class="paramname">prec</td><td>current minimum precedence </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns nullptr on error, otherwise parsed RHS. </dd></dl>
 
 </div>
 </div>

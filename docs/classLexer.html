@@ -65,6 +65,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classLexer-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Lexer Class Reference</div>  </div>
@@ -76,34 +77,267 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac9c46b91b3910c5033d4db6599efa267"><td class="memItemLeft" align="right" valign="top"><a id="ac9c46b91b3910c5033d4db6599efa267"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Lexer</b> (std::istream &amp;input)</td></tr>
 <tr class="separator:ac9c46b91b3910c5033d4db6599efa267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a614b69bb0eb2420c175afb6bf28285"><td class="memItemLeft" align="right" valign="top"><a id="a8a614b69bb0eb2420c175afb6bf28285"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>nextChar</b> ()</td></tr>
+<tr class="memitem:a8a614b69bb0eb2420c175afb6bf28285"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a8a614b69bb0eb2420c175afb6bf28285">nextChar</a> ()</td></tr>
+<tr class="memdesc:a8a614b69bb0eb2420c175afb6bf28285"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aquire next char.  <a href="#a8a614b69bb0eb2420c175afb6bf28285">More...</a><br /></td></tr>
 <tr class="separator:a8a614b69bb0eb2420c175afb6bf28285"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ee0e39bac505ed42a26d7e31ff5729d"><td class="memItemLeft" align="right" valign="top"><a id="a8ee0e39bac505ed42a26d7e31ff5729d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>currentChar</b> () const noexcept</td></tr>
+<tr class="memitem:a8ee0e39bac505ed42a26d7e31ff5729d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a8ee0e39bac505ed42a26d7e31ff5729d">currentChar</a> () const noexcept</td></tr>
 <tr class="separator:a8ee0e39bac505ed42a26d7e31ff5729d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad70ae308f841161587a0407daaeea480"><td class="memItemLeft" align="right" valign="top"><a id="ad70ae308f841161587a0407daaeea480"></a>
-Token&#160;</td><td class="memItemRight" valign="bottom"><b>nextToken</b> ()</td></tr>
+<tr class="memitem:ad70ae308f841161587a0407daaeea480"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken</a> ()</td></tr>
 <tr class="separator:ad70ae308f841161587a0407daaeea480"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9ab5989b9d977a44aedbb534128fe61"><td class="memItemLeft" align="right" valign="top"><a id="ae9ab5989b9d977a44aedbb534128fe61"></a>
-Token&#160;</td><td class="memItemRight" valign="bottom"><b>currentToken</b> () const noexcept</td></tr>
+<tr class="memitem:ae9ab5989b9d977a44aedbb534128fe61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#ae9ab5989b9d977a44aedbb534128fe61">currentToken</a> () const noexcept</td></tr>
 <tr class="separator:ae9ab5989b9d977a44aedbb534128fe61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a116c84590168fa755818692ddd35c118"><td class="memItemLeft" align="right" valign="top"><a id="a116c84590168fa755818692ddd35c118"></a>
-Operator&#160;</td><td class="memItemRight" valign="bottom"><b>currentOperator</b> () const noexcept</td></tr>
+<tr class="memitem:a116c84590168fa755818692ddd35c118"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a7215803e478cdd4bdf4f1b8087cae87b">Operator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a116c84590168fa755818692ddd35c118">currentOperator</a> () const noexcept</td></tr>
 <tr class="separator:a116c84590168fa755818692ddd35c118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d624e7197e96c22f3e09237db66e110"><td class="memItemLeft" align="right" valign="top"><a id="a1d624e7197e96c22f3e09237db66e110"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>currentNumber</b> () const noexcept</td></tr>
+<tr class="memitem:a1d624e7197e96c22f3e09237db66e110"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a1d624e7197e96c22f3e09237db66e110">currentNumber</a> () const noexcept</td></tr>
 <tr class="separator:a1d624e7197e96c22f3e09237db66e110"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a077ad7464e2aaad06ed316b95b3b807a"><td class="memItemLeft" align="right" valign="top"><a id="a077ad7464e2aaad06ed316b95b3b807a"></a>
-const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>currentIdentifier</b> () const noexcept</td></tr>
+<tr class="memitem:a077ad7464e2aaad06ed316b95b3b807a"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a077ad7464e2aaad06ed316b95b3b807a">currentIdentifier</a> () const noexcept</td></tr>
 <tr class="separator:a077ad7464e2aaad06ed316b95b3b807a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83aeb88258b6516d490b57910c2d9a65"><td class="memItemLeft" align="right" valign="top"><a id="a83aeb88258b6516d490b57910c2d9a65"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>currentPrecedence</b> ()</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a83aeb88258b6516d490b57910c2d9a65">currentPrecedence</a> ()</td></tr>
+<tr class="memdesc:a83aeb88258b6516d490b57910c2d9a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns precedence of current token. <br /></td></tr>
 <tr class="separator:a83aeb88258b6516d490b57910c2d9a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="memItemLeft" align="right" valign="top"><a id="a76b2a13a2faf7b71c07e5cde6b215d1c"></a>
-Token&#160;</td><td class="memItemRight" valign="bottom"><b>reportError</b> (const std::string &amp;msg)</td></tr>
+<tr class="memitem:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a76b2a13a2faf7b71c07e5cde6b215d1c">reportError</a> (const std::string &amp;msg)</td></tr>
+<tr class="memdesc:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints error to console (std::cerr).  <a href="#a76b2a13a2faf7b71c07e5cde6b215d1c">More...</a><br /></td></tr>
 <tr class="separator:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a932788929f0065c0da41929a4c9b46a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a932788929f0065c0da41929a4c9b46a1">skipNewLine</a> = false</td></tr>
+<tr class="memdesc:a932788929f0065c0da41929a4c9b46a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if lines should be ignored/skipped by nextToken.  <a href="#a932788929f0065c0da41929a4c9b46a1">More...</a><br /></td></tr>
+<tr class="separator:a932788929f0065c0da41929a4c9b46a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73b06355cc72a5dec463a68ea8b2cd7d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a73b06355cc72a5dec463a68ea8b2cd7d">skippedNewLinePrefix</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a73b06355cc72a5dec463a68ea8b2cd7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prefix to print if line was ignored/skipped by nextToken.  <a href="#a73b06355cc72a5dec463a68ea8b2cd7d">More...</a><br /></td></tr>
+<tr class="separator:a73b06355cc72a5dec463a68ea8b2cd7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a8ee0e39bac505ed42a26d7e31ff5729d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ee0e39bac505ed42a26d7e31ff5729d">&#9670;&nbsp;</a></span>currentChar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Lexer::currentChar </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns char returned by the latest <a class="el" href="classLexer.html#a8a614b69bb0eb2420c175afb6bf28285" title="Aquire next char.">nextChar()</a> call. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLexer.html#a8a614b69bb0eb2420c175afb6bf28285" title="Aquire next char.">nextChar</a> </dd></dl>
+
+</div>
+</div>
+<a id="a077ad7464e2aaad06ed316b95b3b807a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a077ad7464e2aaad06ed316b95b3b807a">&#9670;&nbsp;</a></span>currentIdentifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string&amp; Lexer::currentIdentifier </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns identifier, which was returned by the latest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> == tok_id call. </dd></dl>
+
+</div>
+</div>
+<a id="a1d624e7197e96c22f3e09237db66e110"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d624e7197e96c22f3e09237db66e110">&#9670;&nbsp;</a></span>currentNumber()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double Lexer::currentNumber </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns floating-point number, which was returned by the latest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> == tok_num call. </dd></dl>
+
+</div>
+</div>
+<a id="a116c84590168fa755818692ddd35c118"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a116c84590168fa755818692ddd35c118">&#9670;&nbsp;</a></span>currentOperator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="lexer_8hpp.html#a7215803e478cdd4bdf4f1b8087cae87b">Operator</a> Lexer::currentOperator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns operator, which was returned by the lastest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> == tok_op call. </dd></dl>
+
+</div>
+</div>
+<a id="ae9ab5989b9d977a44aedbb534128fe61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9ab5989b9d977a44aedbb534128fe61">&#9670;&nbsp;</a></span>currentToken()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a> Lexer::currentToken </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns token, which was returned by the latest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> call. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken</a> </dd></dl>
+
+</div>
+</div>
+<a id="a8a614b69bb0eb2420c175afb6bf28285"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a614b69bb0eb2420c175afb6bf28285">&#9670;&nbsp;</a></span>nextChar()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Lexer::nextChar </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Aquire next char. </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns next char.</dd></dl>
+<p>Gets next character in file-stream. Also generates a string for the current line, count current column and line. </p>
+
+</div>
+</div>
+<a id="ad70ae308f841161587a0407daaeea480"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad70ae308f841161587a0407daaeea480">&#9670;&nbsp;</a></span>nextToken()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a> Lexer::nextToken </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns next token. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04" title="Tokens for Tokenizer/Lexical Analysis.">Token</a>, <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken</a> </dd></dl>
+
+</div>
+</div>
+<a id="a76b2a13a2faf7b71c07e5cde6b215d1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76b2a13a2faf7b71c07e5cde6b215d1c">&#9670;&nbsp;</a></span>reportError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a> Lexer::reportError </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prints error to console (std::cerr). </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns tok_err. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a932788929f0065c0da41929a4c9b46a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a932788929f0065c0da41929a4c9b46a1">&#9670;&nbsp;</a></span>skipNewLine</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Lexer::skipNewLine = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>True if lines should be ignored/skipped by nextToken. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken</a> </dd></dl>
+
+</div>
+</div>
+<a id="a73b06355cc72a5dec463a68ea8b2cd7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b06355cc72a5dec463a68ea8b2cd7d">&#9670;&nbsp;</a></span>skippedNewLinePrefix</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string Lexer::skippedNewLinePrefix = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prefix to print if line was ignored/skipped by nextToken. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken</a>, <a class="el" href="classLexer.html#a932788929f0065c0da41929a4c9b46a1" title="True if lines should be ignored/skipped by nextToken.">skipNewLine</a> </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/func/<a class="el" href="lexer_8hpp_source.html">lexer.hpp</a></li>
 </ul>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['expr',['Expr',['../classExpr.html',1,'']]]
+  ['biopexpr',['BiOpExpr',['../classBiOpExpr.html',1,'']]]
 ];

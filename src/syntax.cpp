@@ -184,11 +184,12 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
 }
 
 Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
-  if (topLevel)
+  if (topLevel && lexer.currentToken() == tok_eol)
+    return nullptr;
+
   switch(lexer.currentToken()) {
     case tok_err:
     case tok_eof:
-    case tok_eol:
       return nullptr;
   }
 

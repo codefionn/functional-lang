@@ -2,7 +2,7 @@
 #define FUNC_SYNTAX_HPP
 
 /*!\file func/syntax.hpp
- * \brief A syntax parser
+ * \brief A syntax parser/Syntax analysis.
  */
 
 #include "func/global.hpp"
@@ -16,15 +16,14 @@ class IdExpr;
 class LambdaExpr;
 
 enum ExprType : int {
-  expr_biop,
-  expr_num,
-  expr_id,
-  expr_lambda,
-  expr_atom,
-  expr_if,
-  expr_any,
+  expr_biop, //!< Binary operator
+  expr_num, //!< Floating-point Number
+  expr_id,  //!< Identifier
+  expr_lambda, //!< Lambda function
+  expr_atom, //!< Atom
+  expr_if, //!< If-then-else
+  expr_any, //!< Any '_'
 };
-
 
 typedef std::map<std::string, Expr*> Environment;
 
@@ -36,23 +35,45 @@ public:
   Expr(GCMain &gc, ExprType type) : GCObj(gc), type{type} {}
   virtual ~Expr() {}
 
+  /*!\return Returns expression in functional-lang (the programming language to
+   * parse).
+   */
   virtual std::string toString() const noexcept { return std::string(); }
 
   ExprType getExpressionType() const noexcept { return type; }
 
+  /*!\brief Evaluates expression one time.
+   * \param gc
+   * \param env Environment for accessing variables.
+   * \return Returns itself if nothing evaluated, otherwise a new expression.
+   */
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept {
     return this;
   }
 
+  /*!\brief Replace all identifiers equal to name with expr.
+   * \param gc
+   * \param name Identifer name to replace.
+   * \param expr The expression to replaces identifiers.
+   * \return Returns new expression, where matching identifiers are replaced.
+   * Returns itself if not possible (expression can't contain any identifiers)
+   * or if expression is a lambda function, where the <id> is equal to name.
+   */
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept {
     return const_cast<Expr*>(this);
   }
 
+  /*!\brief Checks if this expression and expr have the same structure, Every
+   * expression has the same structure as '_' (it's called ANY after all).
+   * \param expr The expression to compare to this.
+   */
   virtual bool equals(const Expr *expr) const noexcept
     { return this == expr; }
 };
 
 
+/*!\brief Binary operator expression.
+ */
 class BiOpExpr : public Expr {
   Operator op;
   Expr *lhs, *rhs;
@@ -103,6 +124,8 @@ public:
   }
 };
 
+/*!\brief Floating point number expression.
+ */
 class NumExpr : public Expr {
   double num;
 public:
@@ -124,6 +147,8 @@ public:
   }
 };
 
+/*!\brief Identifier expression.
+ */
 class IdExpr : public Expr {
   std::string id;
 public:
@@ -147,6 +172,8 @@ public:
   }
 };
 
+/*!\brief Lambda function expression.
+ */
 class LambdaExpr : public Expr {
   std::string name;
   Expr* expr;
@@ -173,7 +200,7 @@ public:
     expr->mark(gc);
   }
 
-  /*\return Returns expression where getName is replcase by expr.
+  /*\return Returns expression where getName() is replaced by expr.
    * \param gc
    * \param expr
    */
@@ -190,7 +217,7 @@ public:
   }
 };
 
-/*!\brief '.' \<id\>
+/*!\brief Atom expression.
  */
 class AtomExpr : public Expr {
   std::string id;
@@ -212,7 +239,9 @@ public:
   }
 };
 
-/*!\brief if \<expr_condition\> then \<expr_true\> else \<expr_false\>
+/*!\brief If-then-else expression.
+ *
+ *     if \<expr_condition\> then \<expr_true\> else \<expr_false\>
  */
 class IfExpr : public Expr {
   Expr *condition, *exprTrue, *exprFalse;
@@ -222,10 +251,16 @@ public:
       condition{condition}, exprTrue{exprTrue}, exprFalse{exprFalse} {}
   virtual ~IfExpr() {}
 
+  /*!\brief Condition of the if-then-else expression.
+   * \return Returns abitrary expression (which SHOULD evaluate to .false or
+   * .true).
+   */
   const Expr& getCondition() const noexcept { return *condition; }
+
   //! Evaluated if condition evaluated not to the atom .false
   //! (but to an atom).
   const Expr& getTrue() const noexcept { return *exprTrue; }
+
   //! Evaluated if condition evaluated to the atom .true
   const Expr& getFalse() const noexcept { return *exprFalse; }
 
@@ -261,6 +296,10 @@ public:
   }
 };
 
+/*!\brief any expression
+ *
+ *     '_'
+ */
 class AnyExpr : public Expr {
 public:
   AnyExpr(GCMain &gc) : Expr(gc, expr_any) {}
@@ -272,13 +311,32 @@ public:
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);
+
+/*!\brief Parses primary expression(s). Also parses lambda function
+ * substitutions (so also expressions, not only one primary one).
+ * \param gc
+ * \param lexer
+ * \param env Environment to access variables.
+ * \return Returns nullptr on error, otherwise primary expression(s).
+ */
 Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env);
+
+/*!\return Returns nullptr on error, otherwise parsed tokens from
+ * lexer.nextToken().
+ *
+ * \param gc
+ * \param lexer
+ * \param env Environment to access variables.
+ * \param topLevel If top level, nullptr is returned if eol occured.
+ */
 Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel = true);
 
 /*!\brief Parse right-hand-side
+ * \param gc
  * \param lexer
  * \param lhs Already parsed Left-hand-side
  * \param prec current minimum precedence
+ * \return Returns nullptr on error, otherwise parsed RHS.
  */
 Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec);
 
