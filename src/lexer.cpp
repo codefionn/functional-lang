@@ -130,6 +130,26 @@ Token Lexer::nextToken() {
     return curtok = tok_id;
   }
 
+  if (curchar == '"') {
+    nextChar(); // eat "
+    // identifier
+    curid = "";
+    while (curchar != '"' && curchar != '\n' && curchar != EOF) {
+      curid += curchar;
+      nextChar(); // eat char
+    }
+
+    if (curchar != '"')
+      return curtok = reportError("Expected \", not newline or eof.");
+
+    nextChar(); // eat "
+
+    if (isdigit(curchar))
+      return curtok = reportError("Digits are not allowed after identifiers!");
+
+    return curtok = tok_id;
+  }
+
   if (curchar == '\n') {
     curchar = -2; // problem of interpreted languages.
                   // we want to reach eol token before next eol was typed
