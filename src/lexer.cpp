@@ -172,6 +172,8 @@ Token Lexer::reportError(const std::string &msg) {
     }
   }
   if (advancedline) line++;
+  curchar = -2; // last was new line
+
   // Print line and clear line
   std::cerr << lineStr << std::endl;
   lineStr = "";
