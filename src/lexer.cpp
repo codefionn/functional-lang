@@ -66,6 +66,9 @@ Token Lexer::nextToken() {
   case '\\': /* eat \ */
     nextChar();
     return curtok = tok_lambda;
+  case '.':
+    nextChar(); // eat .
+    return curtok = tok_atom;
   case '(':
     nextChar(); // eat (
     return curtok = tok_obrace;

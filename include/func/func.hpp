@@ -25,15 +25,18 @@
  *             | <expr> '/' <expr>
  *             | <expr> '^' <expr>
  *             | <expr> <expr>
+ *             | '\' <id> '=' <expr>
+ *             | '.' <id>
  *
- *  Precedence:
+ * Precedence:
  *
- *  - '=': 1
- *  - '+', '-': 2
- *  - '*', '/': 3
- *  - \<expr\> \<expr\>: 4
+ * - '=': 1
+ * - '+', '-': 2
+ * - '*', '/': 3
+ * - '^': 4
+ * - \<expr\> \<expr\>: 5
  *
- *  ## License
+ * ## License
  *
  * Copyright (c) 2019 Fionn Langhans
  * 

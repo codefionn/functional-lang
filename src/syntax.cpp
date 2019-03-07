@@ -11,7 +11,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
   while (lexer.currentToken() == tok_id
       || lexer.currentToken() == tok_num
       || lexer.currentToken() == tok_obrace
-      || lexer.currentToken() == tok_lambda) {
+      || lexer.currentToken() == tok_lambda
+      || lexer.currentToken() == tok_atom) {
     switch (lexer.currentToken()) {
       case tok_id: {
          IdExpr *idexpr = new IdExpr(gc, lexer.currentIdentifier());
@@ -77,6 +78,16 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
 
           break;
         } // end case tok_lambda
+      case tok_atom: {
+          lexer.nextToken(); // eat .
+          if (lexer.currentToken() != tok_id)
+            return reportSyntaxError(lexer, "Expected identifier!");
+
+          std::string idname = lexer.currentIdentifier();
+          lexer.nextToken(); // eat id
+
+          return new AtomExpr(gc, idname);
+        };
     }
   }
 
@@ -190,8 +201,7 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
                 return nullptr; // Error forwarding
 
               if (lhs->getExpressionType() != expr_lambda) {
-                std::cerr << "Invalid function call. Callee not a lambda function." << std::endl;
-                return nullptr;
+                return this; // Just return this (without substitution)
               }
 
               return ((LambdaExpr*)lhs)->replace(gc, rhs);

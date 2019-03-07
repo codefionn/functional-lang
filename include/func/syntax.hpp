@@ -20,6 +20,7 @@ enum ExprType : int {
   expr_num,
   expr_id,
   expr_lambda,
+  expr_atom,
 };
 
 /*!\brief Main expression handle (should only be used as parent class).
@@ -142,6 +143,21 @@ public:
    */
   Expr *replace(GCMain &gc, Expr *expr) const noexcept;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+};
+
+/*!\brief '.' \<id\>
+ */
+class AtomExpr : public Expr {
+  std::string id;
+public:
+  AtomExpr(GCMain &gc, const std::string &id) : Expr(gc, expr_atom), id(id) {}
+  virtual ~AtomExpr() {}
+
+  const std::string &getName() const noexcept { return id; }
+
+  virtual std::string toString() const noexcept override {
+    return "." + id;
+  }
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);

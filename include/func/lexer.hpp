@@ -14,6 +14,7 @@ enum Token : int {
   tok_obrace, //!< (
   tok_cbrace, //!< )
   tok_lambda, /*!< \\ */
+  tok_atom, //!< .
 
   tok_err, //!< Error
 };
