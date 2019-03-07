@@ -11,17 +11,13 @@ Lexer::~Lexer() {
 int Lexer::nextChar() {
   curchar = input->get();
 
-  if (curchar == '\n') {
-    ++line;
-    column = 0;
-    lineStr = "";
-  } else if (curchar == ' ') {
+  if (curchar == ' ') {
     ++column;
     lineStr += ' ';
   } else if (curchar == '\t') {
     column += 4;
     lineStr += "    ";
-  } else {
+  } else if (curchar != '\n') {
     lineStr += (char) curchar;
     ++column;
   }
@@ -34,8 +30,12 @@ int Lexer::currentChar() const noexcept {
 }
 
 Token Lexer::nextToken() {
-  if (curchar == -2)
+  if (curchar == -2) {
+    ++line;
+    column = 0;
+    lineStr = "";
     nextChar();
+  }
 
   // Skip spaces
   while (curchar == ' ' || curchar == '\r' || curchar == '\t') {
@@ -160,7 +160,8 @@ const std::string &Lexer::currentIdentifier() const noexcept {
 
 Token Lexer::reportError(const std::string &msg) {
   // Advance to next line
-  while (curchar != '\n' && curchar != EOF) {
+  bool advancedline = curchar != '\n' && curchar != -2;
+  while (curchar != -2 && curchar != '\n' && curchar != EOF) {
     curchar = input->get();
     if (curchar == ' ') {
       lineStr += ' ';
@@ -170,7 +171,7 @@ Token Lexer::reportError(const std::string &msg) {
       lineStr += (char) curchar;
     }
   }
-  line++;
+  if (advancedline) line++;
   // Print line and clear line
   std::cerr << lineStr << std::endl;
   lineStr = "";

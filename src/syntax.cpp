@@ -38,7 +38,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
           lexer.nextToken(); // eat (
           Expr *oldResult = result;
           result = parse(gc, lexer);
-          if (lexer.currentToken() != tok_cbrace) {
+          if (!result || lexer.currentToken() != tok_cbrace) {
             if (result) delete result; // delete result ?
 
             return reportSyntaxError(lexer, "Expected matching closing bracket )");
@@ -79,15 +79,26 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
 
           break;
         } // end case tok_lambda
-      default:
-        return reportSyntaxError(lexer, "Not a primary expression token!");
     }
   }
+
+  if (lexer.currentToken() == tok_err)
+    return nullptr;
+
+  if (!result)
+    return reportSyntaxError(lexer, "Not a primary expression token!");
 
   return result;
 }
 
 Expr *parse(GCMain &gc, Lexer &lexer) {
+  switch(lexer.currentToken()) {
+    case tok_err:
+    case tok_eof:
+    case tok_eol:
+      return nullptr;
+  }
+
   Expr *primaryExpr = parsePrimary(gc, lexer);
   if (!primaryExpr)
     return nullptr; // error forwarding
