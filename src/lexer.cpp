@@ -133,7 +133,7 @@ Token Lexer::nextToken() {
   if (curchar == '"') {
     nextChar(); // eat "
     // identifier
-    curid = "";
+    curid = "\"";
     while (curchar != '"' && curchar != '\n' && curchar != EOF) {
       curid += curchar;
       nextChar(); // eat char
@@ -147,7 +147,13 @@ Token Lexer::nextToken() {
     if (isdigit(curchar))
       return curtok = reportError("Digits are not allowed after identifiers!");
 
+    curid += "\"";
+
     return curtok = tok_id;
+  }
+
+  if (curchar == '#') { // Comment
+    while (curchar != '\n') nextChar();
   }
 
   if (curchar == '\n') {

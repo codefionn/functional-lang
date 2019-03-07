@@ -14,7 +14,7 @@
  *
  * Defining a primitive functional language and implementing an interpreter.
  *
- *     <program> := e | <expr> | <expr> <program>
+ *     <program> := e | <expr> | <expr> <newline> <program>
  *     <expr> := <id>
  *             | <num>
  *             | '(' <expr> ')'
