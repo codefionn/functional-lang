@@ -39,8 +39,6 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer) {
           Expr *oldResult = result;
           result = parse(gc, lexer);
           if (!result || lexer.currentToken() != tok_cbrace) {
-            if (result) delete result; // delete result ?
-
             return reportSyntaxError(lexer, "Expected matching closing bracket )");
           }
 
@@ -105,7 +103,6 @@ Expr *parse(GCMain &gc, Lexer &lexer) {
 
   switch(lexer.currentToken()) {
     case tok_err:
-      delete primaryExpr;
       return nullptr; // Error forwarding
     case tok_eol:
     case tok_eof:
@@ -128,7 +125,6 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Expr *lhs, int prec) {
 
     Expr *rhs = parsePrimary(gc, lexer);
     if (!rhs) {
-      delete lhs; // cleanup
       return nullptr; // Error forwarding
     }
 
