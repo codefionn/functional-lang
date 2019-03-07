@@ -25,7 +25,31 @@ enum ExprType : int {
   expr_any, //!< Any '_'
 };
 
-typedef std::map<std::string, Expr*> Environment;
+class Environment : public GCObj {
+  std::map<std::string, Expr*> variables;
+  Environment *parent;
+public:
+  Environment(GCMain &gc, Environment *parent = nullptr)
+    : GCObj(gc), parent{parent}, variables() {}
+  virtual ~Environment() {}
+
+  /*!\return Returns name if in environment, nullptr if not.
+   */
+  bool contains(const std::string &name) const noexcept;
+
+  /*!\return Returns associated expression (to name). nullptr if not found.
+   */
+  Expr *get(const std::string &name) const noexcept;
+
+  virtual void mark(GCMain &gc) noexcept override;
+
+  std::map<std::string, Expr*> &getVariables() noexcept
+    { return variables; }
+
+  /*!\return Returns parent of environment/scope. May be nullptr.
+   */
+  Environment *getParent() const noexcept { return parent; }
+};
 
 /*!\brief Main expression handle (should only be used as parent class).
  */
@@ -57,7 +81,7 @@ public:
    * \param expr The expression to replaces identifiers.
    * \return Returns new expression, where matching identifiers are replaced.
    * Returns itself if not possible (expression can't contain any identifiers)
-   * or if expression is a lambda function, where the <id> is equal to name.
+   * or if expression is a lambda function, where the \<id\> is equal to name.
    */
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept {
     return const_cast<Expr*>(this);

@@ -8,9 +8,10 @@ int main() {
 
   GCMain gc;
   Expr *expr = nullptr;
-  Environment env;
+  Environment env(gc);
   while (expr = parse(gc, lexer, env)) {
     std::cout << expr->toString() << std::endl;
+    env.mark(gc);
     gc.collect(); // We collect it all
 
     std::cout << "> ";

@@ -1,5 +1,37 @@
 #include "func/syntax.hpp"
 
+// Environment
+
+bool Environment::contains(const std::string &name) const noexcept {
+  if (variables.count(name) > 0)
+    return true;
+
+  return parent ? parent->contains(name) : false;
+}
+
+Expr *Environment::get(const std::string &name) const noexcept {
+  auto it = variables.find(name);
+  if (it != variables.end()) {
+    return it->second;
+  }
+
+  return parent ? parent->get(name) : nullptr;
+}
+
+void Environment::mark(GCMain &gc) noexcept {
+  if (isMarked(gc))
+    return;
+  
+  markSelf(gc);
+  for (std::pair<std::string, Expr*> var : variables) {
+    var.second->mark(gc);
+  }
+
+  if (parent) parent->mark(gc);
+}
+
+//
+
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg) {
   lexer.skipNewLine = false; // reset new line skip
   lexer.reportError(msg);
@@ -246,14 +278,17 @@ static std::string boolToAtom(bool b) {
 Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   switch (op) {
   case op_asg: {
-              std::string id = ((IdExpr*) lhs)->getName();
-              if (env.find(id) == env.end()) {
-                env.insert(std::pair<std::string, Expr*>(id, rhs));
-                return this;
-              }
+              if (lhs->getExpressionType() == expr_id) {
+                std::string id = ((IdExpr*) lhs)->getName();
+                Expr *expr = env.get(id);
+                if (!expr) {
+                  env.getVariables().insert(std::pair<std::string, Expr*>(id, rhs));
+                  return this;
+                }
 
-              std::cerr << "Variable " << id << " already exists." << std::endl;
-              return nullptr;
+                std::cerr << "Variable " << id << " already exists." << std::endl;
+                return nullptr;
+              }
             }
   case op_eq:
   case op_leq:
@@ -319,12 +354,13 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
-  if (env.find(getName()) == env.end()) {
+  Expr *val = env.get(getName());
+  if (!val) {
     std::cerr << "Invalid identifier " << getName() << "." << std::endl;
     return nullptr;
   }
 
-  return env[getName()];
+  return val;
 }
 
 Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {

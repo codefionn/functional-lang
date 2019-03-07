@@ -69,7 +69,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -87,6 +86,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html">Environment</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html">Expr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main expression handle (should only be used as parent class).  <a href="classExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,12 +113,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">any expression  <a href="classAnyExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:aa055ed7cafece83fe0bbadb7482cca9a"><td class="memItemLeft" align="right" valign="top"><a id="aa055ed7cafece83fe0bbadb7482cca9a"></a>
-typedef std::map&lt; std::string, <a class="el" href="classExpr.html">Expr</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b></td></tr>
-<tr class="separator:aa055ed7cafece83fe0bbadb7482cca9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> : int { <br />
@@ -138,15 +133,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a46ee867f065f7787a7751f9091d97352"><td class="memItemLeft" align="right" valign="top"><a id="a46ee867f065f7787a7751f9091d97352"></a>
 <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>reportSyntaxError</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, const std::string &amp;msg)</td></tr>
 <tr class="separator:a46ee867f065f7787a7751f9091d97352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a13b5a4a20d9f165d57f0d4236eca24f5">parsePrimary</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env)</td></tr>
+<tr class="memitem:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a13b5a4a20d9f165d57f0d4236eca24f5">parsePrimary</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> &amp;env)</td></tr>
 <tr class="memdesc:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses primary expression(s). Also parses lambda function substitutions (so also expressions, not only one primary one).  <a href="#a13b5a4a20d9f165d57f0d4236eca24f5">More...</a><br /></td></tr>
 <tr class="separator:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc172ebba0abe4f88382d10c41bedd93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#afc172ebba0abe4f88382d10c41bedd93">parse</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env, bool topLevel=true)</td></tr>
+<tr class="memitem:afc172ebba0abe4f88382d10c41bedd93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#afc172ebba0abe4f88382d10c41bedd93">parse</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> &amp;env, bool topLevel=true)</td></tr>
 <tr class="separator:afc172ebba0abe4f88382d10c41bedd93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43e566ebd5da770c0cd558a82573d3c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a43e566ebd5da770c0cd558a82573d3c5">parseRHS</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, Environment &amp;env, <a class="el" href="classExpr.html">Expr</a> *lhs, int prec)</td></tr>
+<tr class="memitem:a43e566ebd5da770c0cd558a82573d3c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a43e566ebd5da770c0cd558a82573d3c5">parseRHS</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> &amp;env, <a class="el" href="classExpr.html">Expr</a> *lhs, int prec)</td></tr>
 <tr class="memdesc:a43e566ebd5da770c0cd558a82573d3c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse right-hand-side.  <a href="#a43e566ebd5da770c0cd558a82573d3c5">More...</a><br /></td></tr>
 <tr class="separator:a43e566ebd5da770c0cd558a82573d3c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f9938cd76957bee48537f5ad2fada1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a0f9938cd76957bee48537f5ad2fada1f">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, Environment &amp;env, <a class="el" href="classExpr.html">Expr</a> *expr) noexcept</td></tr>
+<tr class="memitem:a0f9938cd76957bee48537f5ad2fada1f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a0f9938cd76957bee48537f5ad2fada1f">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env, <a class="el" href="classExpr.html">Expr</a> *expr) noexcept</td></tr>
 <tr class="memdesc:a0f9938cd76957bee48537f5ad2fada1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes eval function for given expr as long as different expr is returned.  <a href="#a0f9938cd76957bee48537f5ad2fada1f">More...</a><br /></td></tr>
 <tr class="separator:a0f9938cd76957bee48537f5ad2fada1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -202,7 +197,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
           <td class="paramname"><em>env</em>, </td>
         </tr>
         <tr>
@@ -228,7 +223,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
-    <tr><td class="paramname">env</td><td>Environment to use </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to use </td></tr>
     <tr><td class="paramname">expr</td><td>Expression to evaluate </td></tr>
   </table>
   </dd>
@@ -257,7 +252,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
           <td class="paramname"><em>env</em>, </td>
         </tr>
         <tr>
@@ -278,7 +273,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
     <tr><td class="paramname">lexer</td><td></td></tr>
-    <tr><td class="paramname">env</td><td>Environment to access variables. </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to access variables. </td></tr>
     <tr><td class="paramname">topLevel</td><td>If top level, nullptr is returned if eol occured. </td></tr>
   </table>
   </dd>
@@ -307,7 +302,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
           <td class="paramname"><em>env</em>&#160;</td>
         </tr>
         <tr>
@@ -323,7 +318,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
     <tr><td class="paramname">lexer</td><td></td></tr>
-    <tr><td class="paramname">env</td><td>Environment to access variables. </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to access variables. </td></tr>
   </table>
   </dd>
 </dl>
@@ -352,7 +347,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Environment &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
           <td class="paramname"><em>env</em>, </td>
         </tr>
         <tr>

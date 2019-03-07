@@ -8,7 +8,7 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
     lexer.skippedNewLinePrefix = "..";
 
   GCMain gc;
-  std::map<std::string, Expr*> env; // environment
+  Environment env(gc); // environment
   Expr *expr = nullptr;
   while (true) {
     if (interpret_mode)
@@ -44,10 +44,7 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
     if (lexer.currentToken() == tok_eof)
       break;
 
-    // mark some stuff
-    for (std::pair<std::string, Expr*> _pair : env) {
-      _pair.second->mark(gc);
-    }
+    env.mark(gc); // mark main scope/environemnt
 
     gc.collect(); // We collect it all (garbage)
   }
