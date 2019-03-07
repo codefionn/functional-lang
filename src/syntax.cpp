@@ -21,7 +21,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
       || lexer.currentToken() == tok_lambda
       || lexer.currentToken() == tok_atom
       || lexer.currentToken() == tok_if
-      || lexer.currentToken() == tok_literal) {
+      || lexer.currentToken() == tok_literal
+      || lexer.currentToken() == tok_any) {
     switch (lexer.currentToken()) {
       case tok_id: {
          IdExpr *idexpr = new IdExpr(gc, lexer.currentIdentifier());
@@ -54,13 +55,13 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
             return reportSyntaxError(lexer, "Expected matching closing bracket )");
           }
 
+          lexer.skipNewLine = false;
           lexer.nextToken(); // eat )
 
           if (oldResult) {
             result = new BiOpExpr(gc, op_fn, oldResult, result);
           }
 
-          lexer.skipNewLine = false;
           break;
         } // end case tok_obrace
       case tok_lambda: {
@@ -149,8 +150,27 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           Expr *expr = parse(gc, lexer, env, false);
           if (!expr) return nullptr;
 
-          return ::eval(gc, env, expr);
+          Expr *literal = ::eval(gc, env, expr);
+          if (!literal)
+            return nullptr; // error forwarding
+
+          if (!result)
+            result = literal;
+          else
+            result = new BiOpExpr(gc, op_fn, result, literal);
+
+          break;
         } // end case tok_literal
+      case tok_any: {
+           lexer.nextToken(); // eat _
+
+          if (!result)
+            return new AnyExpr(gc);
+          else
+            return new BiOpExpr(gc, op_fn, result, new AnyExpr(gc));
+
+          break;
+        } // end case tok_any
     }
   }
 
@@ -249,6 +269,9 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
               Expr *newrhs = ::eval(gc, env, rhs);
               if (!newrhs) return nullptr; // error forwarding
 
+              if (op == op_eq)
+                return new AtomExpr(gc, boolToAtom(newlhs->equals(newrhs)));
+
               if (newlhs->getExpressionType() == expr_num
                   && newrhs-> getExpressionType() == expr_num) {
                 double num0 = ((NumExpr*) newlhs)->getNumber();
@@ -259,23 +282,12 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
                 case op_mul: num0 *= num1; break;
                 case op_div: num0 /= num1; break;
                 case op_pow: num0 = pow(num0, num1); break;
-                case op_eq: return new AtomExpr(gc, boolToAtom(num0 == num1));
                 case op_leq: return new AtomExpr(gc, boolToAtom(num0 <= num1));
                 case op_geq: return new AtomExpr(gc, boolToAtom(num0 >= num1));
                 case op_le: return new AtomExpr(gc, boolToAtom(num0 < num1));
                 case op_gt: return new AtomExpr(gc, boolToAtom(num0 > num1));
                 }
                 return new NumExpr(gc, num0);
-              }
-
-              if (newlhs->getExpressionType() == expr_atom
-                  && newrhs->getExpressionType() == expr_atom) {
-                const std::string &atom0 = ((AtomExpr*) newlhs)->getName();
-                const std::string &atom1 = ((AtomExpr*) newrhs)->getName();
-                switch(op) {
-                case op_eq:
-                  return new AtomExpr(gc, boolToAtom(atom0 == atom1));
-                }
               }
 
               if (newlhs == lhs && newrhs == rhs)

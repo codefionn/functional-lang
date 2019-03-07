@@ -116,6 +116,9 @@ Token Lexer::nextToken() {
   case '$':
     nextChar(); // eat $
     return curtok = tok_literal;
+  case '_':
+    nextChar(); // eat _
+    return curtok = tok_any;
   }
 
   if (isdigit(curchar)) {

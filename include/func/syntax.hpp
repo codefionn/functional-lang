@@ -22,6 +22,7 @@ enum ExprType : int {
   expr_lambda,
   expr_atom,
   expr_if,
+  expr_any,
 };
 
 
@@ -44,6 +45,9 @@ public:
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept {
     return const_cast<Expr*>(this);
   }
+
+  virtual bool equals(const Expr *expr) const noexcept
+    { return this == expr; }
 };
 
 typedef std::map<std::string, Expr*> Environment;
@@ -84,6 +88,18 @@ public:
 
   virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != expr_num) return false;
+
+    const BiOpExpr *biOpExpr = dynamic_cast<const BiOpExpr*>(expr);
+    if (biOpExpr->getOperator() != this->getOperator()) return false;
+    if (!biOpExpr->getRHS().equals(&this->getRHS())) return false;
+    if (!biOpExpr->getLHS().equals(&this->getLHS())) return false;
+
+    return true;
+  }
 };
 
 class NumExpr : public Expr {
@@ -97,6 +113,13 @@ public:
 
   virtual std::string toString() const noexcept override {
     return std::to_string(num);
+  }
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != getExpressionType()) return false;
+
+    return dynamic_cast<const NumExpr*>(expr)->getNumber() == getNumber();
   }
 };
 
@@ -114,6 +137,13 @@ public:
 
   virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != getExpressionType()) return false;
+
+    return dynamic_cast<const IdExpr*>(expr)->getName() == getName();
+  }
 };
 
 class LambdaExpr : public Expr {
@@ -148,6 +178,15 @@ public:
    */
   Expr *replace(GCMain &gc, Expr *expr) const noexcept;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != getExpressionType()) return false;
+
+    const LambdaExpr *lambdaExpr = dynamic_cast<const LambdaExpr*>(expr);
+    return lambdaExpr->getName() == getName()
+      && lambdaExpr->getExpression().equals(&getExpression());
+  }
 };
 
 /*!\brief '.' \<id\>
@@ -162,6 +201,13 @@ public:
 
   virtual std::string toString() const noexcept override {
     return "." + id;
+  }
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != getExpressionType()) return false;
+
+    return dynamic_cast<const AtomExpr*>(expr)->getName() == getName();
   }
 };
 
@@ -200,6 +246,28 @@ public:
 
   virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != getExpressionType()) return false;
+
+    const IfExpr *ifExpr = dynamic_cast<const IfExpr*>(expr);
+    if (!ifExpr->getCondition().equals(&getCondition())) return false;
+    if (!ifExpr->getTrue().equals(&getTrue())) return false;
+    if (!ifExpr->getFalse().equals(&getFalse())) return false;
+
+    return true;
+  }
+};
+
+class AnyExpr : public Expr {
+public:
+  AnyExpr(GCMain &gc) : Expr(gc, expr_any) {}
+  virtual ~AnyExpr() {}
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    return true;
+  }
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);

@@ -21,6 +21,8 @@ enum Token : int {
   tok_then,
   tok_else,
 
+  tok_any,
+
   tok_err, //!< Error
 };
 
