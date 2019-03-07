@@ -21,6 +21,7 @@ enum ExprType : int {
   expr_id,
   expr_lambda,
   expr_atom,
+  expr_if,
 };
 
 /*!\brief Main expression handle (should only be used as parent class).
@@ -45,17 +46,17 @@ public:
 };
 
 class BiOpExpr : public Expr {
-  char op;
+  Operator op;
   Expr *lhs, *rhs;
 public:
-  BiOpExpr(GCMain &gc, char op, Expr *lhs,
+  BiOpExpr(GCMain &gc, Operator op, Expr *lhs,
                     Expr *rhs)
     : Expr(gc, expr_biop),
-      op{op}, lhs{lhs}, rhs{rhs} {}
+      op(op), lhs{lhs}, rhs{rhs} {}
   virtual ~BiOpExpr() {}
 
   //!\return Returns operator.
-  char getOperator() const noexcept { return op; }
+  Operator getOperator() const noexcept { return op; }
 
   //!\return Returns right-hand-side
   const Expr& getRHS() const noexcept { return *rhs; }
@@ -64,7 +65,8 @@ public:
   const Expr& getLHS() const noexcept { return *lhs; }
 
   virtual std::string toString() const noexcept override {
-    return "(" + lhs->toString() + " " + op + " " + rhs->toString() + ")";
+    return "(" + lhs->toString()
+      + " " + std::to_string(op) + " " + rhs->toString() + ")";
   }
 
   //!\brief Mark self, rhs and lhs.
@@ -158,6 +160,43 @@ public:
   virtual std::string toString() const noexcept override {
     return "." + id;
   }
+};
+
+/*!\brief if \<expr_condition\> then \<expr_true\> else \<expr_false\>
+ */
+class IfExpr : public Expr {
+  Expr *condition, *exprTrue, *exprFalse;
+public:
+  IfExpr(GCMain &gc, Expr *condition, Expr *exprTrue, Expr *exprFalse)
+    : Expr(gc, expr_if),
+      condition{condition}, exprTrue{exprTrue}, exprFalse{exprFalse} {}
+  virtual ~IfExpr() {}
+
+  const Expr& getCondition() const noexcept { return *condition; }
+  //! Evaluated if condition evaluated not to the atom .false
+  //! (but to an atom).
+  const Expr& getTrue() const noexcept { return *exprTrue; }
+  //! Evaluated if condition evaluated to the atom .true
+  const Expr& getFalse() const noexcept { return *exprFalse; }
+
+  virtual std::string toString() const noexcept override {
+    return "if " + condition->toString() + " then "
+      + exprTrue->toString() + " else " + exprFalse->toString();
+  }
+
+  //!\brief Mark self, condition, exprTrue and exprFalse.
+  virtual void mark(GCMain &gc) noexcept override {
+    if (isMarked(gc))
+      return;
+
+    markSelf(gc);
+    condition->mark(gc);
+    exprTrue->mark(gc);
+    exprFalse->mark(gc);
+  }
+
+  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);

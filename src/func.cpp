@@ -27,7 +27,7 @@ bool interpret(std::istream &input, const std::string &prefix) noexcept {
 
     // Should not print if top assignment
     bool shouldPrint = expr->getExpressionType() != expr_biop
-      || ((BiOpExpr*) expr)->getOperator() != '=';
+      || ((BiOpExpr*) expr)->getOperator() != op_asg;
 
     // Evaluate as long as expression is different from the evaluated one
     expr = eval(gc, env, expr);

@@ -16,16 +16,33 @@ enum Token : int {
   tok_lambda, /*!< \\ */
   tok_atom, //!< .
 
+  tok_if,
+  tok_then,
+  tok_else,
+
   tok_err, //!< Error
 };
 
-enum Operator : char {
-  op_add = '+', //!< +
-  op_sub = '-', //!< -
-  op_mul = '*', //!< *
-  op_div = '/', //!< /
-  op_pow = '^', //!< ^
-  op_asg = '=', //!< =
+enum Operator {
+  op_eq, //!< ==
+  op_leq, //!< \<=
+  op_geq, //!< \>=
+  op_le, //!< \<
+  op_gt, //!< \>
+
+  op_add, //!< +
+  op_sub, //!< -
+  op_mul, //!< *
+  op_div, //!< /
+  op_pow, //!< ^
+
+  op_asg, //!< =
+
+  op_fn, //!< Not a real operator (functional substition)
+};
+
+namespace std {
+  std::string to_string(Operator op) noexcept;
 };
 
 int getOperatorPrecedence(Operator op);

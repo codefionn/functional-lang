@@ -8,6 +8,17 @@ Lexer::~Lexer() {
 
 }
 
+static Token identifierToken(const std::string &id) {
+  if (id == "if")
+    return tok_if;
+  if (id == "then")
+    return tok_then;
+  if (id == "else")
+    return tok_else;
+
+  return tok_id;
+}
+
 int Lexer::nextChar() {
   curchar = input->get();
 
@@ -49,6 +60,9 @@ Token Lexer::nextToken() {
     return curtok = tok_op;
   case '-':
     nextChar(); // eat -
+    if (curchar == '-') // it's a comment
+      break;
+
     curop = op_sub;
     return curtok = tok_op;
   case '*':
@@ -61,7 +75,27 @@ Token Lexer::nextToken() {
     return curtok = tok_op;
   case '=':
     nextChar(); // eat =
-    curop = op_asg;
+    if (curchar == '=') {
+      curop = op_eq; 
+      nextChar(); // eat =
+    } else
+      curop = op_asg;
+    return curtok = tok_op;
+  case '<':
+    nextChar(); // eat <
+    if (curchar == '=') {
+      curop = op_leq;
+      nextChar(); // eat =
+    } else
+      curop = op_le;
+    return curtok = tok_op;
+  case '>':
+    nextChar(); // eat >
+    if (curchar == '=') {
+      curop = op_geq;
+      nextChar(); // eat =
+    } else
+      curop = op_gt;
     return curtok = tok_op;
   case '\\': /* eat \ */
     nextChar();
@@ -130,7 +164,7 @@ Token Lexer::nextToken() {
     if (isdigit(curchar))
       return curtok = reportError("Digits are not allowed directly after identifiers!");
 
-    return curtok = tok_id;
+    return curtok = identifierToken(curid);
   }
 
   if (curchar == '"') {
@@ -152,10 +186,10 @@ Token Lexer::nextToken() {
 
     curid += "\"";
 
-    return curtok = tok_id;
+    return curtok = identifierToken(curid);
   }
 
-  if (curchar == '#') { // Comment
+  if (curchar == '-') { // Comment
     while (curchar != '\n') nextChar();
   }
 
@@ -222,14 +256,20 @@ int getOperatorPrecedence(Operator op) {
   switch (op) {
   case op_asg:
       return 1;
+  case op_eq:
+  case op_leq:
+  case op_geq:
+  case op_le:
+  case op_gt:
+      return 2;
   case op_add:
   case op_sub:
-    return 2;
+    return 3;
   case op_mul:
   case op_div:
-    return 3;
-  case op_pow:
     return 4;
+  case op_pow:
+    return 5;
   }
 
   return 0;
@@ -242,4 +282,33 @@ int Lexer::currentPrecedence() {
   }
 
   return 0;
+}
+
+std::string std::to_string(Operator op) noexcept {
+  switch (op) {
+  case op_eq:
+    return "==";
+  case op_leq:
+    return "<=";
+  case op_geq:
+    return ">=";
+  case op_le:
+    return "<";
+  case op_gt:
+    return ">";
+  case op_add:
+    return "+";
+  case op_sub:
+    return "-";
+  case op_mul:
+    return "*";
+  case op_div:
+    return "/";
+  case op_pow:
+    return "^";
+  case op_asg:
+    return "=";
+  }
+
+  return ""; // invalid
 }

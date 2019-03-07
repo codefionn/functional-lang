@@ -4,17 +4,13 @@ An example functional language + interpreter.
 
 ## Examples
 
-```
-double = \ x = x * x
-double 4
+```haskell
+add = \x = \y = x + y
+addone = add 1
 
-multtwo = \ x = x * 2
-multtwo 4
+addone 4 -- == 5
 
-double (double 2)
-
-true = \t = \f = t
-false = \t = \f = f
+if .true then 1 else 0 -- == 1
 ```
 
 ## Build
