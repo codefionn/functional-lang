@@ -4,7 +4,6 @@
 #include "func/global.hpp"
 #include "func/lexer.hpp"
 #include "func/syntax.hpp"
-#include "func/parser.hpp"
 
 /*!\file func/func.hpp
  * \brief Main file of the project
@@ -62,9 +61,9 @@
 
 /*!\brief Interpret characters streamed from input.
  * \param input
- * \param prefix Prefix to print in front of every new input line.
+ * \param interpret_mode Prints some pretty helpers (line prefixes) if true.
  * \return Returns true on success, false if error occured.
  */
-bool interpret(std::istream &input, const std::string &prefix) noexcept;
+bool interpret(std::istream &input, bool interpret_mode = false) noexcept;
 
 #endif /* FUNC_FUNC_HPP */

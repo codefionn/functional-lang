@@ -1,12 +1,19 @@
 #include "func/syntax.hpp"
 
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg) {
+  lexer.skipNewLine = false; // reset new line skip
   lexer.reportError(msg);
   return nullptr;
 }
 
 Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
   Expr* result = nullptr;
+
+  while (lexer.currentToken() == tok_eol) {
+    if (!lexer.skippedNewLinePrefix.empty())
+      std::cout << lexer.skippedNewLinePrefix;
+    lexer.nextToken();
+  }
 
   while (lexer.currentToken() == tok_id
       || lexer.currentToken() == tok_num
@@ -38,9 +45,11 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } // end case tok_num
       case tok_obrace: {
+          lexer.skipNewLine = true;
           lexer.nextToken(); // eat (
+
           Expr *oldResult = result;
-          result = parse(gc, lexer, env);
+          result = parse(gc, lexer, env, false);
           if (!result || lexer.currentToken() != tok_cbrace) {
             return reportSyntaxError(lexer, "Expected matching closing bracket )");
           }
@@ -51,6 +60,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
             result = new BiOpExpr(gc, op_fn, oldResult, result);
           }
 
+          lexer.skipNewLine = false;
           break;
         } // end case tok_obrace
       case tok_lambda: {
@@ -67,7 +77,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
 
           lexer.nextToken(); // eat =
 
-          Expr *expr = parse(gc, lexer, env);
+          Expr *expr = parse(gc, lexer, env, false);
           if (!expr)
             return nullptr; // Error forwarding
 
@@ -97,25 +107,31 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } //end case tok_atom
       case tok_if: {
+          lexer.skipNewLine = true;
           lexer.nextToken(); // eat if
 
-          Expr *condition = parse(gc, lexer, env);
-          if (!condition)
+          Expr *condition = parse(gc, lexer, env,false);
+          if (!condition) {
+            lexer.skipNewLine = false;
             return nullptr;
+          }
 
           if (lexer.currentToken() != tok_then)
             return reportSyntaxError(lexer, "Expected keyword 'then'.");
           lexer.nextToken(); // eat then
 
-          Expr *exprTrue = parse(gc, lexer, env);
-          if (!exprTrue)
+          Expr *exprTrue = parse(gc, lexer, env, false);
+          if (!exprTrue) {
+            lexer.skipNewLine = false;
             return nullptr;
+          }
 
           if (lexer.currentToken() != tok_else)
             return reportSyntaxError(lexer, "Expected keyword 'else'.");
+          lexer.skipNewLine = false;
           lexer.nextToken(); // eat else
 
-          Expr *exprFalse = parse(gc, lexer, env);
+          Expr *exprFalse = parse(gc, lexer, env, false);
           if (!exprFalse)
             return nullptr;
 
@@ -130,7 +146,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
       case tok_literal: {
           lexer.nextToken(); // eat $
 
-          Expr *expr = parse(gc, lexer, env);
+          Expr *expr = parse(gc, lexer, env, false);
           if (!expr) return nullptr;
 
           return ::eval(gc, env, expr);
@@ -147,7 +163,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
   return result;
 }
 
-Expr *parse(GCMain &gc, Lexer &lexer, Environment &env) {
+Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
+  if (topLevel)
   switch(lexer.currentToken()) {
     case tok_err:
     case tok_eof:

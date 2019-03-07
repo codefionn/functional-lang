@@ -199,7 +199,14 @@ Token Lexer::nextToken() {
   if (curchar == '\n') {
     curchar = -2; // problem of interpreted languages.
                   // we want to reach eol token before next eol was typed
-    return curtok = tok_eol;
+    if (this->skipNewLine) {
+      if (!this->skippedNewLinePrefix.empty())
+        std::cout << this->skippedNewLinePrefix;
+
+      return this->nextToken();
+    }
+
+    return curtok = tok_eol; // don't skip, return line
   }
 
   if (curchar == EOF)

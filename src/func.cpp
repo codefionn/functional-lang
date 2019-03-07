@@ -1,15 +1,18 @@
 #include "func/func.hpp"
 
-bool interpret(std::istream &input, const std::string &prefix) noexcept {
+bool interpret(std::istream &input, bool interpret_mode) noexcept {
   bool error = false;
 
   Lexer lexer(input);
+  if (interpret_mode)
+    lexer.skippedNewLinePrefix = "..";
 
   GCMain gc;
   std::map<std::string, Expr*> env; // environment
   Expr *expr = nullptr;
   while (true) {
-    std::cout << prefix; // print prefix
+    if (interpret_mode)
+      std::cout << "> "; // print prefix
   	lexer.nextToken(); // aquire next token (if first loop, first token)
 	  expr = parse(gc, lexer, env);
 

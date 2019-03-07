@@ -10,8 +10,8 @@ int main(int vargsc, char * vargs[]) {
       return 1;
     }
 
-    return interpret(input, "") ? 0 : 1;
+    return interpret(input) ? 0 : 1;
   };
 
-  return interpret(std::cin, "> ") ? 0 : 1;
+  return interpret(std::cin, true) ? 0 : 1;
 }

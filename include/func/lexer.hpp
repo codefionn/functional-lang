@@ -79,6 +79,9 @@ public:
   int currentPrecedence();
 
   Token reportError(const std::string &msg);
+
+  bool skipNewLine = false;
+  std::string skippedNewLinePrefix = "";
 };
 
 #endif /* FUNC_LEXER_HPP */

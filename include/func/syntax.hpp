@@ -204,7 +204,7 @@ public:
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);
 Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env);
-Expr *parse(GCMain &gc, Lexer &lexer, Environment &env);
+Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel = true);
 
 /*!\brief Parse right-hand-side
  * \param lexer

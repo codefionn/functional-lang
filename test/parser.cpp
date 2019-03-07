@@ -4,6 +4,7 @@ int main() {
   std::cout << "> ";
   Lexer lexer(std::cin);
   lexer.nextToken();
+  lexer.skippedNewLinePrefix = "..";
 
   GCMain gc;
   Expr *expr = nullptr;
