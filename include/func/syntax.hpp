@@ -26,6 +26,8 @@ enum ExprType : int {
 };
 
 
+typedef std::map<std::string, Expr*> Environment;
+
 /*!\brief Main expression handle (should only be used as parent class).
  */
 class Expr : public GCObj {
@@ -38,7 +40,7 @@ public:
 
   ExprType getExpressionType() const noexcept { return type; }
 
-  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept {
     return this;
   }
 
@@ -50,7 +52,6 @@ public:
     { return this == expr; }
 };
 
-typedef std::map<std::string, Expr*> Environment;
 
 class BiOpExpr : public Expr {
   Operator op;
@@ -86,7 +87,7 @@ public:
     rhs->mark(gc);
   }
 
-  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr) const noexcept override {
@@ -135,7 +136,7 @@ public:
     return id;
   }
 
-  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr) const noexcept override {
@@ -244,7 +245,7 @@ public:
     exprFalse->mark(gc);
   }
 
-  virtual Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept override;
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr) const noexcept override {
@@ -287,6 +288,6 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec);
  * \param env Environment to use
  * \param expr Expression to evaluate
  */
-Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env, Expr *expr) noexcept;
+Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept;
 
 #endif /* FUNC_SYNTAX_HPP */

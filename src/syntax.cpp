@@ -242,7 +242,7 @@ static std::string boolToAtom(bool b) {
   return b ? "true" : "false";
 }
 
-Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   switch (op) {
   case op_asg: {
               std::string id = ((IdExpr*) lhs)->getName();
@@ -301,7 +301,12 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
                 return nullptr; // Error forwarding
 
               if (lhs->getExpressionType() != expr_lambda) {
-                return this; // Just return this (without substitution)
+                // Evaluate rhs
+                Expr *newrhs = ::eval(gc, env, rhs);
+                if (newrhs == rhs)
+                  return this;
+                else
+                  return new BiOpExpr(gc, op_fn, lhs, newrhs);
               }
 
               return ((LambdaExpr*)lhs)->replace(gc, rhs);
@@ -312,7 +317,7 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
   return nullptr;
 }
 
-Expr *IdExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
   if (env.find(getName()) == env.end()) {
     std::cerr << "Invalid identifier " << getName() << "." << std::endl;
     return nullptr;
@@ -321,7 +326,7 @@ Expr *IdExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
   return env[getName()];
 }
 
-Expr *IfExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
+Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
   Expr *resCondition = ::eval(gc, env, condition);
   if (!resCondition)
     return nullptr;
@@ -374,9 +379,11 @@ Expr *IfExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const 
 
 // evaluate
 
-Expr *eval(GCMain &gc, std::map<std::string, Expr*> &env, Expr *expr) noexcept {
+Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept {
   Expr *oldExpr = expr;
-  while (expr && (expr = expr->eval(gc, env)) != oldExpr) oldExpr = expr;
+  while (expr && (expr = expr->eval(gc, env)) != oldExpr) {
+    oldExpr = expr;
+  }
 
   return expr;
 }
