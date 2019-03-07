@@ -72,6 +72,10 @@ Token Lexer::nextToken() {
   case ')':
     nextChar(); // eat )
     return curtok = tok_cbrace;
+  case '^':
+    nextChar(); // eat ^
+    curop = op_pow;
+    return curtok = tok_op;
   }
 
   if (isdigit(curchar)) {
@@ -192,6 +196,8 @@ int getOperatorPrecedence(Operator op) {
   case op_mul:
   case op_div:
     return 3;
+  case op_pow:
+    return 4;
   }
 
   return 0;

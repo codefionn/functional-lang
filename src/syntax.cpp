@@ -151,7 +151,8 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
   case '+':
   case '-':
   case '*':
-  case '/': {
+  case '/':
+  case '^': {
               Expr *newlhs = ::eval(gc, env, lhs);
               if (!newlhs) return nullptr; // error forwarding
               Expr *newrhs = ::eval(gc, env, rhs);
@@ -166,6 +167,7 @@ Expr *BiOpExpr::eval(GCMain &gc, std::map<std::string, Expr*> &env) noexcept {
                 case '-': num0 -= num1; break;
                 case '*': num0 *= num1; break;
                 case '/': num0 /= num1; break;
+                case '^': num0 = pow(num0, num1); break;
                 }
                 return new NumExpr(gc, num0);
               }

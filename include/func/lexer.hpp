@@ -23,6 +23,7 @@ enum Operator : char {
   op_sub = '-', //!< -
   op_mul = '*', //!< *
   op_div = '/', //!< /
+  op_pow = '^', //!< ^
   op_asg = '=', //!< =
 };
 

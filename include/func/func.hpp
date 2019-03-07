@@ -23,6 +23,7 @@
  *             | <expr> '-' <expr>
  *             | <expr> '*' <expr>
  *             | <expr> '/' <expr>
+ *             | <expr> '^' <expr>
  *             | <expr> <expr>
  *
  *  Precedence:
