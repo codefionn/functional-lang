@@ -381,7 +381,7 @@ public:
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept;
 };
 
-Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);
+Expr *reportSyntaxError(Lexer &lexer, const std::string &msg);
 
 /*!\brief Parses primary expression(s). Also parses lambda function
  * substitutions (so also expressions, not only one primary one).
