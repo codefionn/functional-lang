@@ -88,9 +88,9 @@ Inheritance diagram for AtomExpr:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a46082c9e212d34119e3be97661b92056"><td class="memItemLeft" align="right" valign="top"><a id="a46082c9e212d34119e3be97661b92056"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AtomExpr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const std::string &amp;id)</td></tr>
-<tr class="separator:a46082c9e212d34119e3be97661b92056"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04628ae629e09a3a20a2c1bddb0c331a"><td class="memItemLeft" align="right" valign="top"><a id="a04628ae629e09a3a20a2c1bddb0c331a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AtomExpr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos, const std::string &amp;id)</td></tr>
+<tr class="separator:a04628ae629e09a3a20a2c1bddb0c331a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a684b13566e428b3b4be2c8221019483a"><td class="memItemLeft" align="right" valign="top"><a id="a684b13566e428b3b4be2c8221019483a"></a>
 const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const noexcept</td></tr>
 <tr class="separator:a684b13566e428b3b4be2c8221019483a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,11 +100,13 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memdesc:a08685763c5909ef5f018d7747a61c509"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="#a08685763c5909ef5f018d7747a61c509">More...</a><br /></td></tr>
 <tr class="separator:a08685763c5909ef5f018d7747a61c509"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classExpr"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classExpr')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classExpr.html">Expr</a></td></tr>
-<tr class="memitem:a36be325744f356a29ff92761ca8f2b7d inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a36be325744f356a29ff92761ca8f2b7d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type)</td></tr>
-<tr class="separator:a36be325744f356a29ff92761ca8f2b7d inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="ab6fd9b3b8cb3c300356666794dedb9ed"></a>
-<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getExpressionType</b> () const noexcept</td></tr>
+<tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
+<tr class="separator:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a120d6424e516aa6f8f15caf470bc50b2"></a>
+const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenPos</b> () const noexcept</td></tr>
+<tr class="separator:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">getExpressionType</a> () const noexcept</td></tr>
 <tr class="separator:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a690c0bb8c75125258cc6f79ed779b3a7 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
 <tr class="memdesc:a690c0bb8c75125258cc6f79ed779b3a7 inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates expression one time.  <a href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">More...</a><br /></td></tr>
@@ -112,6 +114,8 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memitem:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">replace</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const std::string &amp;name, <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept</td></tr>
 <tr class="memdesc:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace all identifiers equal to name with expr.  <a href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">More...</a><br /></td></tr>
 <tr class="separator:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3">getIdentifiers</a> () const noexcept</td></tr>
+<tr class="separator:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7">GCObj</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>

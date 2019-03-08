@@ -17,8 +17,11 @@ add ($ 2 * 2) -- == add 4, because immediate evaluation
 
 if .true then 1 else 0 -- == 1
 
-fib = \x = if x == 0 then 0 else
-  if x == 1 then 1 else fib (x - 1) + fib (x - 2)
+fib = \x = if x == 0
+           then 0
+           else if x == 1
+                then 1
+                else fib (x - 1) + fib (x - 2)
 
 hello = hello
 hello -- == hello, because at evaluation, it's value doesn't change
@@ -36,7 +39,7 @@ let x = 1 in x -- == 1, because variable shadowing
 -- use some pattern matching
 sub = \x = if x == .zero
            then .zero
-		   else let .succ x = x in x
+           else let .succ x = x in x
 sub (.succ (.succ .zero)) -- == .succ .zero
 ```
 

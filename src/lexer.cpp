@@ -26,17 +26,25 @@ static Token identifierToken(const std::string &id) {
 int Lexer::nextChar() {
   curchar = input->get();
 
-  if (curchar == ' ') {
+  if (curchar == '\n' || curchar == EOF) {
+    ++line;
+    column = 0;
+    lines.push_back(lineStr);
+    lineStr = "";
+  } else if (curchar == ' ') {
     ++column;
+    ++token_end;
     lineStr += ' ';
   } else if (curchar == '\t') {
     column += 4;
+    token_end += 4;
     lineStr += "    ";
-  } else if (curchar != '\n') {
+  } else {
     lineStr += (char) curchar;
     ++column;
+    ++token_end;
   }
-
+  
   return curchar;
 }
 
@@ -46,9 +54,8 @@ int Lexer::currentChar() const noexcept {
 
 Token Lexer::nextToken() {
   if (curchar == -2) {
-    ++line;
-    column = 0;
-    lineStr = "";
+    token_end = 0;
+    token_start = 0;
     nextChar();
   }
 
@@ -56,6 +63,8 @@ Token Lexer::nextToken() {
   while (curchar == ' ' || curchar == '\r' || curchar == '\t') {
     nextChar();
   }
+
+  token_start = column;
 
   switch (curchar) {
   case '+':
@@ -241,35 +250,56 @@ const std::string &Lexer::currentIdentifier() const noexcept {
   return curid;
 }
 
-Token Lexer::reportError(const std::string &msg) {
+Token Lexer::reportError(const std::string &msg) noexcept {
+  return reportError(msg, TokenPos(getTokenStartPos(), getTokenEndPos(),
+        currentLine(), currentLine()));
+}
+
+Token Lexer::reportError(const std::string &msg, const TokenPos &pos) noexcept {
   // Advance to next line
-  bool advancedline = curchar != '\n' && curchar != -2;
-  while (curchar != -2 && curchar != '\n' && curchar != EOF) {
-    curchar = input->get();
-    if (curchar == ' ') {
-      lineStr += ' ';
-    } else if (curchar == '\t') {
-      lineStr += "    ";
-    } else if (curchar != '\n' && curchar != EOF) {
-      lineStr += (char) curchar;
-    }
-  }
-  if (advancedline) line++;
-  curchar = -2; // last was new line
+  while (curchar != -2 && curchar != '\n' && curchar != EOF) nextChar();
+  if (curchar != EOF) curchar = -2; // last was new line
+
+  if (curtok == tok_eof || curchar == EOF)
+    std::cerr << std::endl;
 
   // Print line and clear line
-  std::cerr << lineStr << std::endl;
-  lineStr = "";
+  for (size_t i = pos.getLineStart(); i <= pos.getLineEnd()
+      && i < lines.size(); ++i) {
+    std::cout << lines[i] << std::endl;
+  }
+
+  size_t start, end;
+  if (pos.getStart() <= pos.getEnd()) {
+    start = pos.getStart();
+    end = pos.getEnd();
+  } else {
+    start = pos.getEnd();
+    end = pos.getStart();
+  }
+
   // Mark position
-  for (size_t i = 0; i < column - 1 && column != 0; ++i) {
-    std::cerr << ' ';
+  for (size_t i = 0; i < end && end != 0; ++i) {
+    if (i < start)
+      std::cerr << ' ';
+    else
+      std::cerr << '~';
   }
   std::cerr << '^' << std::endl;
+
   // Print error message
-  std::cerr << line << ':' << column << ": " << msg << std::endl;
+  if (!msg.empty())
+    std::cerr << pos.getLineStart() + 1 << ':' << pos.getStart() + 1 << ": " << msg << std::endl;
   column = 0; // Reset column
 
+  if (!msg.empty() && curtok == tok_eof)
+    std::cerr << pos.getLineStart() + 1 << ':' << pos.getStart() + 1 << ": Unexpected end of file." << std::endl;
+
   return tok_err;
+}
+
+Token Lexer::reportError(const std::string &msg, size_t start, size_t end) noexcept {
+  return reportError(msg, TokenPos(start, end, currentLine(), currentLine()));
 }
 
 int getOperatorPrecedence(Operator op) {

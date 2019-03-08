@@ -61,9 +61,9 @@ const AtomExpr *BiOpExpr::getAtomConstructor() const noexcept {
 
 // Expressions
 
-Expr *reportSyntaxError(Lexer &lexer, const std::string &msg) {
+Expr *reportSyntaxError(Lexer &lexer, const std::string &msg, const TokenPos &pos) {
   lexer.skipNewLine = false; // reset new line skip
-  lexer.reportError(msg);
+  lexer.reportError(msg, pos);
   return nullptr;
 }
 
@@ -105,7 +105,7 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec) 
         && lhs->getExpressionType() != expr_id
         && (lhs->getExpressionType() == expr_biop
           && !dynamic_cast<BiOpExpr*>(lhs)->isAtomConstructor()))
-      return reportSyntaxError(lexer, "<id> '=' <expr> expected!");
+      return reportSyntaxError(lexer, "<id> '=' <expr> expected!", lhs->getTokenPos());
 
     Expr *rhs = parsePrimary(gc, lexer, env);
     if (!rhs) {
@@ -142,8 +142,8 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
       return thisExpr;
     }
 
-    std::cerr << "Variable " << id << " already exists." << std::endl;
-    return nullptr;
+    return reportSyntaxError(env.lexer, "Variable " + id + " already exists.",
+        lhs->getTokenPos());
   }
 
   if (lhs->getExpressionType() == expr_any)
@@ -157,8 +157,9 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     if (!newrhs) return nullptr;
     if (newrhs->getExpressionType() != expr_biop
         || dynamic_cast<BiOpExpr*>(newrhs)->getOperator() != op_fn) {
-      std::cout << "RHS must be substitution!" << std::endl;
-      return nullptr;
+      return reportSyntaxError(env.lexer,
+          "RHS must be a substitution expression!",
+          newrhs->getTokenPos());
     }
 
     const BiOpExpr *bioplhs = dynamic_cast<const BiOpExpr*>(lhs);
@@ -183,22 +184,26 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
     // exprlhs and exprrhs have to be expr_atom
     if (exprlhs->getExpressionType() != expr_atom) {
-      std::cerr << "Most left expression of LHS must be an atom." << std::endl;
-      return nullptr;
+      return reportSyntaxError(env.lexer,
+        "Most left expression of LHS must be an atom.",
+        exprlhs->getTokenPos());
     }
     if (exprrhs->getExpressionType() != expr_atom) {
-      std::cerr << "Most left expression of RHS must be an atom." << std::endl;
-      return nullptr;
+      return reportSyntaxError(env.lexer,
+        "Most left expression of RHS must be an atom.",
+        exprrhs->getTokenPos());
     }
 
     // Check if atoms are equal
     if (dynamic_cast<const AtomExpr*>(exprlhs)->getName()
         != dynamic_cast<const AtomExpr*>(exprrhs)->getName()) {
 
-      std::cerr << "Assignment of atom constructors requires same name. "
-        << dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
-        << " != " << dynamic_cast<const AtomExpr*>(exprrhs)->getName()
-        << "." << std::endl;
+      reportSyntaxError(env.lexer, "", exprlhs->getTokenPos());
+      return reportSyntaxError(env.lexer,
+          "Assignment of atom constructors requires same name. "
+        + dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
+        + " != " + dynamic_cast<const AtomExpr*>(exprrhs)->getName()
+        + ".", exprrhs->getTokenPos());
     }
 
     return thisExpr;
@@ -227,8 +232,11 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
               Expr *newrhs = ::eval(gc, env, rhs);
               if (!newrhs) return nullptr; // error forwarding
 
+              TokenPos mergedPos = TokenPos(newlhs->getTokenPos(), newrhs->getTokenPos());
+
               if (op == op_eq)
-                return new AtomExpr(gc, boolToAtom(newlhs->equals(newrhs)));
+                return new AtomExpr(gc, mergedPos,
+                    boolToAtom(newlhs->equals(newrhs)));
 
               if (newlhs->getExpressionType() == expr_num
                   && newrhs-> getExpressionType() == expr_num) {
@@ -240,12 +248,12 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 case op_mul: num0 *= num1; break;
                 case op_div: num0 /= num1; break;
                 case op_pow: num0 = pow(num0, num1); break;
-                case op_leq: return new AtomExpr(gc, boolToAtom(num0 <= num1));
-                case op_geq: return new AtomExpr(gc, boolToAtom(num0 >= num1));
-                case op_le: return new AtomExpr(gc, boolToAtom(num0 < num1));
-                case op_gt: return new AtomExpr(gc, boolToAtom(num0 > num1));
+                case op_leq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 <= num1));
+                case op_geq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 >= num1));
+                case op_le: return new AtomExpr(gc, mergedPos, boolToAtom(num0 < num1));
+                case op_gt: return new AtomExpr(gc, mergedPos, boolToAtom(num0 > num1));
                 }
-                return new NumExpr(gc, num0);
+                return new NumExpr(gc, mergedPos, num0);
               }
 
               if (newlhs == lhs && newrhs == rhs)
@@ -278,8 +286,8 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
   const Expr *val = env.get(getName());
   if (!val) {
-    std::cerr << "Invalid identifier " << getName() << "." << std::endl;
-    return nullptr;
+    return reportSyntaxError(env.lexer, "Variable " + id + " doesn't exist.",
+      this->getTokenPos());
   }
 
   return const_cast<Expr*>(val);
@@ -291,8 +299,9 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
     return nullptr;
 
   if (resCondition->getExpressionType() != expr_atom) {
-    std::cerr << "Invalid if condition. Doesn't evaluate to atom." << std::endl;
-    return this;
+    return reportSyntaxError(env.lexer,
+        "Invalid if condition. Doesn't evaluate to atom.",
+        getTokenPos());
   }
 
   AtomExpr *cond = dynamic_cast<AtomExpr*>(resCondition);
@@ -305,10 +314,11 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
 
 Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
   // create new scope
-  Environment *scope = new Environment(gc, &env /* == parent */);
+  Environment *scope = new Environment(gc, env.lexer, &env /* == parent */);
   // iterate through assignments and eval them
   for (BiOpExpr *expr : assignments)
-    expr->eval(gc, *scope); // only one execution required (because asg)
+    if (!expr->eval(gc, *scope)) // only one execution required (because asg)
+      return nullptr;
 
   // Evaluate body with the new scope
   return ::eval(gc, *scope, body);
@@ -324,7 +334,7 @@ Expr *LambdaExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) co
   if (name == getName())
     return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
 
-  return new LambdaExpr(gc, getName(), expr->replace(gc, name, newexpr));
+  return new LambdaExpr(gc, getTokenPos(), getName(), expr->replace(gc, name, newexpr));
 }
 
 Expr *BiOpExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
@@ -341,7 +351,7 @@ Expr *IdExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const 
 }
 
 Expr *IfExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
-  return new IfExpr(gc,
+  return new IfExpr(gc, getTokenPos(),
       condition->replace(gc, name, newexpr),
       exprTrue->replace(gc, name, newexpr),
       exprFalse->replace(gc, name, newexpr));
@@ -372,12 +382,12 @@ Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const no
     if (newbody == body && !changedAsg)
       return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
 
-    return new LetExpr(gc,
+    return new LetExpr(gc, getTokenPos(),
         changedAsg ? newassignments : assignments, newbody);
   }
 
   if (changedAsg)
-    return new LetExpr(gc, newassignments, body);
+    return new LetExpr(gc, getTokenPos(), newassignments, body);
 
   return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
 }

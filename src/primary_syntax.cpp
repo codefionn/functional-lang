@@ -26,7 +26,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
   while (isPrimaryToken(lexer.currentToken())) {
     switch (lexer.currentToken()) {
       case tok_id: {
-         IdExpr *idexpr = new IdExpr(gc, lexer.currentIdentifier());
+         IdExpr *idexpr = new IdExpr(gc, lexer.getTokenPos(),
+             lexer.currentIdentifier());
           if (!result)
             result = idexpr;
           else {
@@ -37,7 +38,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } // end case tok_id
       case tok_num: {
-          NumExpr *numexpr = new NumExpr(gc, lexer.currentNumber());
+          NumExpr *numexpr = new NumExpr(gc, lexer.getTokenPos(),
+              lexer.currentNumber());
           if (!result)
             result = numexpr;
           else
@@ -53,7 +55,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           Expr *oldResult = result;
           result = parse(gc, lexer, env, false);
           if (!result || lexer.currentToken() != tok_cbrace) {
-            return reportSyntaxError(lexer, "Expected matching closing bracket )");
+            return reportSyntaxError(lexer, "Expected matching closing bracket )",
+                lexer.getTokenPos());
           }
 
           lexer.skipNewLine = false;
@@ -68,14 +71,16 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
       case tok_lambda: {
           lexer.nextToken(); /* eat \ */
           if (lexer.currentToken() != tok_id)
-            return reportSyntaxError(lexer, "Expected identifier");
+            return reportSyntaxError(lexer, "Expected identifier",
+                lexer.getTokenPos());
 
           std::string idname = lexer.currentIdentifier();
           lexer.nextToken(); // eat id
 
           if (lexer.currentToken() != tok_op
               && lexer.currentOperator() != op_asg)
-            return reportSyntaxError(lexer, "Expected assign operator '='!");
+            return reportSyntaxError(lexer, "Expected assign operator '='!",
+                lexer.getTokenPos());
 
           lexer.nextToken(); // eat =
 
@@ -83,7 +88,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           if (!expr)
             return nullptr; // Error forwarding
 
-          Expr *lambdaExpr = new LambdaExpr(gc, idname, expr);
+          Expr *lambdaExpr = new LambdaExpr(gc, lexer.getTokenPos(),
+              idname, expr);
 
           if (!result)
             result = lambdaExpr;
@@ -93,14 +99,17 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } // end case tok_lambda
       case tok_atom: {
+           TokenPos atompos = lexer.getTokenPos();
           lexer.nextToken(); // eat .
           if (lexer.currentToken() != tok_id)
-            return reportSyntaxError(lexer, "Expected identifier!");
+            return reportSyntaxError(lexer, "Expected identifier!",
+                lexer.getTokenPos());
+          atompos = TokenPos(atompos, lexer.getTokenPos());
 
           std::string idname = lexer.currentIdentifier();
           lexer.nextToken(); // eat id
 
-          Expr *atom = new AtomExpr(gc, idname);
+          Expr *atom = new AtomExpr(gc, atompos, idname);
           if (!result)
             result = atom;
           else
@@ -109,6 +118,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } //end case tok_atom
       case tok_if: {
+          TokenPos ifpos = lexer.getTokenPos();
           lexer.skipNewLine = true;
           lexer.nextToken(); // eat if
 
@@ -119,7 +129,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           }
 
           if (lexer.currentToken() != tok_then)
-            return reportSyntaxError(lexer, "Expected keyword 'then'.");
+            return reportSyntaxError(lexer, "Expected keyword 'then'.",
+                lexer.getTokenPos());
           lexer.nextToken(); // eat then
 
           Expr *exprTrue = parse(gc, lexer, env, false);
@@ -129,7 +140,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           }
 
           if (lexer.currentToken() != tok_else)
-            return reportSyntaxError(lexer, "Expected keyword 'else'.");
+            return reportSyntaxError(lexer, "Expected keyword 'else'.",
+                lexer.getTokenPos());
           lexer.skipNewLine = false;
           lexer.nextToken(); // eat else
 
@@ -137,7 +149,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           if (!exprFalse)
             return nullptr;
 
-          Expr *ifExpr = new IfExpr(gc, condition, exprTrue, exprFalse);
+          Expr *ifExpr = new IfExpr(gc, ifpos, condition, exprTrue, exprFalse);
           if (!result)
             result = ifExpr;
           else
@@ -163,16 +175,18 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           break;
         } // end case tok_literal
       case tok_any: {
+           TokenPos pos = lexer.getTokenPos();
            lexer.nextToken(); // eat _
 
           if (!result)
-            return new AnyExpr(gc);
+            return new AnyExpr(gc, pos);
           else
-            return new BiOpExpr(gc, op_fn, result, new AnyExpr(gc));
+            return new BiOpExpr(gc, op_fn, result, new AnyExpr(gc, pos));
 
           break;
         } // end case tok_any
       case tok_let: {
+          TokenPos letpos = lexer.getTokenPos();
           lexer.nextToken(); // eat let
 
           std::vector<BiOpExpr*> assignments;
@@ -188,21 +202,24 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
 
             if (asg->getExpressionType() != expr_biop
                 || dynamic_cast<BiOpExpr*>(asg)->getOperator() != op_asg)
-              return reportSyntaxError(lexer, "Assignment expected!");
+              return reportSyntaxError(lexer, "Assignment expected!",
+                  asg->getTokenPos());
 
             if (lexer.currentToken() != tok_in
                 && lexer.currentToken() != tok_delim
                 && lexer.currentToken() != tok_eol)
-              return reportSyntaxError(lexer, "Expected ';', 'in' or EOL.");
+              return reportSyntaxError(lexer, "Expected ';', 'in' or EOL.",
+                  lexer.getTokenPos());
 
             assignments.push_back(dynamic_cast<BiOpExpr*>(asg));
           }
 
           if (assignments.size() == 0)
-            return reportSyntaxError(lexer, "Assignment expected!");
+            return reportSyntaxError(lexer, "Assignment expected!", letpos);
 
           if (lexer.currentToken() != tok_in)
-            return reportSyntaxError(lexer, "Keyword 'in' expected! Not EOF.");
+            return reportSyntaxError(lexer, "Keyword 'in' expected! Not EOF.",
+                lexer.getTokenPos());
 
           lexer.nextToken(); // eat in
 
@@ -210,7 +227,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           if (!body)
             return nullptr;
 
-          Expr *letExpr = new LetExpr(gc, assignments, body);
+          Expr *letExpr = new LetExpr(gc, letpos, assignments, body);
           if (!result)
             result = letExpr;
           else
@@ -225,7 +242,8 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
     return nullptr;
 
   if (!result)
-    return reportSyntaxError(lexer, "Not a primary expression token!");
+    return reportSyntaxError(lexer, "Not a primary expression token!",
+        lexer.getTokenPos());
 
   return result;
 }

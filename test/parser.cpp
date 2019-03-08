@@ -8,7 +8,7 @@ int main() {
 
   GCMain gc;
   Expr *expr = nullptr;
-  Environment *env = new Environment(gc);
+  Environment *env = new Environment(gc, lexer);
   while (expr = parse(gc, lexer, *env)) {
     std::cout << expr->toString() << std::endl;
     env->mark(gc);

@@ -136,9 +136,12 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a46ee867f065f7787a7751f9091d97352"><td class="memItemLeft" align="right" valign="top"><a id="a46ee867f065f7787a7751f9091d97352"></a>
-<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>reportSyntaxError</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, const std::string &amp;msg)</td></tr>
-<tr class="separator:a46ee867f065f7787a7751f9091d97352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae45934d4b8e3b1d13780f5a3bc725291"><td class="memItemLeft" align="right" valign="top"><a id="ae45934d4b8e3b1d13780f5a3bc725291"></a>
+const <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>assignExpressions</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env, const <a class="el" href="classExpr.html">Expr</a> *thisExpr, const <a class="el" href="classExpr.html">Expr</a> *lhs, const <a class="el" href="classExpr.html">Expr</a> *rhs) noexcept</td></tr>
+<tr class="separator:ae45934d4b8e3b1d13780f5a3bc725291"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fad572c3cd4fe815513fdd6d6a94a4e"><td class="memItemLeft" align="right" valign="top"><a id="a5fad572c3cd4fe815513fdd6d6a94a4e"></a>
+<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>reportSyntaxError</b> (<a class="el" href="classLexer.html">Lexer</a> &amp;lexer, const std::string &amp;msg, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
+<tr class="separator:a5fad572c3cd4fe815513fdd6d6a94a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#a13b5a4a20d9f165d57f0d4236eca24f5">parsePrimary</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> &amp;env)</td></tr>
 <tr class="memdesc:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses primary expression(s). Also parses lambda function substitutions (so also expressions, not only one primary one).  <a href="#a13b5a4a20d9f165d57f0d4236eca24f5">More...</a><br /></td></tr>
 <tr class="separator:a13b5a4a20d9f165d57f0d4236eca24f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,7 +170,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Types of expressions. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classExpr.html" title="Main expression handle (should only be used as parent class).">Expr</a>, Expr::getExpressionType </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classExpr.html" title="Main expression handle (should only be used as parent class).">Expr</a>, <a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">Expr::getExpressionType</a> </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b"></a>expr_biop&#160;</td><td class="fielddoc"><p>Binary operator. </p>
 </td></tr>

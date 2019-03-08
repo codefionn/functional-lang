@@ -90,15 +90,36 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a116c84590168fa755818692ddd35c118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d624e7197e96c22f3e09237db66e110"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a1d624e7197e96c22f3e09237db66e110">currentNumber</a> () const noexcept</td></tr>
 <tr class="separator:a1d624e7197e96c22f3e09237db66e110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a720c2aabde5b98a09428c483ceaaec95"><td class="memItemLeft" align="right" valign="top"><a id="a720c2aabde5b98a09428c483ceaaec95"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>currentLine</b> () const noexcept</td></tr>
+<tr class="separator:a720c2aabde5b98a09428c483ceaaec95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfbda4af5b55416b08d5797003c945de"><td class="memItemLeft" align="right" valign="top"><a id="abfbda4af5b55416b08d5797003c945de"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenStartPos</b> () const noexcept</td></tr>
+<tr class="separator:abfbda4af5b55416b08d5797003c945de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a3242b1f2d95c14ee5e0f0b79c4e414"><td class="memItemLeft" align="right" valign="top"><a id="a2a3242b1f2d95c14ee5e0f0b79c4e414"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenEndPos</b> () const noexcept</td></tr>
+<tr class="separator:a2a3242b1f2d95c14ee5e0f0b79c4e414"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab588f41a1c803927f848f7b7bcc2c9ca"><td class="memItemLeft" align="right" valign="top"><a id="ab588f41a1c803927f848f7b7bcc2c9ca"></a>
+const std::vector&lt; std::string &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getLines</b> ()</td></tr>
+<tr class="separator:ab588f41a1c803927f848f7b7bcc2c9ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2adda31887ac8886e27f88f41a4ca2ae"><td class="memItemLeft" align="right" valign="top"><a id="a2adda31887ac8886e27f88f41a4ca2ae"></a>
+<a class="el" href="classTokenPos.html">TokenPos</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenPos</b> () const noexcept</td></tr>
+<tr class="separator:a2adda31887ac8886e27f88f41a4ca2ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a077ad7464e2aaad06ed316b95b3b807a"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a077ad7464e2aaad06ed316b95b3b807a">currentIdentifier</a> () const noexcept</td></tr>
 <tr class="separator:a077ad7464e2aaad06ed316b95b3b807a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83aeb88258b6516d490b57910c2d9a65"><td class="memItemLeft" align="right" valign="top"><a id="a83aeb88258b6516d490b57910c2d9a65"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a83aeb88258b6516d490b57910c2d9a65">currentPrecedence</a> ()</td></tr>
 <tr class="memdesc:a83aeb88258b6516d490b57910c2d9a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns precedence of current token. <br /></td></tr>
 <tr class="separator:a83aeb88258b6516d490b57910c2d9a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a76b2a13a2faf7b71c07e5cde6b215d1c">reportError</a> (const std::string &amp;msg)</td></tr>
-<tr class="memdesc:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints error to console (std::cerr).  <a href="#a76b2a13a2faf7b71c07e5cde6b215d1c">More...</a><br /></td></tr>
-<tr class="separator:a76b2a13a2faf7b71c07e5cde6b215d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3914e0e9177f1efe401b3d39f83668c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a3914e0e9177f1efe401b3d39f83668c1">reportError</a> (const std::string &amp;msg) noexcept</td></tr>
+<tr class="memdesc:a3914e0e9177f1efe401b3d39f83668c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints error to console (std::cerr).  <a href="#a3914e0e9177f1efe401b3d39f83668c1">More...</a><br /></td></tr>
+<tr class="separator:a3914e0e9177f1efe401b3d39f83668c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f21191ba4b4b85dd7b3bf6f147c983c"><td class="memItemLeft" align="right" valign="top"><a id="a0f21191ba4b4b85dd7b3bf6f147c983c"></a>
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><b>reportError</b> (const std::string &amp;msg, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos) noexcept</td></tr>
+<tr class="separator:a0f21191ba4b4b85dd7b3bf6f147c983c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4edd8d1fedfb788cea14a94a39a293e"><td class="memItemLeft" align="right" valign="top"><a id="af4edd8d1fedfb788cea14a94a39a293e"></a>
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><b>reportError</b> (const std::string &amp;msg, size_t start, size_t end) noexcept</td></tr>
+<tr class="separator:af4edd8d1fedfb788cea14a94a39a293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -282,11 +303,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a76b2a13a2faf7b71c07e5cde6b215d1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76b2a13a2faf7b71c07e5cde6b215d1c">&#9670;&nbsp;</a></span>reportError()</h2>
+<a id="a3914e0e9177f1efe401b3d39f83668c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3914e0e9177f1efe401b3d39f83668c1">&#9670;&nbsp;</a></span>reportError()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a> Lexer::reportError </td>
@@ -296,6 +320,11 @@ Public Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Prints error to console (std::cerr). </p>

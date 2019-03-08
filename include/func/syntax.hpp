@@ -39,8 +39,10 @@ class Environment : public GCObj {
   std::map<std::string, const Expr*> variables;
   Environment *parent;
 public:
-  Environment(GCMain &gc, Environment *parent = nullptr)
-    : GCObj(gc), parent{parent}, variables() {}
+  Lexer &lexer;
+
+  Environment(GCMain &gc, Lexer &lexer, Environment *parent = nullptr)
+    : GCObj(gc), lexer{lexer}, parent{parent}, variables() {}
   virtual ~Environment() {}
 
   /*!\return Returns name if in environment, nullptr if not.
@@ -65,9 +67,13 @@ public:
  */
 class Expr : public GCObj {
   ExprType type;
+  TokenPos pos;
 public:
-  Expr(GCMain &gc, ExprType type) : GCObj(gc), type{type} {}
+  Expr(GCMain &gc, ExprType type, const TokenPos &pos)
+    : GCObj(gc), type{type}, pos(pos) {}
   virtual ~Expr() {}
+
+  const TokenPos &getTokenPos() const noexcept { return pos; }
 
   /*!\return Returns expression in functional-lang (the programming language to
    * parse).
@@ -122,7 +128,7 @@ class BiOpExpr : public Expr {
 public:
   BiOpExpr(GCMain &gc, Operator op, Expr *lhs,
                     Expr *rhs)
-    : Expr(gc, expr_biop),
+    : Expr(gc, expr_biop, TokenPos(lhs->getTokenPos(), rhs->getTokenPos())),
       op(op), lhs{lhs}, rhs{rhs} {}
   virtual ~BiOpExpr() {}
 
@@ -194,8 +200,8 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 class NumExpr : public Expr {
   double num;
 public:
-  NumExpr(GCMain &gc, double num)
-    : Expr(gc, expr_num), num{num} {}
+  NumExpr(GCMain &gc, const TokenPos &pos, double num)
+    : Expr(gc, expr_num, pos), num{num} {}
   virtual ~NumExpr() {}
 
   double getNumber() const noexcept { return num; }
@@ -217,7 +223,8 @@ public:
 class IdExpr : public Expr {
   std::string id;
 public:
-  IdExpr(GCMain &gc, const std::string &id) : Expr(gc, expr_id), id(id) {}
+  IdExpr(GCMain &gc, const TokenPos &pos, const std::string &id)
+    : Expr(gc, expr_id, pos), id(id) {}
   virtual ~IdExpr() {}
 
   const std::string &getName() const noexcept { return id; }
@@ -249,9 +256,10 @@ class LambdaExpr : public Expr {
   std::string name;
   Expr* expr;
 public:
-  LambdaExpr(GCMain &gc, const std::string &name,
+  LambdaExpr(GCMain &gc, const TokenPos &pos, const std::string &name,
              Expr* expr)
-    : Expr(gc, expr_lambda), name(name), expr(std::move(expr)) {}
+    : Expr(gc, expr_lambda, TokenPos(pos, expr->getTokenPos())),
+      name(name), expr(std::move(expr)) {}
   virtual ~LambdaExpr() {}
 
   const std::string &getName() const noexcept { return name; }
@@ -299,7 +307,8 @@ public:
 class AtomExpr : public Expr {
   std::string id;
 public:
-  AtomExpr(GCMain &gc, const std::string &id) : Expr(gc, expr_atom), id(id) {}
+  AtomExpr(GCMain &gc, const TokenPos &pos, const std::string &id)
+    : Expr(gc, expr_atom, pos), id(id) {}
   virtual ~AtomExpr() {}
 
   const std::string &getName() const noexcept { return id; }
@@ -323,8 +332,8 @@ public:
 class IfExpr : public Expr {
   Expr *condition, *exprTrue, *exprFalse;
 public:
-  IfExpr(GCMain &gc, Expr *condition, Expr *exprTrue, Expr *exprFalse)
-    : Expr(gc, expr_if),
+  IfExpr(GCMain &gc, const TokenPos &pos, Expr *condition, Expr *exprTrue, Expr *exprFalse)
+    : Expr(gc, expr_if, TokenPos(pos, exprFalse->getTokenPos())),
       condition{condition}, exprTrue{exprTrue}, exprFalse{exprFalse} {}
   virtual ~IfExpr() {}
 
@@ -389,7 +398,7 @@ public:
  */
 class AnyExpr : public Expr {
 public:
-  AnyExpr(GCMain &gc) : Expr(gc, expr_any) {}
+  AnyExpr(GCMain &gc, const TokenPos &pos) : Expr(gc, expr_any, pos) {}
   virtual ~AnyExpr() {}
 
   virtual bool equals(const Expr *expr) const noexcept override {
@@ -408,8 +417,9 @@ public:
    * \param assignments All assignments of the let expression.
    * \param body Body of let expression
    */
-  LetExpr(GCMain &gc, const std::vector<BiOpExpr*> &assignments, Expr *body)
-    : Expr(gc, expr_let), assignments(assignments), body{body} {}
+  LetExpr(GCMain &gc, const TokenPos &pos, const std::vector<BiOpExpr*> &assignments, Expr *body)
+    : Expr(gc, expr_let, TokenPos(pos, body->getTokenPos())),
+      assignments(assignments), body{body} {}
   virtual ~LetExpr() {}
 
   /*!\return Returns assignments done between let ... in (separated by ';').
@@ -469,7 +479,8 @@ public:
   }
 };
 
-Expr *reportSyntaxError(Lexer &lexer, const std::string &msg);
+Expr *reportSyntaxError(Lexer &lexer, const std::string &msg,
+    const TokenPos &pos);
 
 /*!\brief Parses primary expression(s). Also parses lambda function
  * substitutions (so also expressions, not only one primary one).

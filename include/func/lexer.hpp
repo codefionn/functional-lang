@@ -59,6 +59,28 @@ enum Operator {
   op_fn, //!< Not a real operator (functional substition)
 };
 
+class TokenPos {
+  size_t start, end, lineStart, lineEnd;
+public:
+  TokenPos(size_t start, size_t end, size_t lineStart, size_t lineEnd)
+    : start{start}, end{end}, lineStart{lineStart}, lineEnd{lineEnd} {}
+  TokenPos(const TokenPos &pos0, const TokenPos &pos1)
+    : start{pos0.start < pos1.start ? pos0.start : pos1.start},
+      end{pos0.end > pos1.end ? pos0.end : pos1.end},
+      lineStart{pos0.lineStart < pos1.lineStart ? pos0.lineStart : pos1.lineStart},
+      lineEnd{pos0.lineEnd > pos1.lineEnd ? pos0.lineEnd : pos1.lineEnd} {}
+  virtual ~TokenPos() {}
+
+  size_t getStart() const noexcept { return start; }
+  size_t getEnd() const noexcept { return end; }
+  size_t getLineStart() const noexcept { return lineStart; }
+  size_t getLineEnd() const noexcept { return lineEnd; }
+
+  TokenPos min() const noexcept {
+    return TokenPos(start, end - 1, lineStart, lineEnd);
+  }
+};
+
 namespace std {
   std::string to_string(Operator op) noexcept;
 };
@@ -81,6 +103,9 @@ class Lexer {
   int curchar;
 
   std::istream *input;
+
+  size_t token_start, token_end;
+  std::vector<std::string> lines;
 public:
   Lexer(std::istream &input);
   virtual ~Lexer();
@@ -118,6 +143,26 @@ public:
    */
   double currentNumber() const noexcept;
 
+  size_t currentLine() const noexcept
+    { return curchar == -2 || curchar == '\n' || curchar == EOF || curtok == tok_eof ?
+        (line == 0 ? 0 : line - 1) : line; }
+  size_t getTokenStartPos() const noexcept
+    { return token_start == 0 ? 0 : 
+      token_start - 1; }
+  size_t getTokenEndPos() const noexcept {
+    size_t pos = token_end == 0 ? 0 : token_end - (isspace(curchar) ? 2 : 1);
+    if (pos < getTokenStartPos())
+      return getTokenStartPos();
+
+    return pos;
+  }
+  const std::vector<std::string> &getLines() { return lines; }
+
+  TokenPos getTokenPos() const noexcept {
+    return TokenPos(getTokenStartPos(), getTokenEndPos(),
+        currentLine(), currentLine());
+  }
+
   /*!\return Returns identifier, which was returned by the latest
    * nextToken() == tok_id call.
    */
@@ -130,7 +175,10 @@ public:
   /*!\brief Prints error to console (std::cerr).
    * \return Returns tok_err.
    */
-  Token reportError(const std::string &msg);
+  Token reportError(const std::string &msg) noexcept;
+
+  Token reportError(const std::string &msg, const TokenPos &pos) noexcept;
+  Token reportError(const std::string &msg, size_t start, size_t end) noexcept;
 
   /*!\brief True if lines should be ignored/skipped by nextToken.
    * \see nextToken

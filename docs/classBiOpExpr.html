@@ -112,12 +112,20 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a7583bdd8dd663170f56b41c4fa1ceb79"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBiOpExpr.html#a7583bdd8dd663170f56b41c4fa1ceb79">equals</a> (const <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept override</td></tr>
 <tr class="memdesc:a7583bdd8dd663170f56b41c4fa1ceb79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="#a7583bdd8dd663170f56b41c4fa1ceb79">More...</a><br /></td></tr>
 <tr class="separator:a7583bdd8dd663170f56b41c4fa1ceb79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae79e2f18572ae555561a2bf276b317fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBiOpExpr.html#ae79e2f18572ae555561a2bf276b317fa">isAtomConstructor</a> () const noexcept</td></tr>
+<tr class="separator:ae79e2f18572ae555561a2bf276b317fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad28f6707f6ca2255be07a87b4d01495d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classAtomExpr.html">AtomExpr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBiOpExpr.html#ad28f6707f6ca2255be07a87b4d01495d">getAtomConstructor</a> () const noexcept</td></tr>
+<tr class="separator:ad28f6707f6ca2255be07a87b4d01495d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab946290ab5bc93516610dffac93bf28d"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBiOpExpr.html#ab946290ab5bc93516610dffac93bf28d">getIdentifiers</a> () const noexcept override</td></tr>
+<tr class="separator:ab946290ab5bc93516610dffac93bf28d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classExpr"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classExpr')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classExpr.html">Expr</a></td></tr>
-<tr class="memitem:a36be325744f356a29ff92761ca8f2b7d inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a36be325744f356a29ff92761ca8f2b7d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type)</td></tr>
-<tr class="separator:a36be325744f356a29ff92761ca8f2b7d inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="ab6fd9b3b8cb3c300356666794dedb9ed"></a>
-<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getExpressionType</b> () const noexcept</td></tr>
+<tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
+<tr class="separator:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a120d6424e516aa6f8f15caf470bc50b2"></a>
+const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenPos</b> () const noexcept</td></tr>
+<tr class="separator:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">getExpressionType</a> () const noexcept</td></tr>
 <tr class="separator:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
@@ -222,6 +230,61 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 
 </div>
 </div>
+<a id="ad28f6707f6ca2255be07a87b4d01495d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad28f6707f6ca2255be07a87b4d01495d">&#9670;&nbsp;</a></span>getAtomConstructor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classAtomExpr.html">AtomExpr</a>* BiOpExpr::getAtomConstructor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>&lt;atom&gt; of atom constructor RHS don't have to be &lt;Id&gt; or '_'. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classBiOpExpr.html#ae79e2f18572ae555561a2bf276b317fa">isAtomConstructor</a> </dd></dl>
+
+</div>
+</div>
+<a id="ab946290ab5bc93516610dffac93bf28d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab946290ab5bc93516610dffac93bf28d">&#9670;&nbsp;</a></span>getIdentifiers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::vector&lt;std::string&gt; BiOpExpr::getIdentifiers </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns all identifiers used in expression. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3">Expr</a>.</p>
+
+</div>
+</div>
 <a id="afcf8823420a098db4bc864902e7515cb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afcf8823420a098db4bc864902e7515cb">&#9670;&nbsp;</a></span>getLHS()</h2>
 
@@ -297,6 +360,32 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Returns right-hand-side </dd></dl>
+
+</div>
+</div>
+<a id="ae79e2f18572ae555561a2bf276b317fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae79e2f18572ae555561a2bf276b317fa">&#9670;&nbsp;</a></span>isAtomConstructor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool BiOpExpr::isAtomConstructor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns true if all expressions are binary operator functions with identifiers, except the expression the most left has to be an atom. Like: &lt;atom&gt; (&lt;Id&gt; | '_')+ </dd></dl>
 
 </div>
 </div>

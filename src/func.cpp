@@ -8,7 +8,7 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
     lexer.skippedNewLinePrefix = "..";
 
   GCMain gc;
-  Environment *env = new Environment(gc); // environment
+  Environment *env = new Environment(gc, lexer); // environment
   Expr *expr = nullptr;
   while (true) {
     if (interpret_mode)

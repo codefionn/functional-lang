@@ -65,6 +65,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classEnvironment-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Environment Class Reference</div>  </div>
@@ -87,20 +88,20 @@ Inheritance diagram for Environment:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5417d71a7fbce524cbf1acf3c8bce7fb"><td class="memItemLeft" align="right" valign="top"><a id="a5417d71a7fbce524cbf1acf3c8bce7fb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> *parent=nullptr)</td></tr>
-<tr class="separator:a5417d71a7fbce524cbf1acf3c8bce7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8af20dcd0719c1a5705abaae08ad193b"><td class="memItemLeft" align="right" valign="top"><a id="a8af20dcd0719c1a5705abaae08ad193b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> *parent=nullptr)</td></tr>
+<tr class="separator:a8af20dcd0719c1a5705abaae08ad193b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa97708c838b992f021bfb02b643b2960"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#aa97708c838b992f021bfb02b643b2960">contains</a> (const std::string &amp;name) const noexcept</td></tr>
 <tr class="separator:aa97708c838b992f021bfb02b643b2960"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa87465f813d124f8bed185b3df5691d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#aa87465f813d124f8bed185b3df5691d8">get</a> (const std::string &amp;name) const noexcept</td></tr>
-<tr class="separator:aa87465f813d124f8bed185b3df5691d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bcf30670d63df729dc8802f8f9ec812"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#a4bcf30670d63df729dc8802f8f9ec812">get</a> (const std::string &amp;name) const noexcept</td></tr>
+<tr class="separator:a4bcf30670d63df729dc8802f8f9ec812"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9176bf98537f657dcf617c5bd87778bb"><td class="memItemLeft" align="right" valign="top"><a id="a9176bf98537f657dcf617c5bd87778bb"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#a9176bf98537f657dcf617c5bd87778bb">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
 <tr class="memdesc:a9176bf98537f657dcf617c5bd87778bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
 <tr class="separator:a9176bf98537f657dcf617c5bd87778bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7da7f29b99c829171290a1951ec0d0fe"><td class="memItemLeft" align="right" valign="top"><a id="a7da7f29b99c829171290a1951ec0d0fe"></a>
-std::map&lt; std::string, <a class="el" href="classExpr.html">Expr</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariables</b> () noexcept</td></tr>
-<tr class="separator:a7da7f29b99c829171290a1951ec0d0fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01d6dabb82748c5080bf76e23accdca1"><td class="memItemLeft" align="right" valign="top"><a id="a01d6dabb82748c5080bf76e23accdca1"></a>
+std::map&lt; std::string, const <a class="el" href="classExpr.html">Expr</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariables</b> () noexcept</td></tr>
+<tr class="separator:a01d6dabb82748c5080bf76e23accdca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a861ba5fad18ffd704a8c4be78980a195"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEnvironment.html">Environment</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#a861ba5fad18ffd704a8c4be78980a195">getParent</a> () const noexcept</td></tr>
 <tr class="separator:a861ba5fad18ffd704a8c4be78980a195"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
@@ -110,6 +111,12 @@ std::map&lt; std::string, <a class="el" href="classExpr.html">Expr</a> * &gt; &a
 <tr class="separator:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a9ca4761950c6951431cc04f40282ed2e">isMarked</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) const noexcept</td></tr>
 <tr class="separator:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a61c0005481ef0d848204a902d0400680"><td class="memItemLeft" align="right" valign="top"><a id="a61c0005481ef0d848204a902d0400680"></a>
+<a class="el" href="classLexer.html">Lexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>lexer</b></td></tr>
+<tr class="separator:a61c0005481ef0d848204a902d0400680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -149,8 +156,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 
 </div>
 </div>
-<a id="aa87465f813d124f8bed185b3df5691d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa87465f813d124f8bed185b3df5691d8">&#9670;&nbsp;</a></span>get()</h2>
+<a id="a4bcf30670d63df729dc8802f8f9ec812"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bcf30670d63df729dc8802f8f9ec812">&#9670;&nbsp;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -159,7 +166,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classExpr.html">Expr</a>* Environment::get </td>
+          <td class="memname">const <a class="el" href="classExpr.html">Expr</a>* Environment::get </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
