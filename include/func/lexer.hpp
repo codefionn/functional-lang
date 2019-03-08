@@ -12,7 +12,8 @@
  */
 enum Token : int {
   tok_id = 256, //!< Identifier
-  tok_num,      //!< Number
+  tok_num,      //!< Floating-point Number
+  tok_int,      //!< Integer number
   tok_op,       //!< Binary-Operator
 
   tok_eol, //!< End of line (new-line character)
@@ -98,6 +99,7 @@ class Lexer {
   Token curtok;
   Operator curop;
   double curnum;
+  int64_t curint;
   std::string curid;
 
   int curchar;
@@ -142,6 +144,11 @@ public:
    * nextToken() == tok_num call.
    */
   double currentNumber() const noexcept;
+
+  /*!\return Returns integer number, which was returned by the latest
+   * nextToken() = tok_int call.
+   */
+  std::int64_t currentInteger() const noexcept;
 
   size_t currentLine() const noexcept
     { return curchar == -2 || curchar == '\n' || curchar == EOF || curtok == tok_eof ?

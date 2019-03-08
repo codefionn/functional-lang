@@ -11,6 +11,7 @@ var searchData=
   ['tok_5fid',['tok_id',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeb9ec78d6644037640dd97136a072db0',1,'lexer.hpp']]],
   ['tok_5fif',['tok_if',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a341a539642a6efd25f0fabc1314e9367',1,'lexer.hpp']]],
   ['tok_5fin',['tok_in',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeed39326af16953ef0310359957839db',1,'lexer.hpp']]],
+  ['tok_5fint',['tok_int',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9c14e08b5a88aef9e4e68498859c79fd',1,'lexer.hpp']]],
   ['tok_5flambda',['tok_lambda',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9f0ebd82f5e02fbd389fd1d90ecf5497',1,'lexer.hpp']]],
   ['tok_5flet',['tok_let',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aa31f5aa85b09a2f889ec4ff7ec41e8e0',1,'lexer.hpp']]],
   ['tok_5fliteral',['tok_literal',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a533bdde4dd13527359d5ad27bec6c7e6',1,'lexer.hpp']]],

@@ -11,6 +11,7 @@ var searchData=
   ['tok_5fid',['tok_id',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeb9ec78d6644037640dd97136a072db0',1,'lexer.hpp']]],
   ['tok_5fif',['tok_if',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a341a539642a6efd25f0fabc1314e9367',1,'lexer.hpp']]],
   ['tok_5fin',['tok_in',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeed39326af16953ef0310359957839db',1,'lexer.hpp']]],
+  ['tok_5fint',['tok_int',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9c14e08b5a88aef9e4e68498859c79fd',1,'lexer.hpp']]],
   ['tok_5flambda',['tok_lambda',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9f0ebd82f5e02fbd389fd1d90ecf5497',1,'lexer.hpp']]],
   ['tok_5flet',['tok_let',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aa31f5aa85b09a2f889ec4ff7ec41e8e0',1,'lexer.hpp']]],
   ['tok_5fliteral',['tok_literal',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a533bdde4dd13527359d5ad27bec6c7e6',1,'lexer.hpp']]],
@@ -20,5 +21,5 @@ var searchData=
   ['tok_5fthen',['tok_then',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9deeef00f4f87f1e2d3f66beaf5ef8bf',1,'lexer.hpp']]],
   ['token',['Token',['../lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04',1,'lexer.hpp']]],
   ['tokenpos',['TokenPos',['../classTokenPos.html',1,'']]],
-  ['tostring',['toString',['../classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22',1,'Expr::toString()'],['../classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab',1,'BiOpExpr::toString()'],['../classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49',1,'NumExpr::toString()'],['../classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06',1,'IdExpr::toString()'],['../classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5',1,'LambdaExpr::toString()'],['../classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0',1,'AtomExpr::toString()'],['../classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614',1,'IfExpr::toString()']]]
+  ['tostring',['toString',['../classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22',1,'Expr::toString()'],['../classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab',1,'BiOpExpr::toString()'],['../classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49',1,'NumExpr::toString()'],['../classIntExpr.html#ae07d2971c7d63aa2e7b0b36bd9927bb4',1,'IntExpr::toString()'],['../classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06',1,'IdExpr::toString()'],['../classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5',1,'LambdaExpr::toString()'],['../classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0',1,'AtomExpr::toString()'],['../classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614',1,'IfExpr::toString()']]]
 ];

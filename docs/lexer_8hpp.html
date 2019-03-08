@@ -94,25 +94,26 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a3d0a3a093a6327332a573b383427fb04"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04">Token</a> : int { <br />
 &#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeb9ec78d6644037640dd97136a072db0">tok_id</a> = 256, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a4719e52dcae9aa91a322ef303066200d">tok_num</a>, 
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9c14e08b5a88aef9e4e68498859c79fd">tok_int</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04ac47a7aad1d79f129b483fe6c3bf63bd2">tok_op</a>, 
-<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a3427dae399a0fc0ee6df73766e56a775">tok_eol</a>, 
 <br />
-&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04ae5d30f8e7869dddee3750decf12bda6c">tok_eof</a>, 
+&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a3427dae399a0fc0ee6df73766e56a775">tok_eol</a>, 
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04ae5d30f8e7869dddee3750decf12bda6c">tok_eof</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04af2946fa2b18488b1bd312e5da8320efd">tok_obrace</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a96df71174d85910511ca20d1ff542196">tok_cbrace</a>, 
-<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9f0ebd82f5e02fbd389fd1d90ecf5497">tok_lambda</a>, 
 <br />
-&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a578e0b04033d8507166cbc56b5217c5b">tok_atom</a>, 
+&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9f0ebd82f5e02fbd389fd1d90ecf5497">tok_lambda</a>, 
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a578e0b04033d8507166cbc56b5217c5b">tok_atom</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a533bdde4dd13527359d5ad27bec6c7e6">tok_literal</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a341a539642a6efd25f0fabc1314e9367">tok_if</a>, 
-<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9deeef00f4f87f1e2d3f66beaf5ef8bf">tok_then</a>, 
 <br />
-&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04adb9366c5569b0126e7bfa38a83d5b5b0">tok_else</a>, 
+&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a9deeef00f4f87f1e2d3f66beaf5ef8bf">tok_then</a>, 
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04adb9366c5569b0126e7bfa38a83d5b5b0">tok_else</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aa31f5aa85b09a2f889ec4ff7ec41e8e0">tok_let</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04aeed39326af16953ef0310359957839db">tok_in</a>, 
-<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04ae08e437d5a150ef6ee3b880a082e4217">tok_delim</a>, 
 <br />
-&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a65026fd0e7326e155a82688bd109aeed">tok_any</a>, 
+&#160;&#160;<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04ae08e437d5a150ef6ee3b880a082e4217">tok_delim</a>, 
+<a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04a65026fd0e7326e155a82688bd109aeed">tok_any</a>, 
 <a class="el" href="lexer_8hpp.html#a3d0a3a093a6327332a573b383427fb04afad9879f03a9a59a8b27b8c32af4f1d0">tok_err</a>
 <br />
  }</td></tr>
@@ -215,7 +216,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>std::to_string
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3d0a3a093a6327332a573b383427fb04aeb9ec78d6644037640dd97136a072db0"></a>tok_id&#160;</td><td class="fielddoc"><p>Identifier. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a3d0a3a093a6327332a573b383427fb04a4719e52dcae9aa91a322ef303066200d"></a>tok_num&#160;</td><td class="fielddoc"><p>Number. </p>
+<tr><td class="fieldname"><a id="a3d0a3a093a6327332a573b383427fb04a4719e52dcae9aa91a322ef303066200d"></a>tok_num&#160;</td><td class="fielddoc"><p>Floating-point Number. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a3d0a3a093a6327332a573b383427fb04a9c14e08b5a88aef9e4e68498859c79fd"></a>tok_int&#160;</td><td class="fielddoc"><p>Integer number. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a3d0a3a093a6327332a573b383427fb04ac47a7aad1d79f129b483fe6c3bf63bd2"></a>tok_op&#160;</td><td class="fielddoc"><p>Binary-Operator. </p>
 </td></tr>

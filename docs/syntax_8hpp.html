@@ -98,6 +98,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNumExpr.html">NumExpr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Floating point number expression.  <a href="classNumExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIntExpr.html">IntExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Integer number expression.  <a href="classIntExpr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIdExpr.html">IdExpr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifier expression.  <a href="classIdExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,13 +125,15 @@ Enumerations</h2></td></tr>
 <tr class="memitem:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> : int { <br />
 &#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b">expr_biop</a>, 
 <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339">expr_num</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3afead925b1534c2c775700df41c1cc5eb">expr_int</a>, 
 <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ac30a228543b3e454debb8b251b4f416e">expr_id</a>, 
-<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368">expr_lambda</a>, 
 <br />
-&#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a9fe508b5a98973631eed32523f25c7d6">expr_atom</a>, 
+&#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368">expr_lambda</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a9fe508b5a98973631eed32523f25c7d6">expr_atom</a>, 
 <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292">expr_if</a>, 
 <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610">expr_any</a>, 
-<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486">expr_let</a>
+<br />
+&#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486">expr_let</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ac40558a32d8eabc2d4933a043a8cecc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of expressions.  <a href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">More...</a><br /></td></tr>
@@ -175,6 +180,8 @@ const <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memIte
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b"></a>expr_biop&#160;</td><td class="fielddoc"><p>Binary operator. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339"></a>expr_num&#160;</td><td class="fielddoc"><p>Floating-point Number. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3afead925b1534c2c775700df41c1cc5eb"></a>expr_int&#160;</td><td class="fielddoc"><p>Integer number. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3ac30a228543b3e454debb8b251b4f416e"></a>expr_id&#160;</td><td class="fielddoc"><p>Identifier. </p>
 </td></tr>

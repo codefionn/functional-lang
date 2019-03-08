@@ -90,6 +90,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a116c84590168fa755818692ddd35c118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d624e7197e96c22f3e09237db66e110"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a1d624e7197e96c22f3e09237db66e110">currentNumber</a> () const noexcept</td></tr>
 <tr class="separator:a1d624e7197e96c22f3e09237db66e110"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5999b9481726b0b2398d873e30c13009"><td class="memItemLeft" align="right" valign="top">std::int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLexer.html#a5999b9481726b0b2398d873e30c13009">currentInteger</a> () const noexcept</td></tr>
+<tr class="separator:a5999b9481726b0b2398d873e30c13009"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a720c2aabde5b98a09428c483ceaaec95"><td class="memItemLeft" align="right" valign="top"><a id="a720c2aabde5b98a09428c483ceaaec95"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>currentLine</b> () const noexcept</td></tr>
 <tr class="separator:a720c2aabde5b98a09428c483ceaaec95"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,6 +183,32 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Returns identifier, which was returned by the latest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> == tok_id call. </dd></dl>
+
+</div>
+</div>
+<a id="a5999b9481726b0b2398d873e30c13009"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5999b9481726b0b2398d873e30c13009">&#9670;&nbsp;</a></span>currentInteger()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::int64_t Lexer::currentInteger </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns integer number, which was returned by the latest <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">nextToken()</a> = tok_int call. </dd></dl>
 
 </div>
 </div>

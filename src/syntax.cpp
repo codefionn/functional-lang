@@ -212,6 +212,44 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
   return nullptr;
 }
 
+static Expr *biopeval(GCMain &gc, Environment &env,
+    const TokenPos &mergedPos, Operator op,
+    const NumExpr *lhs, const NumExpr *rhs) noexcept {
+  double num0 = lhs->getNumber();
+  double num1 = rhs->getNumber();
+  switch (op) {
+  case op_add: num0 += num1; break;
+  case op_sub: num0 -= num1; break;
+  case op_mul: num0 *= num1; break;
+  case op_div: num0 /= num1; break;
+  case op_pow: num0 = pow(num0, num1); break;
+  case op_leq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 <= num1));
+  case op_geq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 >= num1));
+  case op_le: return new AtomExpr(gc, mergedPos, boolToAtom(num0 < num1));
+  case op_gt: return new AtomExpr(gc, mergedPos, boolToAtom(num0 > num1));
+  }
+  return new NumExpr(gc, mergedPos, num0);
+}
+
+static Expr *biopeval(GCMain &gc, Environment &env,
+    const TokenPos &mergedPos, Operator op,
+    const IntExpr *lhs, const IntExpr *rhs) noexcept {
+  std::int64_t num0 = lhs->getNumber();
+  std::int64_t num1 = rhs->getNumber();
+  switch (op) {
+  case op_add: num0 += num1; break;
+  case op_sub: num0 -= num1; break;
+  case op_mul: num0 *= num1; break;
+  case op_div: num0 /= num1; break;
+  case op_pow: num0 = pow(num0, num1); break;
+  case op_leq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 <= num1));
+  case op_geq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 >= num1));
+  case op_le: return new AtomExpr(gc, mergedPos, boolToAtom(num0 < num1));
+  case op_gt: return new AtomExpr(gc, mergedPos, boolToAtom(num0 > num1));
+  }
+  return new IntExpr(gc, mergedPos, num0);
+}
+
 Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   switch (op) {
   case op_asg: {
@@ -240,20 +278,14 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 
               if (newlhs->getExpressionType() == expr_num
                   && newrhs-> getExpressionType() == expr_num) {
-                double num0 = ((NumExpr*) newlhs)->getNumber();
-                double num1 = ((NumExpr*) newrhs)->getNumber();
-                switch (op) {
-                case op_add: num0 += num1; break;
-                case op_sub: num0 -= num1; break;
-                case op_mul: num0 *= num1; break;
-                case op_div: num0 /= num1; break;
-                case op_pow: num0 = pow(num0, num1); break;
-                case op_leq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 <= num1));
-                case op_geq: return new AtomExpr(gc, mergedPos, boolToAtom(num0 >= num1));
-                case op_le: return new AtomExpr(gc, mergedPos, boolToAtom(num0 < num1));
-                case op_gt: return new AtomExpr(gc, mergedPos, boolToAtom(num0 > num1));
-                }
-                return new NumExpr(gc, mergedPos, num0);
+                return biopeval(gc, env, mergedPos, op,
+                    dynamic_cast<const NumExpr*>(newlhs),
+                    dynamic_cast<const NumExpr*>(newrhs));
+              } else if (newlhs->getExpressionType() == expr_int
+                  && newrhs->getExpressionType() == expr_int){
+                return biopeval(gc, env, mergedPos, op,
+                    dynamic_cast<const IntExpr*>(newlhs),
+                    dynamic_cast<const IntExpr*>(newrhs));
               }
 
               if (newlhs == lhs && newrhs == rhs)
@@ -411,4 +443,28 @@ Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept {
   }
 
   return expr;
+}
+
+// equals
+
+bool NumExpr::equals(const Expr *expr) const noexcept {
+  if (expr->getExpressionType() == expr_any) return true;
+  if (expr->getExpressionType() != expr_int
+      && expr->getExpressionType() != expr_num) return false;
+
+  if (expr->getExpressionType() == expr_int)
+    return dynamic_cast<const IntExpr*>(expr)->getNumber() == round(getNumber());
+
+  return dynamic_cast<const NumExpr*>(expr)->getNumber() == getNumber();
+}
+
+bool IntExpr::equals(const Expr *expr) const noexcept {
+  if (expr->getExpressionType() == expr_any) return true;
+  if (expr->getExpressionType() != expr_int
+      && expr->getExpressionType() != expr_num) return false;
+
+  if (expr->getExpressionType() == expr_num)
+    return round(dynamic_cast<const NumExpr*>(expr)->getNumber()) == getNumber();
+
+  return dynamic_cast<const IntExpr*>(expr)->getNumber() == getNumber();
 }

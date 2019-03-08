@@ -140,9 +140,14 @@ Token Lexer::nextToken() {
   if (isdigit(curchar)) {
     // Number
     double num = 0.0;
+    curint = 0;
     while (isdigit(curchar)) {
+      curint *= 10;
+      curint += curchar - '0';
+
       num *= 10.0;
       num += curchar - '0';
+
       nextChar(); // Eat digit
     }
 
@@ -167,12 +172,12 @@ Token Lexer::nextToken() {
         numAfterComma /= 10.0;
 
       curnum = num + numAfterComma;
-    }
-    
-    if (isalpha(curchar))
+      return curtok = tok_num;
+    } else if (isalpha(curchar))
       return curtok = reportError("Alphabetic characters are not allowed directly after numbers!");
 
-    return curtok = tok_num;
+    // it's an integer
+    return curtok = tok_int;
   }
 
   if (isalpha(curchar)) {
@@ -244,6 +249,10 @@ Operator Lexer::currentOperator() const noexcept {
 
 double Lexer::currentNumber() const noexcept {
   return curnum;
+}
+
+std::int64_t Lexer::currentInteger() const noexcept {
+  return curint;
 }
 
 const std::string &Lexer::currentIdentifier() const noexcept {

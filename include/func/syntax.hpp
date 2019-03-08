@@ -12,6 +12,7 @@
 class Expr;
 class BiOpExpr;
 class NumExpr;
+class IntExpr;
 class IdExpr;
 class LambdaExpr;
 class AtomExpr;
@@ -25,6 +26,7 @@ class LetExpr;
 enum ExprType : int {
   expr_biop, //!< Binary operator
   expr_num, //!< Floating-point Number
+  expr_int, //!< Integer number
   expr_id,  //!< Identifier
   expr_lambda, //!< Lambda function
   expr_atom, //!< Atom
@@ -210,13 +212,27 @@ public:
     return std::to_string(num);
   }
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
-    if (expr->getExpressionType() != getExpressionType()) return false;
-
-    return dynamic_cast<const NumExpr*>(expr)->getNumber() == getNumber();
-  }
+  virtual bool equals(const Expr *expr) const noexcept override;
 };
+
+/*!\brief Integer number expression.
+ */
+class IntExpr : public Expr {
+  std::int64_t num;
+public:
+  IntExpr(GCMain &gc, const TokenPos &pos, std::int64_t num)
+    : Expr(gc, expr_int, pos), num{num} {}
+  virtual ~IntExpr() {}
+
+  std::int64_t getNumber() const noexcept { return num; }
+
+  virtual std::string toString() const noexcept override {
+    return std::to_string(num);
+  }
+
+  virtual bool equals(const Expr *expr) const noexcept override;
+};
+
 
 /*!\brief Identifier expression.
  */

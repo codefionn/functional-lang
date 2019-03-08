@@ -5,6 +5,7 @@
 static bool isPrimaryToken(Token tok) {
   return tok == tok_id
       || tok == tok_num
+      || tok == tok_int
       || tok == tok_obrace
       || tok == tok_lambda
       || tok == tok_atom
@@ -48,6 +49,17 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
           lexer.nextToken(); // eat num
           break;
         } // end case tok_num
+      case tok_int: {
+          IntExpr *numexpr = new IntExpr(gc, lexer.getTokenPos(),
+              lexer.currentInteger());
+          if (!result)
+            result = numexpr;
+          else
+            result = new BiOpExpr(gc, op_fn, result, numexpr);
+
+          lexer.nextToken(); // eat num
+          break;
+        } // end case tok_int
       case tok_obrace: {
           lexer.skipNewLine = true;
           lexer.nextToken(); // eat (
