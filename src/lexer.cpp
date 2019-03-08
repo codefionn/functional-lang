@@ -15,6 +15,10 @@ static Token identifierToken(const std::string &id) {
     return tok_then;
   if (id == "else")
     return tok_else;
+  if (id == "let")
+    return tok_let;
+  if (id== "in")
+    return tok_in;
 
   return tok_id;
 }
@@ -119,6 +123,9 @@ Token Lexer::nextToken() {
   case '_':
     nextChar(); // eat _
     return curtok = tok_any;
+  case ';':
+    nextChar(); // eat :
+    return curtok = tok_delim;
   }
 
   if (isdigit(curchar)) {

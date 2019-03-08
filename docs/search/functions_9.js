@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['tostring',['toString',['../classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22',1,'Expr::toString()'],['../classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab',1,'BiOpExpr::toString()'],['../classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49',1,'NumExpr::toString()'],['../classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06',1,'IdExpr::toString()'],['../classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5',1,'LambdaExpr::toString()'],['../classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0',1,'AtomExpr::toString()'],['../classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614',1,'IfExpr::toString()']]]
+  ['replace',['replace',['../classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9',1,'Expr::replace()'],['../classBiOpExpr.html#a1be5f6ab07107520cc7f998e6b241f20',1,'BiOpExpr::replace()'],['../classIdExpr.html#abf6630aa5b709579b0c44330b1181820',1,'IdExpr::replace()'],['../classLambdaExpr.html#ad808756403f43f0670199bb395b2f6da',1,'LambdaExpr::replace()'],['../classIfExpr.html#ad5346042cb7702cecada22ff5603c207',1,'IfExpr::replace()']]],
+  ['reporterror',['reportError',['../classLexer.html#a76b2a13a2faf7b71c07e5cde6b215d1c',1,'Lexer']]]
 ];

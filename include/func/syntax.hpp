@@ -14,7 +14,13 @@ class BiOpExpr;
 class NumExpr;
 class IdExpr;
 class LambdaExpr;
+class AtomExpr;
+class IfExpr;
+class AnyExpr;
 
+/*!\brief Types of expressions.
+ * \see Expr, Expr::getExpressionType
+ */
 enum ExprType : int {
   expr_biop, //!< Binary operator
   expr_num, //!< Floating-point Number
@@ -23,8 +29,11 @@ enum ExprType : int {
   expr_atom, //!< Atom
   expr_if, //!< If-then-else
   expr_any, //!< Any '_'
+  expr_let, //!< Let statement
 };
 
+/*!\brief Environment for accessing variables.
+ */
 class Environment : public GCObj {
   std::map<std::string, Expr*> variables;
   Environment *parent;
@@ -332,6 +341,44 @@ public:
   virtual bool equals(const Expr *expr) const noexcept override {
     return true;
   }
+};
+
+/*!\brief Let expression
+ */
+class LetExpr : public Expr {
+  std::vector<BiOpExpr*> assignments;
+  Expr *body;
+public:
+  /*!\brief Initialize let expression.
+   * \param gc
+   * \param assignments All assignments of the let expression.
+   * \param body Body of let expression
+   */
+  LetExpr(GCMain &gc, const std::vector<BiOpExpr*> &assignments, Expr *body)
+    : Expr(gc, expr_let), assignments(assignments), body{body} {}
+  virtual ~LetExpr() {}
+
+  /*!\return Returns assignments done between let ... in (separated by ';').
+   */
+  const std::vector<BiOpExpr*> &getAssignments() const noexcept
+    { return assignments; }
+
+  /*!\return Returns body of let expression.
+   */
+  const Expr &getBody() const noexcept { return *body; }
+
+  virtual void mark(GCMain &gc) noexcept {
+    if (isMarked(gc))
+      return;
+
+    markSelf(gc);
+    for (BiOpExpr *expr : assignments)
+      expr->mark(gc);
+
+    body->mark(gc);
+  }
+
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept;
 };
 
 Expr *reportSyntaxError(GCMain &gc, Lexer &lexer, const std::string &msg);

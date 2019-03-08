@@ -8,13 +8,13 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
     lexer.skippedNewLinePrefix = "..";
 
   GCMain gc;
-  Environment env(gc); // environment
+  Environment *env = new Environment(gc); // environment
   Expr *expr = nullptr;
   while (true) {
     if (interpret_mode)
       std::cout << "> "; // print prefix
   	lexer.nextToken(); // aquire next token (if first loop, first token)
-	  expr = parse(gc, lexer, env);
+	  expr = parse(gc, lexer, *env);
 
     // Just jump if emtpy (error recovery and new-line support)
     if (!expr) { // empty
@@ -33,7 +33,7 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
       || ((BiOpExpr*) expr)->getOperator() != op_asg;
 
     // Evaluate as long as expression is different from the evaluated one
-    expr = eval(gc, env, expr);
+    expr = eval(gc, *env, expr);
 
     // Print the expression
     if (expr && shouldPrint) {
@@ -44,7 +44,7 @@ bool interpret(std::istream &input, bool interpret_mode) noexcept {
     if (lexer.currentToken() == tok_eof)
       break;
 
-    env.mark(gc); // mark main scope/environemnt
+    env->mark(gc); // mark main scope/environemnt
 
     gc.collect(); // We collect it all (garbage)
   }

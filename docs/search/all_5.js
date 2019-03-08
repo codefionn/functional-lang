@@ -4,6 +4,8 @@ var searchData=
   ['gcmain',['GCMain',['../classGCMain.html',1,'']]],
   ['gcobj',['GCObj',['../classGCObj.html',1,'GCObj'],['../classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7',1,'GCObj::GCObj()']]],
   ['get',['get',['../classEnvironment.html#aa87465f813d124f8bed185b3df5691d8',1,'Environment']]],
+  ['getassignments',['getAssignments',['../classLetExpr.html#a11e856d94989d5b4cdb58e2bf4458c96',1,'LetExpr']]],
+  ['getbody',['getBody',['../classLetExpr.html#a4ef5fef12c68f5ce4c5d65000b08b9ea',1,'LetExpr']]],
   ['getcondition',['getCondition',['../classIfExpr.html#af168756a2f4e82a13fa44036831ec510',1,'IfExpr']]],
   ['getfalse',['getFalse',['../classIfExpr.html#a2e04f122d5b25b61f54918fdb83fa931',1,'IfExpr']]],
   ['getlhs',['getLHS',['../classBiOpExpr.html#afcf8823420a098db4bc864902e7515cb',1,'BiOpExpr']]],

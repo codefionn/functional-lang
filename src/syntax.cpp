@@ -30,12 +30,24 @@ void Environment::mark(GCMain &gc) noexcept {
   if (parent) parent->mark(gc);
 }
 
-//
+// Expressions
 
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg) {
   lexer.skipNewLine = false; // reset new line skip
   lexer.reportError(msg);
   return nullptr;
+}
+
+bool isPrimaryToken(Token tok) {
+  return tok == tok_id
+      || tok == tok_num
+      || tok == tok_obrace
+      || tok == tok_lambda
+      || tok == tok_atom
+      || tok == tok_if
+      || tok == tok_literal
+      || tok == tok_any
+      || tok == tok_let;
 }
 
 Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
@@ -47,14 +59,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
     lexer.nextToken();
   }
 
-  while (lexer.currentToken() == tok_id
-      || lexer.currentToken() == tok_num
-      || lexer.currentToken() == tok_obrace
-      || lexer.currentToken() == tok_lambda
-      || lexer.currentToken() == tok_atom
-      || lexer.currentToken() == tok_if
-      || lexer.currentToken() == tok_literal
-      || lexer.currentToken() == tok_any) {
+  while (isPrimaryToken(lexer.currentToken())) {
     switch (lexer.currentToken()) {
       case tok_id: {
          IdExpr *idexpr = new IdExpr(gc, lexer.currentIdentifier());
@@ -203,6 +208,52 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
 
           break;
         } // end case tok_any
+      case tok_let: {
+          lexer.nextToken(); // eat let
+
+          std::vector<BiOpExpr*> assignments;
+          while (lexer.currentToken() != tok_in
+              && lexer.currentToken() != tok_eof) { // eat let, delim, newline
+
+            if (assignments.size() > 0 && lexer.currentToken() == tok_delim)
+              lexer.nextToken(); // eat ;
+            
+            Expr *asg = parse(gc, lexer, env, false);
+            if (!asg)
+              return nullptr;
+
+            if (asg->getExpressionType() != expr_biop
+                || dynamic_cast<BiOpExpr*>(asg)->getOperator() != op_asg)
+              return reportSyntaxError(lexer, "Assignment expected!");
+
+            if (lexer.currentToken() != tok_in
+                && lexer.currentToken() != tok_delim
+                && lexer.currentToken() != tok_eol)
+              return reportSyntaxError(lexer, "Expected ';', 'in' or EOL.");
+
+            assignments.push_back(dynamic_cast<BiOpExpr*>(asg));
+          }
+
+          if (assignments.size() == 0)
+            return reportSyntaxError(lexer, "Assignment expected!");
+
+          if (lexer.currentToken() != tok_in)
+            return reportSyntaxError(lexer, "Keyword 'in' expected! Not EOF.");
+
+          lexer.nextToken(); // eat in
+
+          Expr *body = parse(gc, lexer, env, false);
+          if (!body)
+            return nullptr;
+
+          Expr *letExpr = new LetExpr(gc, assignments, body);
+          if (!result)
+            result = letExpr;
+          else
+            result = new BiOpExpr(gc, op_fn, result, letExpr);
+
+          break;
+        } // end case tok_let
     }
   }
 
@@ -379,6 +430,17 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
     return ::eval(gc, env, exprTrue);
   else
     return ::eval(gc, env, exprFalse);
+}
+
+Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
+  // create new scope
+  Environment *scope = new Environment(gc, &env /* == parent */);
+  // iterate through assignments and eval them
+  for (BiOpExpr *expr : assignments)
+    expr->eval(gc, *scope); // only one execution required (because asg)
+
+  // Evaluate body with the new scope
+  return ::eval(gc, *scope, body);
 }
 
 // replace/substitute

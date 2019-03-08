@@ -6,5 +6,6 @@ var searchData=
   ['expr_5fid',['expr_id',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ac30a228543b3e454debb8b251b4f416e',1,'syntax.hpp']]],
   ['expr_5fif',['expr_if',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292',1,'syntax.hpp']]],
   ['expr_5flambda',['expr_lambda',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368',1,'syntax.hpp']]],
+  ['expr_5flet',['expr_let',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486',1,'syntax.hpp']]],
   ['expr_5fnum',['expr_num',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339',1,'syntax.hpp']]]
 ];

@@ -87,6 +87,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html">Environment</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> for accessing variables.  <a href="classEnvironment.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html">Expr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main expression handle (should only be used as parent class).  <a href="classExpr.html#details">More...</a><br /></td></tr>
@@ -112,6 +113,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAnyExpr.html">AnyExpr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">any expression  <a href="classAnyExpr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLetExpr.html">LetExpr</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Let expression.  <a href="classLetExpr.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -123,9 +127,11 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a9fe508b5a98973631eed32523f25c7d6">expr_atom</a>, 
 <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292">expr_if</a>, 
-<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610">expr_any</a>
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610">expr_any</a>, 
+<a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486">expr_let</a>
 <br />
  }</td></tr>
+<tr class="memdesc:ac40558a32d8eabc2d4933a043a8cecc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of expressions.  <a href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">More...</a><br /></td></tr>
 <tr class="separator:ac40558a32d8eabc2d4933a043a8cecc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -159,6 +165,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Types of expressions. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classExpr.html" title="Main expression handle (should only be used as parent class).">Expr</a>, Expr::getExpressionType </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aae164b08653a39b7cd91d74e3d17b74b"></a>expr_biop&#160;</td><td class="fielddoc"><p>Binary operator. </p>
 </td></tr>
@@ -173,6 +182,8 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3a3659121e3597ee05abffa1c1b374e292"></a>expr_if&#160;</td><td class="fielddoc"><p>If-then-else. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3aa3775fa3050b8ab45da8b34233c2b610"></a>expr_any&#160;</td><td class="fielddoc"><p>Any '_'. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486"></a>expr_let&#160;</td><td class="fielddoc"><p>Let statement. </p>
 </td></tr>
 </table>
 
@@ -223,7 +234,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
-    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to use </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> to use </td></tr>
     <tr><td class="paramname">expr</td><td>Expression to evaluate </td></tr>
   </table>
   </dd>
@@ -273,7 +284,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
     <tr><td class="paramname">lexer</td><td></td></tr>
-    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to access variables. </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> to access variables. </td></tr>
     <tr><td class="paramname">topLevel</td><td>If top level, nullptr is returned if eol occured. </td></tr>
   </table>
   </dd>
@@ -318,7 +329,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
     <tr><td class="paramname">lexer</td><td></td></tr>
-    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> to access variables. </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> to access variables. </td></tr>
   </table>
   </dd>
 </dl>

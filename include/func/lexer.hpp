@@ -28,6 +28,11 @@ enum Token : int {
   tok_then, //!< 'then'
   tok_else, //!< 'else'
 
+  tok_let, //!< 'let'
+  tok_in, //!< 'in'
+
+  tok_delim, //!< ';'
+
   tok_any,  //!< '_'
 
   tok_err, //!< Error

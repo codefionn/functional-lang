@@ -81,14 +81,15 @@ Inheritance diagram for Expr:</div>
  <div class="center">
   <img src="classExpr.png" usemap="#Expr_map" alt=""/>
   <map id="Expr_map" name="Expr_map">
-<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="276,0,358,24"/>
-<area href="classAnyExpr.html" title="any expression" alt="AnyExpr" shape="rect" coords="0,112,82,136"/>
-<area href="classAtomExpr.html" title="Atom expression." alt="AtomExpr" shape="rect" coords="92,112,174,136"/>
-<area href="classBiOpExpr.html" title="Binary operator expression." alt="BiOpExpr" shape="rect" coords="184,112,266,136"/>
-<area href="classIdExpr.html" title="Identifier expression." alt="IdExpr" shape="rect" coords="276,112,358,136"/>
-<area href="classIfExpr.html" title="If-then-else expression." alt="IfExpr" shape="rect" coords="368,112,450,136"/>
-<area href="classLambdaExpr.html" title="Lambda function expression." alt="LambdaExpr" shape="rect" coords="460,112,542,136"/>
-<area href="classNumExpr.html" title="Floating point number expression." alt="NumExpr" shape="rect" coords="552,112,634,136"/>
+<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="0,0,82,24"/>
+<area href="classAnyExpr.html" title="any expression" alt="AnyExpr" shape="rect" coords="92,112,174,136"/>
+<area href="classAtomExpr.html" title="Atom expression." alt="AtomExpr" shape="rect" coords="92,168,174,192"/>
+<area href="classBiOpExpr.html" title="Binary operator expression." alt="BiOpExpr" shape="rect" coords="92,224,174,248"/>
+<area href="classIdExpr.html" title="Identifier expression." alt="IdExpr" shape="rect" coords="92,280,174,304"/>
+<area href="classIfExpr.html" title="If-then-else expression." alt="IfExpr" shape="rect" coords="92,336,174,360"/>
+<area href="classLambdaExpr.html" title="Lambda function expression." alt="LambdaExpr" shape="rect" coords="92,392,174,416"/>
+<area href="classLetExpr.html" title="Let expression." alt="LetExpr" shape="rect" coords="92,448,174,472"/>
+<area href="classNumExpr.html" title="Floating point number expression." alt="NumExpr" shape="rect" coords="92,504,174,528"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -208,13 +209,13 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
-    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html">Environment</a> for accessing variables. </td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> for accessing variables. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns itself if nothing evaluated, otherwise a new expression. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classIfExpr.html#a45894d8f52fe169f37263083802a039d">IfExpr</a>, <a class="el" href="classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9">IdExpr</a>, and <a class="el" href="classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9">BiOpExpr</a>.</p>
+<p>Reimplemented in <a class="el" href="classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd">LetExpr</a>, <a class="el" href="classIfExpr.html#a45894d8f52fe169f37263083802a039d">IfExpr</a>, <a class="el" href="classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9">IdExpr</a>, and <a class="el" href="classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9">BiOpExpr</a>.</p>
 
 </div>
 </div>
