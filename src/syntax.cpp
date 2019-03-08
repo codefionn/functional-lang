@@ -262,6 +262,16 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
               return new BiOpExpr(gc, op, newlhs, newrhs);
             }
   case op_fn: {
+              // special cases (built-in functions)
+              if (lhs->getExpressionType() == expr_id) {
+                const std::string &id = dynamic_cast<IdExpr*>(lhs)->getName();
+                if (id == "error") { // print error message
+                  return reportSyntaxError(env.lexer,
+                      rhs->toString(),
+                      TokenPos(lhs->getTokenPos(), rhs->getTokenPos()));
+                }
+              }
+
               lhs = ::eval(gc, env, lhs);
               if (!lhs)
                 return nullptr; // Error forwarding
