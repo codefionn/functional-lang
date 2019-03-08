@@ -17,6 +17,7 @@ class LambdaExpr;
 class AtomExpr;
 class IfExpr;
 class AnyExpr;
+class LetExpr;
 
 /*!\brief Types of expressions.
  * \see Expr, Expr::getExpressionType
@@ -35,7 +36,7 @@ enum ExprType : int {
 /*!\brief Environment for accessing variables.
  */
 class Environment : public GCObj {
-  std::map<std::string, Expr*> variables;
+  std::map<std::string, const Expr*> variables;
   Environment *parent;
 public:
   Environment(GCMain &gc, Environment *parent = nullptr)
@@ -48,11 +49,11 @@ public:
 
   /*!\return Returns associated expression (to name). nullptr if not found.
    */
-  Expr *get(const std::string &name) const noexcept;
+  const Expr *get(const std::string &name) const noexcept;
 
   virtual void mark(GCMain &gc) noexcept override;
 
-  std::map<std::string, Expr*> &getVariables() noexcept
+  std::map<std::string, const Expr*> &getVariables() noexcept
     { return variables; }
 
   /*!\return Returns parent of environment/scope. May be nullptr.
@@ -73,6 +74,9 @@ public:
    */
   virtual std::string toString() const noexcept { return std::string(); }
 
+  /*!\return Returns the type of expression.
+   * \see ExprType
+   */
   ExprType getExpressionType() const noexcept { return type; }
 
   /*!\brief Evaluates expression one time.
@@ -102,8 +106,13 @@ public:
    */
   virtual bool equals(const Expr *expr) const noexcept
     { return this == expr; }
-};
 
+  /*!\return Returns all identifiers used in expression.
+   */
+  virtual std::vector<std::string> getIdentifiers() const noexcept {
+    return std::vector<std::string>();
+  }
+};
 
 /*!\brief Binary operator expression.
  */
@@ -146,7 +155,7 @@ public:
 
   virtual bool equals(const Expr *expr) const noexcept override {
     if (expr->getExpressionType() == expr_any) return true;
-    if (expr->getExpressionType() != expr_num) return false;
+    if (expr->getExpressionType() != expr_biop) return false;
 
     const BiOpExpr *biOpExpr = dynamic_cast<const BiOpExpr*>(expr);
     if (biOpExpr->getOperator() != this->getOperator()) return false;
@@ -155,7 +164,30 @@ public:
 
     return true;
   }
+
+  /*!\return Returns true if all expressions are binary operator functions with
+   * identifiers, except the expression the most left has to be an atom. Like:
+   * \<atom\> (\<Id\> | '_')+
+   */
+  bool isAtomConstructor() const noexcept;
+
+  /*!\returns \<atom\> of atom constructor RHS don't have to be \<Id\> or '_'.
+   * \see isAtomConstructor
+   */
+  const AtomExpr *getAtomConstructor() const noexcept;
+
+  virtual std::vector<std::string> getIdentifiers() const noexcept override {
+    std::vector<std::string> result = getLHS().getIdentifiers();
+    for (std::string &id : getRHS().getIdentifiers())
+      result.push_back(id);
+
+    return result;
+  }
 };
+
+const Expr *assignExpressions(GCMain &gc, Environment &env,
+    const Expr *thisExpr,
+    const Expr *lhs, const Expr *rhs) noexcept;
 
 /*!\brief Floating point number expression.
  */
@@ -203,6 +235,12 @@ public:
 
     return dynamic_cast<const IdExpr*>(expr)->getName() == getName();
   }
+
+  virtual std::vector<std::string> getIdentifiers() const noexcept override {
+    std::vector<std::string> result;
+    result.push_back(id);
+    return result;
+  }
 };
 
 /*!\brief Lambda function expression.
@@ -247,6 +285,12 @@ public:
     const LambdaExpr *lambdaExpr = dynamic_cast<const LambdaExpr*>(expr);
     return lambdaExpr->getName() == getName()
       && lambdaExpr->getExpression().equals(&getExpression());
+  }
+
+  virtual std::vector<std::string> getIdentifiers() const noexcept override {
+    std::vector<std::string> result = expr->getIdentifiers();
+    result.push_back(name);
+    return result;
   }
 };
 
@@ -318,7 +362,7 @@ public:
 
   virtual bool equals(const Expr *expr) const noexcept override {
     if (expr->getExpressionType() == expr_any) return true;
-    if (expr->getExpressionType() != getExpressionType()) return false;
+    if (expr->getExpressionType() != expr_if) return false;
 
     const IfExpr *ifExpr = dynamic_cast<const IfExpr*>(expr);
     if (!ifExpr->getCondition().equals(&getCondition())) return false;
@@ -326,6 +370,16 @@ public:
     if (!ifExpr->getFalse().equals(&getFalse())) return false;
 
     return true;
+  }
+
+  virtual std::vector<std::string> getIdentifiers() const noexcept override {
+    std::vector<std::string> result = condition->getIdentifiers();
+    for (std::string &id : exprTrue->getIdentifiers())
+      result.push_back(id);
+    for (std::string &id : exprFalse->getIdentifiers())
+      result.push_back(id);
+
+    return result;
   }
 };
 
@@ -379,6 +433,40 @@ public:
   }
 
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept;
+  virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
+
+  virtual std::vector<std::string> getIdentifiers() const noexcept override {
+    std::vector<std::string> result = body->getIdentifiers();
+    for (BiOpExpr *expr : assignments)
+      for (std::string &id : expr->getIdentifiers())
+        result.push_back(id);
+
+    return result;
+  }
+
+  virtual bool equals(const Expr *expr) const noexcept override {
+    if (expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != expr_let) return false;
+
+    const LetExpr *letexpr = dynamic_cast<const LetExpr*>(expr);
+    if (assignments.size() != letexpr->getAssignments().size())
+      return false;
+
+    auto thisIt = assignments.begin();
+    auto exprIt = letexpr->getAssignments().begin();
+
+    for (; thisIt != assignments.end()
+        && exprIt != letexpr->getAssignments().end();) {
+      
+      if (!(*thisIt)->equals(*exprIt))
+        return false;
+
+      ++thisIt;
+      ++exprIt;
+    }
+
+    return body->equals(&(letexpr->getBody()));
+  }
 };
 
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg);

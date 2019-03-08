@@ -29,6 +29,15 @@ addone 2 == add 2 1 -- because both expression evaluated equal 3
 
 .hello == .hello -- == .true, because same atoms
 .hello == .nothello --  .false, because not same atoms
+
+x = 0
+let x = 1 in x -- == 1, because variable shadowing
+
+-- use some pattern matching
+sub = \x = if x == .zero
+           then .zero
+		   else let .succ x = x in x
+sub (.succ (.succ .zero)) -- == .succ .zero
 ```
 
 ## Build

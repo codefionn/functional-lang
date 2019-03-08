@@ -9,7 +9,7 @@ bool Environment::contains(const std::string &name) const noexcept {
   return parent ? parent->contains(name) : false;
 }
 
-Expr *Environment::get(const std::string &name) const noexcept {
+const Expr *Environment::get(const std::string &name) const noexcept {
   auto it = variables.find(name);
   if (it != variables.end()) {
     return it->second;
@@ -23,11 +23,40 @@ void Environment::mark(GCMain &gc) noexcept {
     return;
   
   markSelf(gc);
-  for (std::pair<std::string, Expr*> var : variables) {
-    var.second->mark(gc);
+  for (std::pair<std::string, const Expr*> var : variables) {
+    const_cast<Expr*>(var.second)->mark(gc);
   }
 
   if (parent) parent->mark(gc);
+}
+
+// BiOpExpr
+
+bool BiOpExpr::isAtomConstructor() const noexcept {
+  if (getOperator() != op_fn) return false;
+
+  if (getRHS().getExpressionType() != expr_id
+      && getRHS().getExpressionType() != expr_any
+      && (getRHS().getExpressionType() == expr_biop
+        && !dynamic_cast<const BiOpExpr*>(rhs)->isAtomConstructor()))
+      return false;
+
+  if (getLHS().getExpressionType() == expr_atom) return true;
+  if (getLHS().getExpressionType() != expr_biop) return false;
+
+  return dynamic_cast<const BiOpExpr*>(lhs)->isAtomConstructor();
+}
+
+const AtomExpr *BiOpExpr::getAtomConstructor() const noexcept {
+  if (getOperator() != op_fn) return nullptr;
+
+  if (getLHS().getExpressionType() == expr_atom)
+    return dynamic_cast<const AtomExpr*>(lhs);
+
+  if (getLHS().getExpressionType() == expr_biop)
+    return dynamic_cast<const BiOpExpr*>(lhs)->getAtomConstructor();
+
+  return nullptr;
 }
 
 // Expressions
@@ -72,7 +101,10 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec) 
     lexer.nextToken(); // eat op
 
     // exceptions
-    if (op == '=' && lhs->getExpressionType() != expr_id)
+    if (op == '='
+        && lhs->getExpressionType() != expr_id
+        && (lhs->getExpressionType() == expr_biop
+          && !dynamic_cast<BiOpExpr*>(lhs)->isAtomConstructor()))
       return reportSyntaxError(lexer, "<id> '=' <expr> expected!");
 
     Expr *rhs = parsePrimary(gc, lexer, env);
@@ -99,20 +131,87 @@ static std::string boolToAtom(bool b) {
   return b ? "true" : "false";
 }
 
+const Expr *assignExpressions(GCMain &gc, Environment &env,
+    const Expr *thisExpr,
+    const Expr *lhs, const Expr *rhs) noexcept {
+
+  if (lhs->getExpressionType() == expr_id) {
+    std::string id = ((IdExpr*) lhs)->getName();
+    if (env.getVariables().count(id) == 0) {
+      env.getVariables().insert(std::pair<std::string, const Expr*>(id, rhs));
+      return thisExpr;
+    }
+
+    std::cerr << "Variable " << id << " already exists." << std::endl;
+    return nullptr;
+  }
+
+  if (lhs->getExpressionType() == expr_any)
+    return thisExpr;
+
+  if (lhs->getExpressionType() == expr_biop
+      && dynamic_cast<const BiOpExpr*>(lhs)->isAtomConstructor()) {
+
+    // Evaluate rhs and check for right expression type
+    Expr *newrhs = ::eval(gc, env, const_cast<Expr*>(rhs));
+    if (!newrhs) return nullptr;
+    if (newrhs->getExpressionType() != expr_biop
+        || dynamic_cast<BiOpExpr*>(newrhs)->getOperator() != op_fn) {
+      std::cout << "RHS must be substitution!" << std::endl;
+      return nullptr;
+    }
+
+    const BiOpExpr *bioplhs = dynamic_cast<const BiOpExpr*>(lhs);
+    const BiOpExpr *bioprhs = dynamic_cast<const BiOpExpr*>(newrhs);
+
+    const Expr *exprlhs = bioplhs;
+    const Expr *exprrhs = bioprhs;
+    while (exprlhs->getExpressionType() == expr_biop
+        && exprrhs->getExpressionType() == expr_biop
+        && dynamic_cast<const BiOpExpr*>(exprlhs)->getOperator() == op_fn
+        && dynamic_cast<const BiOpExpr*>(exprrhs)->getOperator() == op_fn) {
+      if (!assignExpressions(gc, env,
+          thisExpr,
+          &dynamic_cast<const BiOpExpr*>(exprlhs)->getRHS(),
+          &dynamic_cast<const BiOpExpr*>(exprrhs)->getRHS()))
+        return nullptr; // error forwarding
+
+      // assigned, now next expressions
+      exprlhs = &dynamic_cast<const BiOpExpr*>(exprlhs)->getLHS();
+      exprrhs = &dynamic_cast<const BiOpExpr*>(exprrhs)->getLHS();
+    }
+
+    // exprlhs and exprrhs have to be expr_atom
+    if (exprlhs->getExpressionType() != expr_atom) {
+      std::cerr << "Most left expression of LHS must be an atom." << std::endl;
+      return nullptr;
+    }
+    if (exprrhs->getExpressionType() != expr_atom) {
+      std::cerr << "Most left expression of RHS must be an atom." << std::endl;
+      return nullptr;
+    }
+
+    // Check if atoms are equal
+    if (dynamic_cast<const AtomExpr*>(exprlhs)->getName()
+        != dynamic_cast<const AtomExpr*>(exprrhs)->getName()) {
+
+      std::cerr << "Assignment of atom constructors requires same name. "
+        << dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
+        << " != " << dynamic_cast<const AtomExpr*>(exprrhs)->getName()
+        << "." << std::endl;
+    }
+
+    return thisExpr;
+  }
+
+  return nullptr;
+}
+
 Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   switch (op) {
   case op_asg: {
-              if (lhs->getExpressionType() == expr_id) {
-                std::string id = ((IdExpr*) lhs)->getName();
-                if (env.getVariables().count(id) == 0) {
-                  env.getVariables().insert(std::pair<std::string, Expr*>(id, rhs));
-                  return this;
-                }
-
-                std::cerr << "Variable " << id << " already exists." << std::endl;
-                return nullptr;
-              }
-            }
+      return const_cast<Expr*>(assignExpressions(gc, env, this, lhs, rhs));
+    }
   case op_eq:
   case op_leq:
   case op_geq:
@@ -177,13 +276,13 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
-  Expr *val = env.get(getName());
+  const Expr *val = env.get(getName());
   if (!val) {
     std::cerr << "Invalid identifier " << getName() << "." << std::endl;
     return nullptr;
   }
 
-  return val;
+  return const_cast<Expr*>(val);
 }
 
 Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
@@ -246,6 +345,41 @@ Expr *IfExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const 
       condition->replace(gc, name, newexpr),
       exprTrue->replace(gc, name, newexpr),
       exprFalse->replace(gc, name, newexpr));
+}
+
+Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept {
+  bool changedAsg = false;
+  bool overwritesId = false;
+  std::vector<BiOpExpr*> newassignments;
+  for (BiOpExpr *asg : assignments) {
+    for (std::string &id : asg->getLHS().getIdentifiers()) {
+      if (id == name)
+        overwritesId = true;
+
+      Expr *newasgrhs = asg->getRHS().replace(gc, name, expr);
+      if (newasgrhs != &asg->getRHS()) {
+        changedAsg = true;
+        newassignments.push_back(new BiOpExpr(gc, op_asg,
+             const_cast<Expr*>(&asg->getLHS()), newasgrhs));
+      } else {
+        newassignments.push_back(asg);
+      }
+    }
+  }
+
+  if (!overwritesId) {
+    Expr *newbody = body->replace(gc, name, expr);
+    if (newbody == body && !changedAsg)
+      return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
+
+    return new LetExpr(gc,
+        changedAsg ? newassignments : assignments, newbody);
+  }
+
+  if (changedAsg)
+    return new LetExpr(gc, newassignments, body);
+
+  return const_cast<Expr*>(dynamic_cast<const Expr*>(this));
 }
 
 // evaluate
