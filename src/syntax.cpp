@@ -361,7 +361,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
               Expr *newrhs = ::eval(gc, env, rhs);
               if (!newrhs) return nullptr; // error forwarding
 
-              TokenPos mergedPos = TokenPos(newlhs->getTokenPos(), newrhs->getTokenPos());
+              TokenPos mergedPos = this->getTokenPos();
 
               if (op == op_eq)
                 return new AtomExpr(gc, mergedPos,
@@ -422,7 +422,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 if (newrhs == rhs)
                   return this;
                 else
-                  return new BiOpExpr(gc, op_fn, lhs, newrhs);
+                  return new BiOpExpr(gc, getTokenPos(),op_fn, lhs, newrhs);
               }
 
               return ((LambdaExpr*)lhs)->replace(gc, rhs);
@@ -492,9 +492,9 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
   Expr *lambdaFn = nullptr;
-  Expr *noMatch = new BiOpExpr(gc, op_fn,
+  Expr *noMatch = new BiOpExpr(gc, this->getTokenPos(), op_fn,
       new IdExpr(gc, this->getTokenPos(), "error"),
-      new IdExpr(gc, getTokenPos(), "\"No Match\""));
+      new IdExpr(gc, this->getTokenPos(), "\"No Match\""));
 
   for (auto it = fncases.rbegin(); it != fncases.rend(); ++it) {
     // Work on one function case
@@ -513,8 +513,9 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
           || (expr->getExpressionType() == expr_biop
             && dynamic_cast<const BiOpExpr*>(expr)->isAtomConstructor())) {
         exprFnBody = new LetExpr(gc, expr->getTokenPos(),
-            std::vector<BiOpExpr*>{new BiOpExpr(gc, op_asg,
-                expr, argumentId)}, exprFnBody);
+            std::vector<BiOpExpr*>{new BiOpExpr(gc,
+                fncase.second->getTokenPos(),
+                op_asg, expr, argumentId)}, exprFnBody);
       }
 
       // Check if equality check needed
@@ -524,7 +525,8 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
 
       // For checking equality we need expr, where ids are replaced by ANY
       Expr *noidexpr = expr->replace(gc,  "", nullptr);
-      Expr *equalityCheck = new BiOpExpr(gc, op_eq, noidexpr, argumentId);
+      Expr *equalityCheck = new BiOpExpr(gc, noidexpr->getTokenPos(),
+          op_eq, noidexpr, argumentId);
       if (!exprCondition)
         exprCondition = equalityCheck; 
       else
@@ -569,7 +571,7 @@ Expr *LambdaExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) co
 }
 
 Expr *BiOpExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
-  return new BiOpExpr(gc, op,
+  return new BiOpExpr(gc, this->getTokenPos(), op,
       lhs->replace(gc, name, newexpr),
       rhs->replace(gc, name, newexpr));
 }
@@ -603,8 +605,9 @@ Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const no
       Expr *newasgrhs = asg->getRHS().replace(gc, name, expr);
       if (newasgrhs != &asg->getRHS()) {
         changedAsg = true;
-        newassignments.push_back(new BiOpExpr(gc, op_asg,
-             const_cast<Expr*>(&asg->getLHS()), newasgrhs));
+        newassignments.push_back(new BiOpExpr(gc, asg->getTokenPos(),
+              op_asg,
+              const_cast<Expr*>(&asg->getLHS()), newasgrhs));
       } else {
         newassignments.push_back(asg);
       }

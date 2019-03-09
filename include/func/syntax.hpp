@@ -74,8 +74,8 @@ public:
 /*!\brief Main expression handle (should only be used as parent class).
  */
 class Expr : public GCObj {
-  ExprType type;
   TokenPos pos;
+  ExprType type;
 protected:
   Expr *lastEval = nullptr;
 public:
@@ -154,10 +154,13 @@ class BiOpExpr : public Expr {
   Operator op;
   Expr *lhs, *rhs;
 public:
-  BiOpExpr(GCMain &gc, Operator op, Expr *lhs,
-                    Expr *rhs)
+  BiOpExpr(GCMain &gc, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, TokenPos(lhs->getTokenPos(), rhs->getTokenPos())),
       op(op), lhs{lhs}, rhs{rhs} {}
+  BiOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *lhs, Expr *rhs)
+    : Expr(gc, expr_biop, pos),
+      op(op), lhs{lhs}, rhs{rhs} {}
+
   virtual ~BiOpExpr() {}
 
   //!\return Returns operator.
