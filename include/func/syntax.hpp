@@ -83,6 +83,8 @@ public:
     : GCObj(gc), type{type}, pos(pos) {}
   virtual ~Expr() {}
 
+  /*!\return Returns position of token in code.
+   */
   const TokenPos &getTokenPos() const noexcept { return pos; }
 
   /*!\return Returns expression in functional-lang (the programming language to
@@ -104,8 +106,8 @@ public:
     return this;
   }
 
-  /*!\return Returns Last evaluation if already computed (except
-   * assignments). If no last evaluation, evaluate.
+  /*!\return Returns Last evaluation if already computed (except assignments).
+   * If no last evaluation, evaluate. To reset evaluation "lastEval = nullptr".
    * \param gc
    * \param env
    */

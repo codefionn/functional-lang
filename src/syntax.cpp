@@ -194,9 +194,6 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
         lhs->getTokenPos());
   }
 
-  if (lhs->getExpressionType() == expr_any)
-    return thisExpr;
-
   if (lhs->getExpressionType() == expr_biop
       && dynamic_cast<const BiOpExpr*>(lhs)->isAtomConstructor()) {
     // Atom constructor (pattern matching)
@@ -211,9 +208,12 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
           newrhs->getTokenPos());
     }
 
+    // Cast both sides
     const BiOpExpr *bioplhs = dynamic_cast<const BiOpExpr*>(lhs);
     const BiOpExpr *bioprhs = dynamic_cast<const BiOpExpr*>(newrhs);
 
+    // Assign all statements.
+    // Iterator through lhs and rhs till no longer binary function operator.
     const Expr *exprlhs = bioplhs;
     const Expr *exprrhs = bioprhs;
     while (exprlhs->getExpressionType() == expr_biop
@@ -226,7 +226,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
           &dynamic_cast<const BiOpExpr*>(exprrhs)->getRHS()))
         return nullptr; // error forwarding
 
-      // assigned, now next expressions
+      // assigned, now next expressions (iterator step)
       exprlhs = &dynamic_cast<const BiOpExpr*>(exprlhs)->getLHS();
       exprrhs = &dynamic_cast<const BiOpExpr*>(exprrhs)->getLHS();
     }
@@ -247,7 +247,9 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     if (dynamic_cast<const AtomExpr*>(exprlhs)->getName()
         != dynamic_cast<const AtomExpr*>(exprrhs)->getName()) {
 
+      // Print position of atom lhs
       reportSyntaxError(env.lexer, "", exprlhs->getTokenPos());
+      // Print error with atom rhs
       return reportSyntaxError(env.lexer,
           "Assignment of atom constructors requires same name. "
         + dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
@@ -294,13 +296,9 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
         expr->getTokenPos());
   }
 
-  if (!lhs->equals(rhs)) {
-    return reportSyntaxError(env.lexer,
-        "Invalid assignment!",
-        lhs->getTokenPos());
-  }
-
-  return thisExpr;
+  return reportSyntaxError(env.lexer,
+      "Invalid assignment. Only atom constructors, functions and identifier allowed.",
+      lhs->getTokenPos());
 }
 
 static Expr *biopeval(GCMain &gc, Environment &env,
@@ -401,10 +399,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 }
               }
 
-              if (newlhs == lhs && newrhs == rhs)
-                return this;
-
-              return new BiOpExpr(gc, op, newlhs, newrhs);
+              break;
             }
   case op_fn: {
               // special cases (built-in functions)
@@ -434,8 +429,9 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
             }
   }
 
-  std::cerr << "Interpreter error." << std::endl;
-  return nullptr;
+  return reportSyntaxError(env.lexer, 
+      "Invalid use of binary operator.",
+      this->getTokenPos());
 }
 
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
@@ -501,6 +497,7 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
       new IdExpr(gc, getTokenPos(), "\"No Match\""));
 
   for (auto it = fncases.rbegin(); it != fncases.rend(); ++it) {
+    // Work on one function case
     const std::pair<std::vector<Expr*>, Expr*> &fncase = *it;
 
     Expr *exprCondition = nullptr; // if condition
