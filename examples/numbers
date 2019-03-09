@@ -1,0 +1,45 @@
+zero = .zero
+succ x = .succ x
+
+-- substract one from x (decrement)
+dec (.succ x) = x
+
+-- add numbers x and y
+add (.succ x) y = .succ (add x y)
+add .zero y     = y
+
+-- subtract number y from x (may fail)
+sub (.succ x) (.succ y) = x
+sub (.succ x) .zero     = .succ x
+
+-- multiply x and y
+mul .zero         y = .zero
+mul (.succ .zero) y = y
+mul (.succ x)     y = add (mul x y) y
+
+-- are x and y equal ?
+eq (.succ x) (.succ y) = eq x y
+eq .zero .zero         = .true
+eq _     _             = .false
+
+-- check if x is greater than y
+gt (.succ x) (.succ y) = gt x y
+gt (.succ _) .zero     = .true
+gt _         _         = .false
+
+-- check if x is less than y
+le (.succ x) (.succ y) = le x y
+le .zero     (.succ _) = .true
+le _         _         = .false
+
+-- some numbers
+one   = .succ zero
+two   = add one one
+three = add two one
+four  = add three one
+five  = add four one
+six   = add five one
+seven = add six one
+eight = add seven one
+nine  = add eight one
+ten   = add nine one

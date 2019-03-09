@@ -409,6 +409,9 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                   return reportSyntaxError(*env.lexer,
                       rhs->toString(),
                       TokenPos(lhs->getTokenPos(), rhs->getTokenPos()));
+                } else if (id == "print") { // print expression and return expr
+                  std::cout << rhs->toString() << std::endl;
+                  return rhs;
                 }
               }
 

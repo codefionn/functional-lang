@@ -50,7 +50,16 @@ sub (.succ (.succ .zero)) -- == .succ .zero
 
 ## Build
 
+Normal:
+
 ```bash
 mkdir build ; cd build
 cmake .. ; cmake --build .
+```
+
+Debug (some things ARE broken):
+
+```bash
+mkdir build ; cd build
+cmake -DCMAKE_BUILD_TYPE=Debug .. ; cmake --build .
 ```
