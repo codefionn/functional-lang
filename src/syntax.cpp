@@ -81,11 +81,10 @@ bool BiOpExpr::isFunctionConstructor() const noexcept {
 bool BiOpExpr::isAtomConstructor() const noexcept {
   if (getOperator() != op_fn) return false;
 
-  /*if (getRHS().getExpressionType() != expr_id
-      && getRHS().getExpressionType() != expr_any
-      && (getRHS().getExpressionType() == expr_biop
-        && !dynamic_cast<const BiOpExpr*>(rhs)->isAtomConstructor()))
-      return false;*/
+  if (getRHS().getExpressionType() != expr_id
+      && (getRHS().getExpressionType() != expr_biop
+        || !dynamic_cast<const BiOpExpr*>(rhs)->isAtomConstructor()))
+      return false;
 
   if (getLHS().getExpressionType() == expr_atom) return true;
   if (getLHS().getExpressionType() != expr_biop) return false;
@@ -340,12 +339,35 @@ static Expr *biopeval(GCMain &gc, Environment &env,
 }
 
 Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
+  TokenPos mergedPos = this->getTokenPos();
+
   switch (op) {
   case op_asg: {
       return const_cast<Expr*>(assignExpressions(gc, env, this, lhs, rhs));
     }
   case op_land:
-  case op_lor:
+  case op_lor: {
+       // Lazy evaluation
+       Expr *newlhs = ::eval(gc, env, lhs);
+       if (!newlhs) return nullptr; // error forwarding
+       if (newlhs->getExpressionType() != expr_atom) break;
+
+       const std::string &namelhs = dynamic_cast<const AtomExpr*>(newlhs)->getName();
+       if (op == op_land && namelhs == "false")
+         return new AtomExpr(gc, mergedPos, boolToAtom(false));
+       if (op == op_lor && namelhs != "false")
+         return new AtomExpr(gc, mergedPos, boolToAtom(true));
+
+       Expr *newrhs = ::eval(gc, env, rhs);
+       if (!newrhs) return nullptr; // error forwarding
+       if (newrhs->getExpressionType() != expr_atom) break;
+
+       const std::string &namerhs = dynamic_cast<const AtomExpr*>(newrhs)->getName();
+       if (op == op_land || op == op_lor)
+         return new AtomExpr(gc, mergedPos, boolToAtom(namerhs != "false"));
+
+       break;
+    }
   case op_eq:
   case op_leq:
   case op_geq:
@@ -361,8 +383,6 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
               Expr *newrhs = ::eval(gc, env, rhs);
               if (!newrhs) return nullptr; // error forwarding
 
-              TokenPos mergedPos = this->getTokenPos();
-
               if (op == op_eq)
                 return new AtomExpr(gc, mergedPos,
                     boolToAtom(newlhs->equals(newrhs)));
@@ -377,29 +397,9 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 return biopeval(gc, env, mergedPos, op,
                     dynamic_cast<const IntExpr*>(newlhs),
                     dynamic_cast<const IntExpr*>(newrhs));
-              } else if (newlhs->getExpressionType() == expr_atom
-                  && newrhs->getExpressionType() == expr_atom) {
-                bool result;
-                switch (op) {
-                case op_land:
-                  result = dynamic_cast<const AtomExpr*>(newlhs)->getName() != "false"
-                    && dynamic_cast<const AtomExpr*>(newrhs)->getName() != "false";
-                  break;
-                case op_lor:
-                  result = dynamic_cast<const AtomExpr*>(newlhs)->getName() != "false"
-                    || dynamic_cast<const AtomExpr*>(newrhs)->getName() != "false";
-                  break;
-
-                }
-
-                switch (op) {
-                case op_land:
-                case op_lor:
-                  return new AtomExpr(gc, mergedPos, boolToAtom(result));
-                }
               }
 
-              break;
+               break;
             }
   case op_fn: {
               // special cases (built-in functions)
