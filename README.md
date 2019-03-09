@@ -22,6 +22,11 @@ fib = \x = if x == 0
            else if x == 1
                 then 1
                 else fib (x - 1) + fib (x - 2)
+-- Or (with named functions):
+namedfib 0 = 0
+namedfib 1 = 1
+namedfib x = namedfib (x - 1) + namedfib (x - 2)
+-- Fun corner: just type 'namedfib' and see what happens
 
 hello = hello
 hello -- == hello, because at evaluation, it's value doesn't change

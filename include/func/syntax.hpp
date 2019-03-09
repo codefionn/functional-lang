@@ -558,6 +558,9 @@ public:
     if (fncase.first.size() != fncases.at(0).first.size())
       return false;
 
+    // Reset evaluation
+    lastEval = nullptr;
+
     fncases.push_back(std::move(fncase));
     return true;
   }

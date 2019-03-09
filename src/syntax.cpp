@@ -475,8 +475,24 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
     if (!expr->eval(gc, *scope)) // only one execution required (because asg)
       return nullptr;
 
-  // Evaluate body with the new scope
-  return ::eval(gc, *scope, body);
+  // Only the main environment should be used, because with secondary
+  // environments identifiers with equal names can be assigned to each other,
+  // but they can be from different scopes !!!. This was necessary after having
+  // problems with named functions (namely the fibonacci-function).
+
+  // How to do this? Lambda Expression!
+  // We take all identifiers from our scope environment and make them to
+  // lambda sustitution expression.
+
+  Expr *result = body;
+  auto &vars = scope->getVariables();
+  for (auto it = vars.begin(); it != vars.end(); ++it) {
+    auto &p = *it;
+    result = new LambdaExpr(gc, getTokenPos(), p.first, result);
+    result = new BiOpExpr(gc, op_fn, result, const_cast<Expr*>(p.second));
+  }
+
+  return result;
 }
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
