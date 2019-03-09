@@ -157,15 +157,11 @@ public:
     { return curchar == -2 || curchar == '\n' || curchar == EOF || curtok == tok_eof ?
         (line == 0 ? 0 : line - 1) : line; }
   size_t getTokenStartPos() const noexcept
-    { return token_start == 0 ? 0 : 
-      token_start - 1; }
-  size_t getTokenEndPos() const noexcept {
-    size_t pos = token_end == 0 ? 0 : token_end - (isspace(curchar) ? 2 : 1);
-    if (pos < getTokenStartPos())
-      return getTokenStartPos();
-
-    return pos;
-  }
+    { return curchar < 0 || curchar == '\n' ? token_start :
+      (token_start == 0 ? 0 : token_start - 1); }
+  size_t getTokenEndPos() const noexcept
+    { return curchar < 0 || curchar == '\n' ? token_end :
+      (token_end == 0 ? 0 : token_end - 1); }
   const std::vector<std::string> &getLines() { return lines; }
 
   TokenPos getTokenPos() const noexcept {

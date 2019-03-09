@@ -278,7 +278,11 @@ const std::string &Lexer::currentIdentifier() const noexcept {
 }
 
 Token Lexer::reportError(const std::string &msg) noexcept {
-  return reportError(msg, TokenPos(getTokenStartPos(), getTokenEndPos(),
+  if (getTokenStartPos() == getTokenEndPos())
+    return reportError(msg, TokenPos(getTokenStartPos() + 1,
+          getTokenEndPos() + 1, currentLine(), currentLine()));
+
+  return reportError(msg, TokenPos(getTokenStartPos(), getTokenEndPos() + 1,
         currentLine(), currentLine()));
 }
 
@@ -306,7 +310,7 @@ Token Lexer::reportError(const std::string &msg, const TokenPos &pos) noexcept {
   }
 
   // Mark position
-  for (size_t i = 0; i < end && end != 0; ++i) {
+  for (size_t i = 0; i < end - 1 && end != 0; ++i) {
     if (i < start)
       std::cerr << ' ';
     else
