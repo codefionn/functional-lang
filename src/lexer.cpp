@@ -201,13 +201,10 @@ Token Lexer::nextToken() {
   if (isalpha(curchar)) {
     // Identifier
     curid = "";
-    while (isalpha(curchar)) {
+    while (isalpha(curchar) || curchar == '_' || isdigit(curchar)) {
       curid += curchar;
       nextChar(); // Eat alpha.
     }
-
-    if (isdigit(curchar))
-      return curtok = reportError("Digits are not allowed directly after identifiers!");
 
     return curtok = identifierToken(curid);
   }
