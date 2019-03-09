@@ -1,6 +1,8 @@
 #include "func/func.hpp"
 
 int main(int vargsc, char * vargs[]) {
+  std::vector<std::string> lines;
+
   GCMain gc;
   Environment *env = new Environment(gc);
   if (vargsc == 2) {
@@ -12,8 +14,8 @@ int main(int vargsc, char * vargs[]) {
       return 1;
     }
 
-    interpret(input, gc, env);
+    interpret(input, gc, lines, env);
   };
 
-  return interpret(std::cin, gc, env, true) ? 0 : 1;
+  return interpret(std::cin, gc, lines, env, true) ? 0 : 1;
 }

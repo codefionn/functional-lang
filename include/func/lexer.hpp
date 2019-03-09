@@ -110,9 +110,9 @@ class Lexer {
   std::istream *input;
 
   size_t token_start, token_end;
-  std::vector<std::string> lines;
+  std::vector<std::string>& lines;
 public:
-  Lexer(std::istream &input);
+  Lexer(std::istream &input, std::vector<std::string> &lines);
   virtual ~Lexer();
 
   /*!\brief Aquire next char.

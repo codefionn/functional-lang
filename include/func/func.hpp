@@ -108,7 +108,9 @@
  * \param interpret_mode Prints some pretty helpers (line prefixes) if true.
  * \return Returns true on success, false if error occured.
  */
-bool interpret(std::istream &input, GCMain &gc, Environment *env = nullptr,
+bool interpret(std::istream &input, GCMain &gc,
+    std::vector<std::string> &lines,
+    Environment *env = nullptr,
     bool interpret_mode = false) noexcept;
 
 #endif /* FUNC_FUNC_HPP */

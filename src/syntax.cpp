@@ -200,7 +200,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
     // Evaluate rhs and check for right expression type
     Expr *newrhs = ::eval(gc, env, const_cast<Expr*>(rhs));
-    if (!newrhs) return nullptr;
+    if (!newrhs) return nullptr; // error forwarding
     if (newrhs->getExpressionType() != expr_biop
         || dynamic_cast<BiOpExpr*>(newrhs)->getOperator() != op_fn) {
       return reportSyntaxError(*env.lexer,
@@ -421,6 +421,8 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 Expr *newrhs = ::eval(gc, env, rhs);
                 if (newrhs == rhs)
                   return this;
+                else if (!newrhs)
+                  return nullptr; // error forwarding
                 else
                   return new BiOpExpr(gc, getTokenPos(),op_fn, lhs, newrhs);
               }

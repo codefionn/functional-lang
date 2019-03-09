@@ -2,8 +2,8 @@
 #include "func/lexer.hpp"
 
 int main() {
-
-  Lexer lexer(std::cin);
+  std::vector<std::string> lines;
+  Lexer lexer(std::cin, lines);
 
   std::cout << "> ";
   while (lexer.nextToken() != tok_eof

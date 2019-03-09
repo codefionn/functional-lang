@@ -156,10 +156,17 @@ class BiOpExpr : public Expr {
 public:
   BiOpExpr(GCMain &gc, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, TokenPos(lhs->getTokenPos(), rhs->getTokenPos())),
-      op(op), lhs{lhs}, rhs{rhs} {}
+      op(op), lhs{lhs}, rhs{rhs} {
+    if (!lhs) exit(1);
+    if (!rhs) exit(1);
+  }
+
   BiOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, pos),
-      op(op), lhs{lhs}, rhs{rhs} {}
+      op(op), lhs{lhs}, rhs{rhs} {
+    if (!lhs) exit(1);
+    if (!rhs) exit(1);
+   }
 
   virtual ~BiOpExpr() {}
 
@@ -198,9 +205,7 @@ public:
     const BiOpExpr *biOpExpr = dynamic_cast<const BiOpExpr*>(expr);
     if (biOpExpr->getOperator() != this->getOperator()) return false;
     if (!biOpExpr->getRHS().equals(&this->getRHS())) return false;
-    if (!biOpExpr->getLHS().equals(&this->getLHS())) return false;
-
-    return true;
+    return biOpExpr->getLHS().equals(&this->getLHS());
   }
 
   /*!\return Returns true if all expressions are binary operator functions with

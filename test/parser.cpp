@@ -2,7 +2,8 @@
 
 int main() {
   std::cout << "> ";
-  Lexer lexer(std::cin);
+  std::vector<std::string> lines;
+  Lexer lexer(std::cin, lines);
   lexer.nextToken();
   lexer.skippedNewLinePrefix = "..";
 

@@ -1,10 +1,12 @@
 #include "func/func.hpp"
 
-bool interpret(std::istream &input, GCMain &gc, Environment *env,
+bool interpret(std::istream &input, GCMain &gc,
+    std::vector<std::string> &lines,
+    Environment *env,
     bool interpret_mode) noexcept {
   bool error = false;
 
-  Lexer lexer(input);
+  Lexer lexer(input, lines);
   if (interpret_mode)
     lexer.skippedNewLinePrefix = "..";
 
@@ -49,8 +51,6 @@ bool interpret(std::istream &input, GCMain &gc, Environment *env,
       break;
 
     env->mark(gc); // mark main scope/environemnt
-
-    gc.collect(); // We collect it all (garbage)
   }
 
   return !error;

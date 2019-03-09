@@ -1,7 +1,9 @@
 #include "func/lexer.hpp"
 
-Lexer::Lexer(std::istream &input)
-  : input{&input}, lineStr(), line{0}, column{0}, curchar{-2} {
+Lexer::Lexer(std::istream &input, std::vector<std::string> &lines)
+  : input{&input}, lineStr(), line{0}, column{0}, curchar{-2},
+    lines{lines} {
+  line = lines.size();
 }
 
 Lexer::~Lexer() {
