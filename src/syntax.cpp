@@ -489,7 +489,7 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
     result = result->replace(gc, p.first, const_cast<Expr*>(p.second));
   }
 
-  return result;
+  return ::eval(gc, *scope, result);
 }
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
