@@ -488,8 +488,7 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
   auto &vars = scope->getVariables();
   for (auto it = vars.begin(); it != vars.end(); ++it) {
     auto &p = *it;
-    result = new LambdaExpr(gc, getTokenPos(), p.first, result);
-    result = new BiOpExpr(gc, op_fn, result, const_cast<Expr*>(p.second));
+    result = result->replace(gc, p.first, const_cast<Expr*>(p.second));
   }
 
   return result;
