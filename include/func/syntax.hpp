@@ -56,6 +56,11 @@ public:
    */
   const Expr *get(const std::string &name) const noexcept;
 
+  /*!\return Returns associated expression (to name), nullptr if not found.
+   * But only looks in current scope/environment, not in parent.
+   */
+  const Expr *currentGet(const std::string &name) const noexcept;
+
   virtual void mark(GCMain &gc) noexcept override;
 
   std::map<std::string, const Expr*> &getVariables() noexcept
@@ -71,6 +76,8 @@ public:
 class Expr : public GCObj {
   ExprType type;
   TokenPos pos;
+protected:
+  Expr *lastEval = nullptr;
 public:
   Expr(GCMain &gc, ExprType type, const TokenPos &pos)
     : GCObj(gc), type{type}, pos(pos) {}
@@ -97,6 +104,13 @@ public:
     return this;
   }
 
+  Expr *evalWithLookup(GCMain &gc, Environment &env) noexcept {
+    if (lastEval)
+      return lastEval;
+
+    return lastEval = eval(gc, env);
+  }
+
   /*!\brief Replace all identifiers equal to name with expr.
    * \param gc
    * \param name Identifer name to replace. If name is empty, every
@@ -121,6 +135,14 @@ public:
    */
   virtual std::vector<std::string> getIdentifiers() const noexcept {
     return std::vector<std::string>();
+  }
+
+  virtual void mark(GCMain &gc) noexcept override {
+    if (isMarked(gc))
+      return;
+
+    markSelf(gc);
+    if (lastEval) lastEval->mark(gc);
   }
 };
 
@@ -156,6 +178,7 @@ public:
       return;
 
     markSelf(gc);
+    if (lastEval) lastEval->mark(gc);
     lhs->mark(gc);
     rhs->mark(gc);
   }
@@ -296,6 +319,7 @@ public:
       return;
 
     markSelf(gc);
+    if (lastEval) lastEval->mark(gc);
     expr->mark(gc);
   }
 
@@ -381,6 +405,7 @@ public:
       return;
 
     markSelf(gc);
+    if (lastEval) lastEval->mark(gc);
     condition->mark(gc);
     exprTrue->mark(gc);
     exprFalse->mark(gc);
@@ -424,6 +449,10 @@ public:
   virtual bool equals(const Expr *expr) const noexcept override {
     return true;
   }
+
+  virtual std::string toString() const noexcept override {
+    return std::string("_");
+  }
 };
 
 /*!\brief Let expression
@@ -456,6 +485,7 @@ public:
       return;
 
     markSelf(gc);
+    if(lastEval) lastEval->mark(gc);
     for (BiOpExpr *expr : assignments)
       expr->mark(gc);
 
@@ -497,6 +527,19 @@ public:
 
     return body->equals(&(letexpr->getBody()));
   }
+
+  virtual std::string toString() const noexcept override {
+    std::string result = "let ";
+    auto &asgs = const_cast<std::vector<BiOpExpr*>&>(assignments);
+    for (auto it = asgs.begin(); it != assignments.end(); ++it) {
+      if (it != assignments.begin())
+        result += "; ";
+
+      result += (*it)->toString();
+    }
+
+    return result + " in " + body->toString();
+  }
 };
 
 /*!\brief Represents a named function.
@@ -511,7 +554,13 @@ public:
     : Expr(gc, expr_fn, pos), name(name), fncases{fncase} {}
   virtual ~FunctionExpr() {}
 
-  void addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept;
+  bool addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept {
+    if (fncase.first.size() != fncases.at(0).first.size())
+      return false;
+
+    fncases.push_back(std::move(fncase));
+    return true;
+  }
 
   /*!\return Returns name of function.
    */

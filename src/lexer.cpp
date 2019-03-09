@@ -388,6 +388,10 @@ std::string std::to_string(Operator op) noexcept {
     return "^";
   case op_asg:
     return "=";
+  case op_land:
+    return "&&";
+  case op_lor:
+    return "||";
   }
 
   return ""; // invalid

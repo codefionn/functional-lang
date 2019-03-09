@@ -18,6 +18,15 @@ const Expr *Environment::get(const std::string &name) const noexcept {
   return parent ? parent->get(name) : nullptr;
 }
 
+const Expr *Environment::currentGet(const std::string &name) const noexcept {
+  auto it = variables.find(name);
+  if (it != variables.end()) {
+    return it->second;
+  }
+
+  return nullptr;
+}
+
 void Environment::mark(GCMain &gc) noexcept {
   if (isMarked(gc))
     return;
@@ -37,6 +46,7 @@ void FunctionExpr::mark(GCMain &gc) noexcept {
     return;
 
   markSelf(gc);
+  if (lastEval) lastEval->mark(gc);
 
   for (const std::pair<std::vector<Expr*>, Expr*> &fncase : fncases) {
     for (Expr *expr : fncase.first) {
@@ -50,7 +60,12 @@ void FunctionExpr::mark(GCMain &gc) noexcept {
 // BiOpExpr
 
 bool BiOpExpr::isFunctionConstructor() const noexcept {
-  return false;
+  if (getOperator() != op_fn) return false;
+
+  if (getLHS().getExpressionType() == expr_biop)
+    return dynamic_cast<const BiOpExpr&>(getLHS()).isFunctionConstructor();
+
+  return getLHS().getExpressionType() == expr_id;
 }
 
 bool BiOpExpr::isAtomConstructor() const noexcept {
@@ -174,6 +189,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
   if (lhs->getExpressionType() == expr_biop
       && dynamic_cast<const BiOpExpr*>(lhs)->isAtomConstructor()) {
+    // Atom constructor (pattern matching)
 
     // Evaluate rhs and check for right expression type
     Expr *newrhs = ::eval(gc, env, const_cast<Expr*>(rhs));
@@ -230,6 +246,42 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     }
 
     return thisExpr;
+  }
+
+  if (lhs->getExpressionType() == expr_biop
+      && dynamic_cast<const BiOpExpr*>(lhs)->isFunctionConstructor()) {
+
+    // function constructor
+
+    std::pair<std::vector<Expr*>, Expr*> fncase;
+    fncase.second = const_cast<Expr*>(rhs);
+    
+    const Expr *expr = lhs;
+    while (expr->getExpressionType() == expr_biop) {
+      fncase.first.insert(fncase.first.begin(),
+          const_cast<Expr*>(&dynamic_cast<const BiOpExpr*>(expr)->getRHS()));
+      expr = const_cast<Expr*>(&dynamic_cast<const BiOpExpr*>(expr)->getLHS());
+    }
+
+    const std::string &fnname = dynamic_cast<const IdExpr*>(expr)->getName();
+    const Expr *fnexpr = env.currentGet(fnname);
+    if (!fnexpr) {
+      fnexpr = new FunctionExpr(gc, expr->getTokenPos(), fnname, fncase);
+      env.getVariables().insert(
+          std::pair<std::string, Expr*>(fnname, const_cast<Expr*>(fnexpr)));
+      return thisExpr;
+    } else if (fnexpr->getExpressionType() == expr_fn) {
+      if(!const_cast<FunctionExpr*>(dynamic_cast<const FunctionExpr*>(fnexpr))->addCase(fncase))
+        return reportSyntaxError(env.lexer,
+            "Function argument length of \"" + fnname + "\" don't match.",
+            expr->getTokenPos());
+
+      return thisExpr;
+    }
+
+    return reportSyntaxError(env.lexer,
+        "Identifier \"" + fnname + "\" already assigned to a non-function!",
+        expr->getTokenPos());
   }
 
   if (!lhs->equals(rhs)) {
@@ -418,22 +470,60 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
-  Expr *lambdaFn = nullptr;
+  IfExpr *lambdaFn = nullptr;
+  Expr *noMatch = new BiOpExpr(gc, op_fn,
+      new IdExpr(gc, this->getTokenPos(), "error"),
+      new IdExpr(gc, getTokenPos(), "\"No Match\""));
 
-  for (const std::pair<std::vector<Expr*>, Expr*> &fncase : fncases) {
-    Expr *exprTrue = nullptr;
+  for (auto it = fncases.rbegin(); it != fncases.rend(); ++it) {
+    const std::pair<std::vector<Expr*>, Expr*> &fncase = *it;
+
+    Expr *exprCondition = nullptr; // if condition
+    Expr *exprFnBody = fncase.second; // function body
+
+    size_t xid = 0; // argument id
     for (Expr *expr : fncase.first) {
       // For checking equality we need expr, where ids are replaced by ANY
       Expr *noidexpr = expr->replace(gc,  "", nullptr);
-      if (!exprTrue) {
-        
-      } else {
 
+      IdExpr *argumentId
+        = new IdExpr(gc, expr->getTokenPos(), std::string("_x") + std::to_string(xid++));
+
+      Expr *equalityCheck = new BiOpExpr(gc, op_eq, noidexpr, argumentId);
+      if (!exprCondition)
+        exprCondition = equalityCheck; 
+      else
+        exprCondition = new BiOpExpr(gc, op_land, exprCondition, equalityCheck);
+
+      // let statement
+      if (expr->getExpressionType() == expr_id
+          || (expr->getExpressionType() == expr_biop
+            && dynamic_cast<const BiOpExpr*>(expr)->isAtomConstructor())) {
+        exprFnBody = new LetExpr(gc, expr->getTokenPos(),
+            std::vector<BiOpExpr*>{new BiOpExpr(gc, op_asg,
+                expr, argumentId)}, exprFnBody);
       }
     }
+
+    // exprTrue is not nullptr because at least one argument exists
+
+    lambdaFn = new IfExpr(gc,
+        TokenPos(fncase.first.at(0)->getTokenPos(),
+                 fncase.first.at(fncase.first.size() - 1)->getTokenPos()),
+        exprCondition, exprFnBody, 
+        lambdaFn ? lambdaFn : noMatch);
   }
 
-  return nullptr;
+  //  lambdaFn is not nullptr because at least one case exists
+  // Now construct lambda Function (lambdaFn is only the body)
+
+  Expr *result = lambdaFn;
+  for (size_t i = fncases.at(0).first.size(); i > 0; --i) {
+    result = new LambdaExpr(gc, this->getTokenPos(),
+      "_x" + std::to_string(i - 1), result); // Not type-able identifier
+  }
+
+  return result;
 }
 
 // replace/substitute
@@ -510,10 +600,14 @@ Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const no
 // evaluate
 
 Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept {
+
   Expr *oldExpr = expr;
   while (expr && (expr = expr->eval(gc, env)) != oldExpr) {
+    if (oldExpr) std::cout << expr->toString() << std::endl;
     oldExpr = expr;
   }
+
+  if (expr) std::cout << expr->toString() << std::endl;
 
   return expr;
 }
