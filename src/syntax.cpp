@@ -412,6 +412,24 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 } else if (id == "print") { // print expression and return expr
                   std::cout << rhs->toString() << std::endl;
                   return rhs;
+                } else if (id == "to_int") {
+                  Expr *expr = ::eval(gc, env, rhs);
+                  switch (expr->getExpressionType()) {
+                  case expr_int:
+                    return expr;
+                  case expr_num:
+                    return new IntExpr(gc, mergedPos,
+                        (int64_t) floor(dynamic_cast<NumExpr*>(expr)->getNumber()));
+                  }
+                } else if (id == "round_int") {
+                  Expr *expr = ::eval(gc, env, rhs);
+                  switch (expr->getExpressionType()) {
+                  case expr_int:
+                    return expr;
+                  case expr_num:
+                    return new IntExpr(gc, mergedPos,
+                        (int64_t) round(dynamic_cast<NumExpr*>(expr)->getNumber()));
+                  }
                 }
               }
 
