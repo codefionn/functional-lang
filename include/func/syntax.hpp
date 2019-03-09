@@ -33,6 +33,7 @@ enum ExprType : int {
   expr_if, //!< If-then-else
   expr_any, //!< Any '_'
   expr_let, //!< Let statement
+  expr_fn, //!< Intern statement for named functions
 };
 
 /*!\brief Environment for accessing variables.
@@ -98,7 +99,8 @@ public:
 
   /*!\brief Replace all identifiers equal to name with expr.
    * \param gc
-   * \param name Identifer name to replace.
+   * \param name Identifer name to replace. If name is empty, every
+   * identifier will be replaced by AnyExpr(expr_any).
    * \param expr The expression to replaces identifiers.
    * \return Returns new expression, where matching identifiers are replaced.
    * Returns itself if not possible (expression can't contain any identifiers)
@@ -178,6 +180,8 @@ public:
    * \<atom\> (\<Id\> | '_')+
    */
   bool isAtomConstructor() const noexcept;
+
+  bool isFunctionConstructor() const noexcept;
 
   /*!\returns \<atom\> of atom constructor RHS don't have to be \<Id\> or '_'.
    * \see isAtomConstructor
@@ -493,6 +497,32 @@ public:
 
     return body->equals(&(letexpr->getBody()));
   }
+};
+
+/*!\brief Represents a named function.
+ */
+class FunctionExpr : public Expr {
+  std::string name;
+  std::vector<std::pair<std::vector<Expr*>, Expr*>>  fncases;
+public:
+  FunctionExpr(GCMain &gc, const TokenPos &pos,
+      const std::string &name,
+      std::pair<std::vector<Expr*>, Expr*> fncase) noexcept
+    : Expr(gc, expr_fn, pos), name(name), fncases{fncase} {}
+  virtual ~FunctionExpr() {}
+
+  void addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept;
+
+  /*!\return Returns name of function.
+   */
+  const std::string &getName() const noexcept { return name; }
+
+  const std::vector<std::pair<std::vector<Expr*>, Expr*>> &getFunctionCases()
+    const noexcept { return fncases; }
+
+  virtual void mark(GCMain &gc) noexcept override;
+
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept;
 };
 
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg,

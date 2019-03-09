@@ -135,6 +135,24 @@ Token Lexer::nextToken() {
   case ';':
     nextChar(); // eat :
     return curtok = tok_delim;
+  case '&':
+    nextChar(); // eat &
+    if (curchar == '&') {
+      nextChar(); // eat &
+      curop = op_land;
+      return curtok = tok_op;
+    }
+
+    return curtok = reportError("Unknown/Unsupported character!");
+  case '|':
+    nextChar(); // eat |
+    if (curchar == '|') {
+      nextChar(); // eat |
+      curop = op_lor;
+      return curtok = tok_op;
+    }
+
+    return curtok = reportError("Unknown/Unsupported character!");
   }
 
   if (isdigit(curchar)) {
@@ -315,20 +333,23 @@ int getOperatorPrecedence(Operator op) {
   switch (op) {
   case op_asg:
       return 1;
+  case op_land:
+  case op_lor:
+      return 2;
   case op_eq:
   case op_leq:
   case op_geq:
   case op_le:
   case op_gt:
-      return 2;
+      return 3;
   case op_add:
   case op_sub:
-    return 3;
+    return 4;
   case op_mul:
   case op_div:
-    return 4;
-  case op_pow:
     return 5;
+  case op_pow:
+    return 6;
   }
 
   return 0;

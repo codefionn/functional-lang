@@ -17,7 +17,7 @@
  *     <expr> := <id>
  *             | <num>
  *             | '(' <expr> ')'
- *             | <id> '=' <expr>
+ *             | <asg-expr> '=' <expr>
  *             | <expr> '==' <expr>
  *             | <expr> '<=' <expr>
  *             | <expr> '>=' <expr>
@@ -33,6 +33,13 @@
  *             | '.' <id>
  *             | '$' <expr>
  *             | '_'
+ *             | 'let' <let-expr> 'in' <expr>
+ *             | 'if' <expr> 'then' <expr> 'else' <expr>
+ *     <let-expr> := <asg-expr> '=' <expr>
+ *                 | <asg-expr> '=' <expr> ';' <let-expr>
+ *                 | <asg-expr> '=' <expr> <newline> <let-expr>
+ *     <asg-expr> := <id> | <atom-asg-expr> | <id> <asg-expr>
+ *     <atom-asg-expr> := '.'<id> <asg-expr>
  *
  * Precedence:
  *

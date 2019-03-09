@@ -30,16 +30,37 @@ void Environment::mark(GCMain &gc) noexcept {
   if (parent) parent->mark(gc);
 }
 
+// mark
+
+void FunctionExpr::mark(GCMain &gc) noexcept {
+  if (isMarked(gc))
+    return;
+
+  markSelf(gc);
+
+  for (const std::pair<std::vector<Expr*>, Expr*> &fncase : fncases) {
+    for (Expr *expr : fncase.first) {
+      expr->mark(gc); 
+    }
+
+    fncase.second->mark(gc);
+  }
+}
+
 // BiOpExpr
+
+bool BiOpExpr::isFunctionConstructor() const noexcept {
+  return false;
+}
 
 bool BiOpExpr::isAtomConstructor() const noexcept {
   if (getOperator() != op_fn) return false;
 
-  if (getRHS().getExpressionType() != expr_id
+  /*if (getRHS().getExpressionType() != expr_id
       && getRHS().getExpressionType() != expr_any
       && (getRHS().getExpressionType() == expr_biop
         && !dynamic_cast<const BiOpExpr*>(rhs)->isAtomConstructor()))
-      return false;
+      return false;*/
 
   if (getLHS().getExpressionType() == expr_atom) return true;
   if (getLHS().getExpressionType() != expr_biop) return false;
@@ -98,14 +119,16 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec) 
   while (lexer.currentToken() == tok_op && lexer.currentPrecedence() >= prec) {
     Operator op = lexer.currentOperator();
     int opprec = lexer.currentPrecedence();
-    lexer.nextToken(); // eat op
 
     // exceptions
-    if (op == '='
+    /*if (op == op_asg
         && lhs->getExpressionType() != expr_id
         && (lhs->getExpressionType() == expr_biop
-          && !dynamic_cast<BiOpExpr*>(lhs)->isAtomConstructor()))
-      return reportSyntaxError(lexer, "<id> '=' <expr> expected!", lhs->getTokenPos());
+          && !dynamic_cast<BiOpExpr*>(lhs)->isAtomConstructor())
+        && lhs->getExpressionType() != expr_any)
+      return reportSyntaxError(lexer, "Expected identifier, atom constructor or any!", lhs->getTokenPos());*/
+
+    lexer.nextToken(); // eat op
 
     Expr *rhs = parsePrimary(gc, lexer, env);
     if (!rhs) {
@@ -209,7 +232,13 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     return thisExpr;
   }
 
-  return nullptr;
+  if (!lhs->equals(rhs)) {
+    return reportSyntaxError(env.lexer,
+        "Invalid assignment!",
+        lhs->getTokenPos());
+  }
+
+  return thisExpr;
 }
 
 static Expr *biopeval(GCMain &gc, Environment &env,
@@ -255,6 +284,8 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   case op_asg: {
       return const_cast<Expr*>(assignExpressions(gc, env, this, lhs, rhs));
     }
+  case op_land:
+  case op_lor:
   case op_eq:
   case op_leq:
   case op_geq:
@@ -286,6 +317,26 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 return biopeval(gc, env, mergedPos, op,
                     dynamic_cast<const IntExpr*>(newlhs),
                     dynamic_cast<const IntExpr*>(newrhs));
+              } else if (newlhs->getExpressionType() == expr_atom
+                  && newrhs->getExpressionType() == expr_atom) {
+                bool result;
+                switch (op) {
+                case op_land:
+                  result = dynamic_cast<const AtomExpr*>(newlhs)->getName() != "false"
+                    && dynamic_cast<const AtomExpr*>(newrhs)->getName() != "false";
+                  break;
+                case op_lor:
+                  result = dynamic_cast<const AtomExpr*>(newlhs)->getName() != "false"
+                    || dynamic_cast<const AtomExpr*>(newrhs)->getName() != "false";
+                  break;
+
+                }
+
+                switch (op) {
+                case op_land:
+                case op_lor:
+                  return new AtomExpr(gc, mergedPos, boolToAtom(result));
+                }
               }
 
               if (newlhs == lhs && newrhs == rhs)
@@ -366,6 +417,25 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
   return ::eval(gc, *scope, body);
 }
 
+Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
+  Expr *lambdaFn = nullptr;
+
+  for (const std::pair<std::vector<Expr*>, Expr*> &fncase : fncases) {
+    Expr *exprTrue = nullptr;
+    for (Expr *expr : fncase.first) {
+      // For checking equality we need expr, where ids are replaced by ANY
+      Expr *noidexpr = expr->replace(gc,  "", nullptr);
+      if (!exprTrue) {
+        
+      } else {
+
+      }
+    }
+  }
+
+  return nullptr;
+}
+
 // replace/substitute
 
 Expr *LambdaExpr::replace(GCMain &gc, Expr *newexpr) const noexcept {
@@ -386,6 +456,9 @@ Expr *BiOpExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) cons
 }
 
 Expr *IdExpr::replace(GCMain &gc, const std::string &name, Expr *newexpr) const noexcept {
+  if (name.empty())
+    return new AnyExpr(gc, getTokenPos());
+
   if (name == getName())
     return newexpr;
 

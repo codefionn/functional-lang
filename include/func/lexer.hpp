@@ -49,6 +49,9 @@ enum Operator {
   op_le, //!< \<
   op_gt, //!< \>
 
+  op_land, //!< &&
+  op_lor, //!< ||
+
   op_add, //!< +
   op_sub, //!< -
   op_mul, //!< *
