@@ -1,5 +1,15 @@
 #include "func/syntax.hpp"
 
+// Expr
+
+Expr *Expr::evalWithLookup(GCMain &gc, Environment &env) noexcept {
+  if (lastEval  && (getExpressionType() != expr_biop
+          || dynamic_cast<const BiOpExpr*>(this)->getOperator() != op_asg))
+    return lastEval;
+
+  return lastEval = eval(gc, env);
+}
+
 // Environment
 
 bool Environment::contains(const std::string &name) const noexcept {
@@ -470,7 +480,7 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
-  IfExpr *lambdaFn = nullptr;
+  Expr *lambdaFn = nullptr;
   Expr *noMatch = new BiOpExpr(gc, op_fn,
       new IdExpr(gc, this->getTokenPos(), "error"),
       new IdExpr(gc, getTokenPos(), "\"No Match\""));
@@ -483,17 +493,8 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
 
     size_t xid = 0; // argument id
     for (Expr *expr : fncase.first) {
-      // For checking equality we need expr, where ids are replaced by ANY
-      Expr *noidexpr = expr->replace(gc,  "", nullptr);
-
       IdExpr *argumentId
         = new IdExpr(gc, expr->getTokenPos(), std::string("_x") + std::to_string(xid++));
-
-      Expr *equalityCheck = new BiOpExpr(gc, op_eq, noidexpr, argumentId);
-      if (!exprCondition)
-        exprCondition = equalityCheck; 
-      else
-        exprCondition = new BiOpExpr(gc, op_land, exprCondition, equalityCheck);
 
       // let statement
       if (expr->getExpressionType() == expr_id
@@ -503,15 +504,31 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
             std::vector<BiOpExpr*>{new BiOpExpr(gc, op_asg,
                 expr, argumentId)}, exprFnBody);
       }
+
+      // Check if equality check needed
+      if (expr->getExpressionType() == expr_any
+          || expr->getExpressionType() == expr_id)
+        continue;
+
+      // For checking equality we need expr, where ids are replaced by ANY
+      Expr *noidexpr = expr->replace(gc,  "", nullptr);
+      Expr *equalityCheck = new BiOpExpr(gc, op_eq, noidexpr, argumentId);
+      if (!exprCondition)
+        exprCondition = equalityCheck; 
+      else
+        exprCondition = new BiOpExpr(gc, op_land, exprCondition, equalityCheck);
     }
 
-    // exprTrue is not nullptr because at least one argument exists
-
-    lambdaFn = new IfExpr(gc,
-        TokenPos(fncase.first.at(0)->getTokenPos(),
-                 fncase.first.at(fncase.first.size() - 1)->getTokenPos()),
-        exprCondition, exprFnBody, 
-        lambdaFn ? lambdaFn : noMatch);
+    // exprCondition might be nullptr
+    if (!exprCondition)
+      lambdaFn = exprFnBody;
+    else  {
+      lambdaFn = new IfExpr(gc,
+          TokenPos(fncase.first.at(0)->getTokenPos(),
+                   fncase.first.at(fncase.first.size() - 1)->getTokenPos()),
+          exprCondition, exprFnBody, 
+          lambdaFn ? lambdaFn : noMatch);
+    }
   }
 
   //  lambdaFn is not nullptr because at least one case exists
@@ -602,12 +619,9 @@ Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const no
 Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept {
 
   Expr *oldExpr = expr;
-  while (expr && (expr = expr->eval(gc, env)) != oldExpr) {
-    if (oldExpr) std::cout << expr->toString() << std::endl;
+  while (expr && (expr = expr->evalWithLookup(gc, env)) != oldExpr) {
     oldExpr = expr;
   }
-
-  if (expr) std::cout << expr->toString() << std::endl;
 
   return expr;
 }

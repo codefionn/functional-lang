@@ -104,12 +104,12 @@ public:
     return this;
   }
 
-  Expr *evalWithLookup(GCMain &gc, Environment &env) noexcept {
-    if (lastEval)
-      return lastEval;
-
-    return lastEval = eval(gc, env);
-  }
+  /*!\return Returns Last evaluation if already computed (except
+   * assignments). If no last evaluation, evaluate.
+   * \param gc
+   * \param env
+   */
+  Expr *evalWithLookup(GCMain &gc, Environment &env) noexcept;
 
   /*!\brief Replace all identifiers equal to name with expr.
    * \param gc
