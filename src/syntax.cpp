@@ -190,7 +190,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
       return thisExpr;
     }
 
-    return reportSyntaxError(env.lexer, "Variable " + id + " already exists.",
+    return reportSyntaxError(*env.lexer, "Variable " + id + " already exists.",
         lhs->getTokenPos());
   }
 
@@ -203,7 +203,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     if (!newrhs) return nullptr;
     if (newrhs->getExpressionType() != expr_biop
         || dynamic_cast<BiOpExpr*>(newrhs)->getOperator() != op_fn) {
-      return reportSyntaxError(env.lexer,
+      return reportSyntaxError(*env.lexer,
           "RHS must be a substitution expression!",
           newrhs->getTokenPos());
     }
@@ -233,12 +233,12 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
     // exprlhs and exprrhs have to be expr_atom
     if (exprlhs->getExpressionType() != expr_atom) {
-      return reportSyntaxError(env.lexer,
+      return reportSyntaxError(*env.lexer,
         "Most left expression of LHS must be an atom.",
         exprlhs->getTokenPos());
     }
     if (exprrhs->getExpressionType() != expr_atom) {
-      return reportSyntaxError(env.lexer,
+      return reportSyntaxError(*env.lexer,
         "Most left expression of RHS must be an atom.",
         exprrhs->getTokenPos());
     }
@@ -248,9 +248,9 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
         != dynamic_cast<const AtomExpr*>(exprrhs)->getName()) {
 
       // Print position of atom lhs
-      reportSyntaxError(env.lexer, "", exprlhs->getTokenPos());
+      reportSyntaxError(*env.lexer, "", exprlhs->getTokenPos());
       // Print error with atom rhs
-      return reportSyntaxError(env.lexer,
+      return reportSyntaxError(*env.lexer,
           "Assignment of atom constructors requires same name. "
         + dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
         + " != " + dynamic_cast<const AtomExpr*>(exprrhs)->getName()
@@ -284,19 +284,19 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
       return thisExpr;
     } else if (fnexpr->getExpressionType() == expr_fn) {
       if(!const_cast<FunctionExpr*>(dynamic_cast<const FunctionExpr*>(fnexpr))->addCase(fncase))
-        return reportSyntaxError(env.lexer,
+        return reportSyntaxError(*env.lexer,
             "Function argument length of \"" + fnname + "\" don't match.",
             expr->getTokenPos());
 
       return thisExpr;
     }
 
-    return reportSyntaxError(env.lexer,
+    return reportSyntaxError(*env.lexer,
         "Identifier \"" + fnname + "\" already assigned to a non-function!",
         expr->getTokenPos());
   }
 
-  return reportSyntaxError(env.lexer,
+  return reportSyntaxError(*env.lexer,
       "Invalid assignment. Only atom constructors, functions and identifier allowed.",
       lhs->getTokenPos());
 }
@@ -406,7 +406,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
               if (lhs->getExpressionType() == expr_id) {
                 const std::string &id = dynamic_cast<IdExpr*>(lhs)->getName();
                 if (id == "error") { // print error message
-                  return reportSyntaxError(env.lexer,
+                  return reportSyntaxError(*env.lexer,
                       rhs->toString(),
                       TokenPos(lhs->getTokenPos(), rhs->getTokenPos()));
                 }
@@ -429,7 +429,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
             }
   }
 
-  return reportSyntaxError(env.lexer, 
+  return reportSyntaxError(*env.lexer, 
       "Invalid use of binary operator.",
       this->getTokenPos());
 }
@@ -437,7 +437,7 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
   const Expr *val = env.get(getName());
   if (!val) {
-    return reportSyntaxError(env.lexer, "Variable " + id + " doesn't exist.",
+    return reportSyntaxError(*env.lexer, "Variable " + id + " doesn't exist.",
       this->getTokenPos());
   }
 
@@ -450,7 +450,7 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
     return nullptr;
 
   if (resCondition->getExpressionType() != expr_atom) {
-    return reportSyntaxError(env.lexer,
+    return reportSyntaxError(*env.lexer,
         "Invalid if condition. Doesn't evaluate to atom.",
         getTokenPos());
   }

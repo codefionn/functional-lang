@@ -42,9 +42,9 @@ class Environment : public GCObj {
   std::map<std::string, const Expr*> variables;
   Environment *parent;
 public:
-  Lexer &lexer;
+  Lexer *lexer;
 
-  Environment(GCMain &gc, Lexer &lexer, Environment *parent = nullptr)
+  Environment(GCMain &gc, Lexer *lexer = nullptr, Environment *parent = nullptr)
     : GCObj(gc), lexer{lexer}, parent{parent}, variables() {}
   virtual ~Environment() {}
 

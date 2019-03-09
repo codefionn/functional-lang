@@ -191,9 +191,9 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env) {
            lexer.nextToken(); // eat _
 
           if (!result)
-            return new AnyExpr(gc, pos);
+            result = new AnyExpr(gc, pos);
           else
-            return new BiOpExpr(gc, op_fn, result, new AnyExpr(gc, pos));
+            result = new BiOpExpr(gc, op_fn, result, new AnyExpr(gc, pos));
 
           break;
         } // end case tok_any

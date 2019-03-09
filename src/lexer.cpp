@@ -393,6 +393,8 @@ std::string std::to_string(Operator op) noexcept {
     return "&&";
   case op_lor:
     return "||";
+  case op_fn:
+    return "";
   }
 
   return ""; // invalid

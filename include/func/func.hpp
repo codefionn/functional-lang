@@ -102,10 +102,13 @@
  */
 
 /*!\brief Interpret characters streamed from input.
+ * \param gc
+ * \parm env If nullptr: create new one.
  * \param input
  * \param interpret_mode Prints some pretty helpers (line prefixes) if true.
  * \return Returns true on success, false if error occured.
  */
-bool interpret(std::istream &input, bool interpret_mode = false) noexcept;
+bool interpret(std::istream &input, GCMain &gc, Environment *env = nullptr,
+    bool interpret_mode = false) noexcept;
 
 #endif /* FUNC_FUNC_HPP */

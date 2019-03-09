@@ -1,6 +1,8 @@
 #include "func/func.hpp"
 
 int main(int vargsc, char * vargs[]) {
+  GCMain gc;
+  Environment *env = new Environment(gc);
   if (vargsc == 2) {
     std::ifstream input;
     input.open(vargs[1]);
@@ -10,8 +12,8 @@ int main(int vargsc, char * vargs[]) {
       return 1;
     }
 
-    return interpret(input) ? 0 : 1;
+    interpret(input, gc, env);
   };
 
-  return interpret(std::cin, true) ? 0 : 1;
+  return interpret(std::cin, gc, env, true) ? 0 : 1;
 }

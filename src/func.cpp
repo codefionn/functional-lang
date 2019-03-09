@@ -1,14 +1,18 @@
 #include "func/func.hpp"
 
-bool interpret(std::istream &input, bool interpret_mode) noexcept {
+bool interpret(std::istream &input, GCMain &gc, Environment *env,
+    bool interpret_mode) noexcept {
   bool error = false;
 
   Lexer lexer(input);
   if (interpret_mode)
     lexer.skippedNewLinePrefix = "..";
 
-  GCMain gc;
-  Environment *env = new Environment(gc, lexer); // environment
+  if (!env)
+    env = new Environment(gc, &lexer); // environment
+  else
+    env->lexer = &lexer;
+
   Expr *expr = nullptr;
   while (true) {
     if (interpret_mode)
