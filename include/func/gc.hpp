@@ -34,6 +34,7 @@ public:
  */
 class GCMain {
   bool markBit; //!< Toggled after every collect() 
+  std::size_t countNewObjs;
 
   //! All objects available.
   std::vector<GCObj*> marks;
@@ -49,6 +50,11 @@ public:
    */
   bool getMarkBit() const noexcept;
 
+  /*!\return Returns count of new objects since last collect call.
+   * \see collect
+   */
+  std::size_t getCountNewObjects() const noexcept;
+
   /*!\brief Adds obj to all objects available.
    * \param obj
    */
@@ -57,6 +63,7 @@ public:
   /*!\brief Collects garbage.
    *
    * Use mark function of directly reachable objects (roots).
+   * Resets getCountNewObjects to 0.
    */ 
   void collect();
 };

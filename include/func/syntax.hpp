@@ -186,6 +186,11 @@ public:
   virtual ~Expr() {
   }
 
+  /*!\return Returns true, if has last evaluation (not nullptr), otherwise
+   * false.
+   */
+  bool hasLastEval() const noexcept { return lastEval != nullptr; }
+
   /*!\return Returns position of token in code.
    */
   const TokenPos &getTokenPos() const noexcept { return pos; }

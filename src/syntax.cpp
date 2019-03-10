@@ -16,6 +16,15 @@ Expr *Expr::evalWithLookup(GCMain &gc, Environment &env) noexcept {
           || dynamic_cast<const BiOpExpr*>(this)->getOperator() != op_asg))
     return lastEval;
 
+  /*size_t maxLookups = 1000;
+  for (auto it = env.ctx.rbegin();
+      it != env.ctx.rend() && maxLookups-- > 0; ++it) {
+    if ((*it)->hasLastEval() && equals(*it)) {
+      std::cout << "F";
+      return lastEval = *it;
+    }
+  }*/
+
   return lastEval = eval(gc, env);
 }
 
@@ -707,6 +716,9 @@ Expr *eval(GCMain &gc, Environment &env, Expr *pexpr) noexcept {
   StackFrameObj<Expr> oldExpr(env, pexpr);
   while (expr && (expr = expr->evalWithLookup(gc, env)) != oldExpr) {
     oldExpr = expr;
+
+    if (gc.getCountNewObjects() < 200)
+      continue;
 
     env.mark(gc);
     gc.collect();
