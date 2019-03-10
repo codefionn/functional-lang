@@ -111,11 +111,16 @@ const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
 <tr class="separator:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a120d6424e516aa6f8f15caf470bc50b2"></a>
-const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenPos</b> () const noexcept</td></tr>
+<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a120d6424e516aa6f8f15caf470bc50b2">getTokenPos</a> () const noexcept</td></tr>
 <tr class="separator:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">getExpressionType</a> () const noexcept</td></tr>
 <tr class="separator:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a1f7958b9435107a7b176a5cf6e246 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246">evalWithLookup</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
+<tr class="separator:ad1a1f7958b9435107a7b176a5cf6e246 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a81c40366518452e0f22224464cb1e41e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a81c40366518452e0f22224464cb1e41e">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
+<tr class="memdesc:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
+<tr class="separator:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7">GCObj</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
@@ -123,10 +128,6 @@ const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td c
 <tr class="separator:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a9ca4761950c6951431cc04f40282ed2e">isMarked</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) const noexcept</td></tr>
 <tr class="separator:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a764a3b96b491926852906865ebf9a943"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a764a3b96b491926852906865ebf9a943">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
-<tr class="memdesc:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
-<tr class="separator:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -135,6 +136,10 @@ Additional Inherited Members</h2></td></tr>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#aa97795406e681c35d2899a29a4cbbf1e">markSelf</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main)</td></tr>
 <tr class="memdesc:aa97795406e681c35d2899a29a4cbbf1e inherit pro_methods_classGCObj"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks itself. <br /></td></tr>
 <tr class="separator:aa97795406e681c35d2899a29a4cbbf1e inherit pro_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classExpr"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classExpr')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classExpr.html">Expr</a></td></tr>
+<tr class="memitem:ad393bcfb5b5a38d85d6423867d29360b inherit pro_attribs_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="ad393bcfb5b5a38d85d6423867d29360b"></a>
+<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastEval</b> = nullptr</td></tr>
+<tr class="separator:ad393bcfb5b5a38d85d6423867d29360b inherit pro_attribs_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Identifier expression. </p>
@@ -295,7 +300,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
-    <tr><td class="paramname">name</td><td>Identifer name to replace. </td></tr>
+    <tr><td class="paramname">name</td><td>Identifer name to replace. If name is empty, every identifier will be replaced by <a class="el" href="classAnyExpr.html" title="any expression">AnyExpr(expr_any)</a>. </td></tr>
     <tr><td class="paramname">expr</td><td>The expression to replaces identifiers. </td></tr>
   </table>
   </dd>

@@ -79,8 +79,14 @@ $(function() {
 <li>contains()
 : <a class="el" href="classEnvironment.html#aa97708c838b992f021bfb02b643b2960">Environment</a>
 </li>
+<li>ctx
+: <a class="el" href="classEnvironment.html#ac2ac61b8891c1e6acd97a1cddaa4c872">Environment</a>
+</li>
 <li>currentChar()
 : <a class="el" href="classLexer.html#a8ee0e39bac505ed42a26d7e31ff5729d">Lexer</a>
+</li>
+<li>currentGet()
+: <a class="el" href="classEnvironment.html#ac452a3f1636e77da4ca14f77f8cc9187">Environment</a>
 </li>
 <li>currentIdentifier()
 : <a class="el" href="classLexer.html#a077ad7464e2aaad06ed316b95b3b807a">Lexer</a>
@@ -119,9 +125,13 @@ $(function() {
 <li>eval()
 : <a class="el" href="classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9">BiOpExpr</a>
 , <a class="el" href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">Expr</a>
+, <a class="el" href="classFunctionExpr.html#a28eaea8e9e7932cf8e8d8ce1edaacabf">FunctionExpr</a>
 , <a class="el" href="classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9">IdExpr</a>
 , <a class="el" href="classIfExpr.html#a45894d8f52fe169f37263083802a039d">IfExpr</a>
 , <a class="el" href="classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd">LetExpr</a>
+</li>
+<li>evalWithLookup()
+: <a class="el" href="classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246">Expr</a>
 </li>
 </ul>
 
@@ -165,6 +175,9 @@ $(function() {
 <li>getMarkBit()
 : <a class="el" href="classGCMain.html#a04861757734ef683dddefa34fd96015c">GCMain</a>
 </li>
+<li>getName()
+: <a class="el" href="classFunctionExpr.html#afd464aa8fe384c1e79899c1b5330c4a2">FunctionExpr</a>
+</li>
 <li>getOperator()
 : <a class="el" href="classBiOpExpr.html#ae83d54198483bc2edd466951faed5a67">BiOpExpr</a>
 </li>
@@ -173,6 +186,9 @@ $(function() {
 </li>
 <li>getRHS()
 : <a class="el" href="classBiOpExpr.html#a79c5955371efca8459bcdd2cf689cbfc">BiOpExpr</a>
+</li>
+<li>getTokenPos()
+: <a class="el" href="classExpr.html#a120d6424e516aa6f8f15caf470bc50b2">Expr</a>
 </li>
 <li>getTrue()
 : <a class="el" href="classIfExpr.html#aeb6a10dd64d107390f19f0662f0c6ea3">IfExpr</a>
@@ -201,6 +217,8 @@ $(function() {
 <li>mark()
 : <a class="el" href="classBiOpExpr.html#aa4526c256e6bf2b712c1241559dcc0ed">BiOpExpr</a>
 , <a class="el" href="classEnvironment.html#a9176bf98537f657dcf617c5bd87778bb">Environment</a>
+, <a class="el" href="classExpr.html#a81c40366518452e0f22224464cb1e41e">Expr</a>
+, <a class="el" href="classFunctionExpr.html#ac4019eda4f689e56cec446d29f34a513">FunctionExpr</a>
 , <a class="el" href="classGCObj.html#a764a3b96b491926852906865ebf9a943">GCObj</a>
 , <a class="el" href="classIfExpr.html#af4b8982d45e4874b518b2a368de6964f">IfExpr</a>
 , <a class="el" href="classLambdaExpr.html#a09dd8628641ffd4c2f58e7dc46d9ae88">LambdaExpr</a>
@@ -218,6 +236,25 @@ $(function() {
 </li>
 <li>nextToken()
 : <a class="el" href="classLexer.html#ad70ae308f841161587a0407daaeea480">Lexer</a>
+</li>
+</ul>
+
+
+<h3><a id="index_o"></a>- o -</h3><ul>
+<li>operator !=()
+: <a class="el" href="classStackFrameObj.html#a7b3c9ea491d868cc1845602cb846a93e">StackFrameObj&lt; T &gt;</a>
+</li>
+<li>operator *()
+: <a class="el" href="classStackFrameObj.html#af4dd0031a766ab727c7dcafa6f7d8a96">StackFrameObj&lt; T &gt;</a>
+</li>
+<li>operator bool()
+: <a class="el" href="classStackFrameObj.html#ade2a1925eaec5610da23f1a24a88f036">StackFrameObj&lt; T &gt;</a>
+</li>
+<li>operator=()
+: <a class="el" href="classStackFrameObj.html#acde6a4c7cc0ac99e8cae82e49b7dd5e1">StackFrameObj&lt; T &gt;</a>
+</li>
+<li>operator==()
+: <a class="el" href="classStackFrameObj.html#ae3be04cf9faca5bd5e6e2eed3c31cdc4">StackFrameObj&lt; T &gt;</a>
 </li>
 </ul>
 
@@ -249,13 +286,16 @@ $(function() {
 
 <h3><a id="index_t"></a>- t -</h3><ul>
 <li>toString()
-: <a class="el" href="classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0">AtomExpr</a>
+: <a class="el" href="classAnyExpr.html#a9a36d245a1792ef3fa5a5663d14c2d99">AnyExpr</a>
+, <a class="el" href="classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0">AtomExpr</a>
 , <a class="el" href="classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab">BiOpExpr</a>
 , <a class="el" href="classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22">Expr</a>
+, <a class="el" href="classFunctionExpr.html#ae36683448bf556f62973036d0fd81a01">FunctionExpr</a>
 , <a class="el" href="classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06">IdExpr</a>
 , <a class="el" href="classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614">IfExpr</a>
 , <a class="el" href="classIntExpr.html#ae07d2971c7d63aa2e7b0b36bd9927bb4">IntExpr</a>
 , <a class="el" href="classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5">LambdaExpr</a>
+, <a class="el" href="classLetExpr.html#ad9ffba820626e66d5289764cfa1bdcb5">LetExpr</a>
 , <a class="el" href="classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49">NumExpr</a>
 </li>
 </ul>

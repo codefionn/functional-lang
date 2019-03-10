@@ -51,6 +51,7 @@ bool interpret(std::istream &input, GCMain &gc,
       break;
 
     env->mark(gc); // mark main scope/environemnt
+    gc.collect();
   }
 
   return !error;

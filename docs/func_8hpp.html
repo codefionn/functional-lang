@@ -84,15 +84,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a74cf1d8f4abdbe9dd95404ef4660110a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="func_8hpp.html#a74cf1d8f4abdbe9dd95404ef4660110a">interpret</a> (std::istream &amp;input, bool interpret_mode=false) noexcept</td></tr>
-<tr class="memdesc:a74cf1d8f4abdbe9dd95404ef4660110a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpret characters streamed from input.  <a href="#a74cf1d8f4abdbe9dd95404ef4660110a">More...</a><br /></td></tr>
-<tr class="separator:a74cf1d8f4abdbe9dd95404ef4660110a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a903e54a2dcbfd0d2c2da5510d70bebe4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="func_8hpp.html#a903e54a2dcbfd0d2c2da5510d70bebe4">interpret</a> (std::istream &amp;input, <a class="el" href="classGCMain.html">GCMain</a> &amp;gc, std::vector&lt; std::string &gt; &amp;lines, <a class="el" href="classEnvironment.html">Environment</a> *env=nullptr, bool interpret_mode=false) noexcept</td></tr>
+<tr class="memdesc:a903e54a2dcbfd0d2c2da5510d70bebe4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpret characters streamed from input.  <a href="#a903e54a2dcbfd0d2c2da5510d70bebe4">More...</a><br /></td></tr>
+<tr class="separator:a903e54a2dcbfd0d2c2da5510d70bebe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main file of the project. You want to include this, nothing else. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a74cf1d8f4abdbe9dd95404ef4660110a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74cf1d8f4abdbe9dd95404ef4660110a">&#9670;&nbsp;</a></span>interpret()</h2>
+<a id="a903e54a2dcbfd0d2c2da5510d70bebe4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903e54a2dcbfd0d2c2da5510d70bebe4">&#9670;&nbsp;</a></span>interpret()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -105,6 +105,24 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">std::istream &amp;&#160;</td>
           <td class="paramname"><em>input</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> *&#160;</td>
+          <td class="paramname"><em>env</em> = <code>nullptr</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -128,6 +146,7 @@ Functions</h2></td></tr>
 <p>Interpret characters streamed from input. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">gc</td><td>\parm env If nullptr: create new one. </td></tr>
     <tr><td class="paramname">input</td><td></td></tr>
     <tr><td class="paramname">interpret_mode</td><td>Prints some pretty helpers (line prefixes) if true. </td></tr>
   </table>

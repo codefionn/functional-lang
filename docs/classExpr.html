@@ -65,6 +65,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classExpr-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Expr Class Reference</div>  </div>
@@ -81,16 +82,17 @@ Inheritance diagram for Expr:</div>
  <div class="center">
   <img src="classExpr.png" usemap="#Expr_map" alt=""/>
   <map id="Expr_map" name="Expr_map">
-<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="0,0,82,24"/>
-<area href="classAnyExpr.html" title="any expression" alt="AnyExpr" shape="rect" coords="92,112,174,136"/>
-<area href="classAtomExpr.html" title="Atom expression." alt="AtomExpr" shape="rect" coords="92,168,174,192"/>
-<area href="classBiOpExpr.html" title="Binary operator expression." alt="BiOpExpr" shape="rect" coords="92,224,174,248"/>
-<area href="classIdExpr.html" title="Identifier expression." alt="IdExpr" shape="rect" coords="92,280,174,304"/>
-<area href="classIfExpr.html" title="If-then-else expression." alt="IfExpr" shape="rect" coords="92,336,174,360"/>
-<area href="classIntExpr.html" title="Integer number expression." alt="IntExpr" shape="rect" coords="92,392,174,416"/>
-<area href="classLambdaExpr.html" title="Lambda function expression." alt="LambdaExpr" shape="rect" coords="92,448,174,472"/>
-<area href="classLetExpr.html" title="Let expression." alt="LetExpr" shape="rect" coords="92,504,174,528"/>
-<area href="classNumExpr.html" title="Floating point number expression." alt="NumExpr" shape="rect" coords="92,560,174,584"/>
+<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="0,0,87,24"/>
+<area href="classAnyExpr.html" title="any expression" alt="AnyExpr" shape="rect" coords="97,112,184,136"/>
+<area href="classAtomExpr.html" title="Atom expression." alt="AtomExpr" shape="rect" coords="97,168,184,192"/>
+<area href="classBiOpExpr.html" title="Binary operator expression." alt="BiOpExpr" shape="rect" coords="97,224,184,248"/>
+<area href="classFunctionExpr.html" title="Represents a named function." alt="FunctionExpr" shape="rect" coords="97,280,184,304"/>
+<area href="classIdExpr.html" title="Identifier expression." alt="IdExpr" shape="rect" coords="97,336,184,360"/>
+<area href="classIfExpr.html" title="If-then-else expression." alt="IfExpr" shape="rect" coords="97,392,184,416"/>
+<area href="classIntExpr.html" title="Integer number expression." alt="IntExpr" shape="rect" coords="97,448,184,472"/>
+<area href="classLambdaExpr.html" title="Lambda function expression." alt="LambdaExpr" shape="rect" coords="97,504,184,528"/>
+<area href="classLetExpr.html" title="Let expression." alt="LetExpr" shape="rect" coords="97,560,184,584"/>
+<area href="classNumExpr.html" title="Floating point number expression." alt="NumExpr" shape="rect" coords="97,616,184,640"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -99,8 +101,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
 <tr class="separator:a8f56d3dabb6f978fae788a89ec6c4d40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2"><td class="memItemLeft" align="right" valign="top"><a id="a120d6424e516aa6f8f15caf470bc50b2"></a>
-const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getTokenPos</b> () const noexcept</td></tr>
+<tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a120d6424e516aa6f8f15caf470bc50b2">getTokenPos</a> () const noexcept</td></tr>
 <tr class="separator:a120d6424e516aa6f8f15caf470bc50b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2c8219dfe666c876ee2adc0d7e65f22"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22">toString</a> () const noexcept</td></tr>
 <tr class="separator:ab2c8219dfe666c876ee2adc0d7e65f22"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,6 +110,8 @@ const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td c
 <tr class="memitem:a690c0bb8c75125258cc6f79ed779b3a7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
 <tr class="memdesc:a690c0bb8c75125258cc6f79ed779b3a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates expression one time.  <a href="#a690c0bb8c75125258cc6f79ed779b3a7">More...</a><br /></td></tr>
 <tr class="separator:a690c0bb8c75125258cc6f79ed779b3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1a1f7958b9435107a7b176a5cf6e246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246">evalWithLookup</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
+<tr class="separator:ad1a1f7958b9435107a7b176a5cf6e246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6f4e5b04bae018f159386b748a3cbb9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">replace</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const std::string &amp;name, <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept</td></tr>
 <tr class="memdesc:ab6f4e5b04bae018f159386b748a3cbb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace all identifiers equal to name with expr.  <a href="#ab6f4e5b04bae018f159386b748a3cbb9">More...</a><br /></td></tr>
 <tr class="separator:ab6f4e5b04bae018f159386b748a3cbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +120,10 @@ const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td c
 <tr class="separator:a32b38240484e4470dc14955b8b356ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af72fbb8fee9e5cc20752acad334e8ad3"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3">getIdentifiers</a> () const noexcept</td></tr>
 <tr class="separator:af72fbb8fee9e5cc20752acad334e8ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81c40366518452e0f22224464cb1e41e"><td class="memItemLeft" align="right" valign="top"><a id="a81c40366518452e0f22224464cb1e41e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a81c40366518452e0f22224464cb1e41e">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
+<tr class="memdesc:a81c40366518452e0f22224464cb1e41e"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
+<tr class="separator:a81c40366518452e0f22224464cb1e41e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7">GCObj</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
@@ -124,10 +131,12 @@ const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td c
 <tr class="separator:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a9ca4761950c6951431cc04f40282ed2e">isMarked</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) const noexcept</td></tr>
 <tr class="separator:a9ca4761950c6951431cc04f40282ed2e inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a764a3b96b491926852906865ebf9a943"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a764a3b96b491926852906865ebf9a943">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
-<tr class="memdesc:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
-<tr class="separator:a764a3b96b491926852906865ebf9a943 inherit pub_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:ad393bcfb5b5a38d85d6423867d29360b"><td class="memItemLeft" align="right" valign="top"><a id="ad393bcfb5b5a38d85d6423867d29360b"></a>
+<a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastEval</b> = nullptr</td></tr>
+<tr class="separator:ad393bcfb5b5a38d85d6423867d29360b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -139,6 +148,8 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main expression handle (should only be used as parent class). </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classStackFrameObj.html" title="Class for adding Expr&#39;s to stack frame of Environment.">StackFrameObj</a></dd></dl>
+<p>To use <a class="el" href="classExpr.html" title="Main expression handle (should only be used as parent class).">Expr</a> as local heap variable, use a <a class="el" href="classStackFrameObj.html" title="Class for adding Expr&#39;s to stack frame of Environment.">StackFrameObj</a>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a32b38240484e4470dc14955b8b356ded"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a32b38240484e4470dc14955b8b356ded">&#9670;&nbsp;</a></span>equals()</h2>
@@ -220,7 +231,51 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns itself if nothing evaluated, otherwise a new expression. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd">LetExpr</a>, <a class="el" href="classIfExpr.html#a45894d8f52fe169f37263083802a039d">IfExpr</a>, <a class="el" href="classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9">IdExpr</a>, and <a class="el" href="classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9">BiOpExpr</a>.</p>
+<p>Reimplemented in <a class="el" href="classFunctionExpr.html#a28eaea8e9e7932cf8e8d8ce1edaacabf">FunctionExpr</a>, <a class="el" href="classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd">LetExpr</a>, <a class="el" href="classIfExpr.html#a45894d8f52fe169f37263083802a039d">IfExpr</a>, <a class="el" href="classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9">IdExpr</a>, and <a class="el" href="classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9">BiOpExpr</a>.</p>
+
+</div>
+</div>
+<a id="ad1a1f7958b9435107a7b176a5cf6e246"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1a1f7958b9435107a7b176a5cf6e246">&#9670;&nbsp;</a></span>evalWithLookup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classExpr.html">Expr</a>* Expr::evalWithLookup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
+          <td class="paramname"><em>env</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns Last evaluation if already computed (except assignments). If no last evaluation, evaluate. To reset evaluation "lastEval = nullptr". </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
+    <tr><td class="paramname">env</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -279,6 +334,32 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 
 </div>
 </div>
+<a id="a120d6424e516aa6f8f15caf470bc50b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a120d6424e516aa6f8f15caf470bc50b2">&#9670;&nbsp;</a></span>getTokenPos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classTokenPos.html">TokenPos</a>&amp; Expr::getTokenPos </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns position of token in code. </dd></dl>
+
+</div>
+</div>
 <a id="ab6f4e5b04bae018f159386b748a3cbb9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab6f4e5b04bae018f159386b748a3cbb9">&#9670;&nbsp;</a></span>replace()</h2>
 
@@ -323,7 +404,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gc</td><td></td></tr>
-    <tr><td class="paramname">name</td><td>Identifer name to replace. </td></tr>
+    <tr><td class="paramname">name</td><td>Identifer name to replace. If name is empty, every identifier will be replaced by <a class="el" href="classAnyExpr.html" title="any expression">AnyExpr(expr_any)</a>. </td></tr>
     <tr><td class="paramname">expr</td><td>The expression to replaces identifiers. </td></tr>
   </table>
   </dd>
@@ -358,7 +439,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Returns expression in functional-lang (the programming language to parse). </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614">IfExpr</a>, <a class="el" href="classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0">AtomExpr</a>, <a class="el" href="classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5">LambdaExpr</a>, <a class="el" href="classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06">IdExpr</a>, <a class="el" href="classIntExpr.html#ae07d2971c7d63aa2e7b0b36bd9927bb4">IntExpr</a>, <a class="el" href="classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49">NumExpr</a>, and <a class="el" href="classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab">BiOpExpr</a>.</p>
+<p>Reimplemented in <a class="el" href="classFunctionExpr.html#ae36683448bf556f62973036d0fd81a01">FunctionExpr</a>, <a class="el" href="classLetExpr.html#ad9ffba820626e66d5289764cfa1bdcb5">LetExpr</a>, <a class="el" href="classAnyExpr.html#a9a36d245a1792ef3fa5a5663d14c2d99">AnyExpr</a>, <a class="el" href="classIfExpr.html#aaa9d44519653ad5d13b35e4d61a57614">IfExpr</a>, <a class="el" href="classAtomExpr.html#a460fa22ef754981d522f1b6afe879ef0">AtomExpr</a>, <a class="el" href="classLambdaExpr.html#aed1df5c1908aefa32d2e83fa418b04c5">LambdaExpr</a>, <a class="el" href="classIdExpr.html#ad4d68e4825900856287acf1a8fb0ec06">IdExpr</a>, <a class="el" href="classIntExpr.html#ae07d2971c7d63aa2e7b0b36bd9927bb4">IntExpr</a>, <a class="el" href="classNumExpr.html#a83677e9cb5555bb8fe156461cf817f49">NumExpr</a>, and <a class="el" href="classBiOpExpr.html#a243e5f10d0e418fc8deaea4419609fab">BiOpExpr</a>.</p>
 
 </div>
 </div>

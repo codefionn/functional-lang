@@ -11,9 +11,11 @@ var searchData=
   ['getidentifiers',['getIdentifiers',['../classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3',1,'Expr::getIdentifiers()'],['../classBiOpExpr.html#ab946290ab5bc93516610dffac93bf28d',1,'BiOpExpr::getIdentifiers()'],['../classIdExpr.html#aca5d9722810a2480bda8872dbb460b4a',1,'IdExpr::getIdentifiers()'],['../classLambdaExpr.html#a535ba2c7ad426d98271b5d82647f5924',1,'LambdaExpr::getIdentifiers()'],['../classIfExpr.html#a2beb4e56748e28227797ed114c0df067',1,'IfExpr::getIdentifiers()'],['../classLetExpr.html#ab1ad89ec98822c054338328b3daf9270',1,'LetExpr::getIdentifiers()']]],
   ['getlhs',['getLHS',['../classBiOpExpr.html#afcf8823420a098db4bc864902e7515cb',1,'BiOpExpr']]],
   ['getmarkbit',['getMarkBit',['../classGCMain.html#a04861757734ef683dddefa34fd96015c',1,'GCMain']]],
+  ['getname',['getName',['../classFunctionExpr.html#afd464aa8fe384c1e79899c1b5330c4a2',1,'FunctionExpr']]],
   ['getoperator',['getOperator',['../classBiOpExpr.html#ae83d54198483bc2edd466951faed5a67',1,'BiOpExpr']]],
   ['getoperatorprecedence',['getOperatorPrecedence',['../lexer_8hpp.html#adffbe38a6948ad2d90c660e152c9439f',1,'lexer.hpp']]],
   ['getparent',['getParent',['../classEnvironment.html#a861ba5fad18ffd704a8c4be78980a195',1,'Environment']]],
   ['getrhs',['getRHS',['../classBiOpExpr.html#a79c5955371efca8459bcdd2cf689cbfc',1,'BiOpExpr']]],
+  ['gettokenpos',['getTokenPos',['../classExpr.html#a120d6424e516aa6f8f15caf470bc50b2',1,'Expr']]],
   ['gettrue',['getTrue',['../classIfExpr.html#aeb6a10dd64d107390f19f0662f0c6ea3',1,'IfExpr']]]
 ];

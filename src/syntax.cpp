@@ -1,8 +1,17 @@
 #include "func/syntax.hpp"
 
+std::vector<Expr*>::iterator find(std::vector<Expr*> &vec, Expr *expr) noexcept {
+  for (auto it = vec.begin(); it != vec.end(); ++it)
+    if (*it == expr) return it;
+
+  return vec.end();
+}
+
 // Expr
 
 Expr *Expr::evalWithLookup(GCMain &gc, Environment &env) noexcept {
+  StackFrameObj<Expr> thisObj(env, this);
+
   if (lastEval  && (getExpressionType() != expr_biop
           || dynamic_cast<const BiOpExpr*>(this)->getOperator() != op_asg))
     return lastEval;
@@ -42,9 +51,11 @@ void Environment::mark(GCMain &gc) noexcept {
     return;
   
   markSelf(gc);
-  for (std::pair<std::string, const Expr*> var : variables) {
+  for (std::pair<std::string, const Expr*> var : variables)
     const_cast<Expr*>(var.second)->mark(gc);
-  }
+
+  for (Expr *expr : ctx)
+    expr->mark(gc);
 
   if (parent) parent->mark(gc);
 }
@@ -139,7 +150,9 @@ Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
   // (least binding)
 }
 
-Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec) {
+Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *plhs, int prec) {
+  StackFrameObj<Expr> lhs(env, plhs);
+
   while (lexer.currentToken() == tok_op && lexer.currentPrecedence() >= prec) {
     Operator op = lexer.currentOperator();
     int opprec = lexer.currentPrecedence();
@@ -154,22 +167,21 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec) 
 
     lexer.nextToken(); // eat op
 
-    Expr *rhs = parsePrimary(gc, lexer, env);
-    if (!rhs) {
-      return nullptr; // Error forwarding
-    }
+    StackFrameObj<Expr> rhs(env, parsePrimary(gc, lexer, env));
+    if (!rhs) return nullptr; // Error forwarding
 
     while (lexer.currentToken() == tok_op
         && (lexer.currentPrecedence() > opprec
             || (lexer.currentOperator() == op_asg // left associative
                 && lexer.currentPrecedence() == opprec))) {
-      rhs = parseRHS(gc, lexer, env, rhs, lexer.currentPrecedence());
+      rhs = parseRHS(gc, lexer, env, *rhs, lexer.currentPrecedence());
+      if (!rhs) return nullptr; // Errorforwarding
     }
 
-    lhs = new BiOpExpr(gc, op, lhs, rhs);
+    lhs = new BiOpExpr(gc, op, *lhs, *rhs);
   }
 
-  return lhs;
+  return *lhs;
 }
 
 // interpreter stuff
@@ -198,10 +210,10 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     // Atom constructor (pattern matching)
 
     // Evaluate rhs and check for right expression type
-    Expr *newrhs = ::eval(gc, env, const_cast<Expr*>(rhs));
+    StackFrameObj<Expr> newrhs(env, ::eval(gc, env, const_cast<Expr*>(rhs)));
     if (!newrhs) return nullptr; // error forwarding
     if (newrhs->getExpressionType() != expr_biop
-        || dynamic_cast<BiOpExpr*>(newrhs)->getOperator() != op_fn) {
+        || dynamic_cast<BiOpExpr*>(*newrhs)->getOperator() != op_fn) {
       return reportSyntaxError(*env.lexer,
           "RHS must be a substitution expression!",
           newrhs->getTokenPos());
@@ -209,7 +221,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
     // Cast both sides
     const BiOpExpr *bioplhs = dynamic_cast<const BiOpExpr*>(lhs);
-    const BiOpExpr *bioprhs = dynamic_cast<const BiOpExpr*>(newrhs);
+    const BiOpExpr *bioprhs = dynamic_cast<const BiOpExpr*>(*newrhs);
 
     // Assign all statements.
     // Iterator through lhs and rhs till no longer binary function operator.
@@ -269,20 +281,23 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     
     const Expr *expr = lhs;
     while (expr->getExpressionType() == expr_biop) {
+      // save rhs
       fncase.first.insert(fncase.first.begin(),
           const_cast<Expr*>(&dynamic_cast<const BiOpExpr*>(expr)->getRHS()));
+      // step down
       expr = const_cast<Expr*>(&dynamic_cast<const BiOpExpr*>(expr)->getLHS());
     }
 
+    // because isFunctionConstructor
     const std::string &fnname = dynamic_cast<const IdExpr*>(expr)->getName();
-    const Expr *fnexpr = env.currentGet(fnname);
+    StackFrameObj<Expr> fnexpr(env, const_cast<Expr*>(env.currentGet(fnname)));
     if (!fnexpr) {
       fnexpr = new FunctionExpr(gc, expr->getTokenPos(), fnname, fncase);
       env.getVariables().insert(
-          std::pair<std::string, Expr*>(fnname, const_cast<Expr*>(fnexpr)));
+          std::pair<std::string, Expr*>(fnname, const_cast<Expr*>(*fnexpr)));
       return thisExpr;
     } else if (fnexpr->getExpressionType() == expr_fn) {
-      if(!const_cast<FunctionExpr*>(dynamic_cast<const FunctionExpr*>(fnexpr))->addCase(fncase))
+      if(!const_cast<FunctionExpr*>(dynamic_cast<const FunctionExpr*>(*fnexpr))->addCase(fncase))
         return reportSyntaxError(*env.lexer,
             "Function argument length of \"" + fnname + "\" don't match.",
             expr->getTokenPos());
@@ -338,7 +353,76 @@ static Expr *biopeval(GCMain &gc, Environment &env,
   return new IntExpr(gc, mergedPos, num0);
 }
 
+Expr *evalLambdaSubstitution(GCMain &gc, Environment &env,
+    const TokenPos &mergedPos, Expr* thisExpr,
+    Expr *lhs, Expr *rhs) noexcept {
+  // special cases (built-in functions)
+  if (lhs->getExpressionType() == expr_id) {
+    const std::string &id = dynamic_cast<IdExpr*>(lhs)->getName();
+    if (id == "error") { // print error message
+      return reportSyntaxError(*env.lexer,
+          rhs->toString(),
+          mergedPos);
+    } else if (id == "print") { // print expression and return expr
+      std::cout << rhs->toString() << std::endl;
+      return rhs;
+    } else if (id == "to_int" || id == "round_int") { // truncate float to int
+      StackFrameObj<Expr> expr(env, ::eval(gc, env, rhs));
+      if (!expr) return nullptr; // error forwarding
+      switch (expr->getExpressionType()) {
+      case expr_int:
+        return *expr;
+      case expr_num:
+        if (id == "to_int")
+          return new IntExpr(gc, mergedPos,
+              (int64_t) floor(dynamic_cast<NumExpr*>(*expr)->getNumber()));
+        else if (id == "round_int")
+          return new IntExpr(gc, mergedPos,
+              (int64_t) round(dynamic_cast<NumExpr*>(*expr)->getNumber()));
+      }
+    } else if(id == "time") { // prints time spent evaluating RHS
+      auto startTime = std::chrono::high_resolution_clock::now();
+
+      StackFrameObj<Expr> expr(env, ::eval(gc, env, rhs));
+      if (!expr) return nullptr;
+
+      auto endTime = std::chrono::high_resolution_clock::now();
+      auto diffTime = endTime - startTime;
+      double consumedTime = diffTime.count() *
+        (double)std::chrono::high_resolution_clock::period::num /
+        (double)std::chrono::high_resolution_clock::period::den
+        * 1000; // seconds -> milliseconds
+
+      std::cout << "Needed "
+        << consumedTime
+        << " ms." << std::endl;
+
+      return *expr;
+    }
+  }
+
+  // Otherwise eval LHS.
+
+  StackFrameObj<Expr> newlhs(env, ::eval(gc, env, lhs));
+  if (!newlhs) return nullptr; // Error forwarding
+
+  if (newlhs->getExpressionType() != expr_lambda) {
+    // Evaluate rhs
+    StackFrameObj<Expr> newrhs(env, ::eval(gc, env, rhs));
+    if (!newrhs)
+      return nullptr; // error forwarding
+    else if (newrhs == rhs)
+      return thisExpr;
+    else
+      return new BiOpExpr(gc, mergedPos, op_fn, *newlhs, *newrhs);
+  }
+
+  // Lambda calculus substitution
+  return dynamic_cast<LambdaExpr*>(*newlhs)->replace(gc, rhs);
+}
+
 Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
+  StackFrameObj<BiOpExpr> thisObj(env, this);
   TokenPos mergedPos = this->getTokenPos();
 
   switch (op) {
@@ -348,21 +432,21 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   case op_land:
   case op_lor: {
        // Lazy evaluation
-       Expr *newlhs = ::eval(gc, env, lhs);
+       StackFrameObj<Expr> newlhs(env, ::eval(gc, env, lhs));
        if (!newlhs) return nullptr; // error forwarding
        if (newlhs->getExpressionType() != expr_atom) break;
 
-       const std::string &namelhs = dynamic_cast<const AtomExpr*>(newlhs)->getName();
+       const std::string &namelhs = dynamic_cast<const AtomExpr*>(*newlhs)->getName();
        if (op == op_land && namelhs == "false")
          return new AtomExpr(gc, mergedPos, boolToAtom(false));
        if (op == op_lor && namelhs != "false")
          return new AtomExpr(gc, mergedPos, boolToAtom(true));
 
-       Expr *newrhs = ::eval(gc, env, rhs);
+       StackFrameObj<Expr> newrhs(env, ::eval(gc, env, rhs));
        if (!newrhs) return nullptr; // error forwarding
        if (newrhs->getExpressionType() != expr_atom) break;
 
-       const std::string &namerhs = dynamic_cast<const AtomExpr*>(newrhs)->getName();
+       const std::string &namerhs = dynamic_cast<const AtomExpr*>(*newrhs)->getName();
        if (op == op_land || op == op_lor)
          return new AtomExpr(gc, mergedPos, boolToAtom(namerhs != "false"));
 
@@ -378,98 +462,33 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   case op_mul:
   case op_div:
   case op_pow: {
-              Expr *newlhs = ::eval(gc, env, lhs);
+              StackFrameObj<Expr> newlhs(env, ::eval(gc, env, lhs));
               if (!newlhs) return nullptr; // error forwarding
-              Expr *newrhs = ::eval(gc, env, rhs);
+
+              StackFrameObj<Expr> newrhs(env, ::eval(gc, env, rhs));
               if (!newrhs) return nullptr; // error forwarding
 
               if (op == op_eq)
                 return new AtomExpr(gc, mergedPos,
-                    boolToAtom(newlhs->equals(newrhs)));
+                    boolToAtom(newlhs->equals(*newrhs)));
 
               if (newlhs->getExpressionType() == expr_num
                   && newrhs-> getExpressionType() == expr_num) {
                 return biopeval(gc, env, mergedPos, op,
-                    dynamic_cast<const NumExpr*>(newlhs),
-                    dynamic_cast<const NumExpr*>(newrhs));
+                    dynamic_cast<const NumExpr*>(*newlhs),
+                    dynamic_cast<const NumExpr*>(*newrhs));
               } else if (newlhs->getExpressionType() == expr_int
                   && newrhs->getExpressionType() == expr_int){
                 return biopeval(gc, env, mergedPos, op,
-                    dynamic_cast<const IntExpr*>(newlhs),
-                    dynamic_cast<const IntExpr*>(newrhs));
+                    dynamic_cast<const IntExpr*>(*newlhs),
+                    dynamic_cast<const IntExpr*>(*newrhs));
               }
 
                break;
             }
-  case op_fn: {
-              // special cases (built-in functions)
-              if (lhs->getExpressionType() == expr_id) {
-                const std::string &id = dynamic_cast<IdExpr*>(lhs)->getName();
-                if (id == "error") { // print error message
-                  return reportSyntaxError(*env.lexer,
-                      rhs->toString(),
-                      TokenPos(lhs->getTokenPos(), rhs->getTokenPos()));
-                } else if (id == "print") { // print expression and return expr
-                  std::cout << rhs->toString() << std::endl;
-                  return rhs;
-                } else if (id == "to_int") { // truncate float to int
-                  Expr *expr = ::eval(gc, env, rhs);
-                  if (!expr) return nullptr; // error forwarding
-                  switch (expr->getExpressionType()) {
-                  case expr_int:
-                    return expr;
-                  case expr_num:
-                    return new IntExpr(gc, mergedPos,
-                        (int64_t) floor(dynamic_cast<NumExpr*>(expr)->getNumber()));
-                  }
-                } else if (id == "round_int") {
-                  Expr *expr = ::eval(gc, env, rhs);
-                  if (!expr) return nullptr; // error forwarding
-                  switch (expr->getExpressionType()) { // rounded float to int
-                  case expr_int:
-                    return expr;
-                  case expr_num:
-                    return new IntExpr(gc, mergedPos,
-                        (int64_t) round(dynamic_cast<NumExpr*>(expr)->getNumber()));
-                  }
-                } else if(id == "time") { // prints time spent evaluating RHS
-                  auto startTime = std::chrono::high_resolution_clock::now();
-
-                  Expr *expr = ::eval(gc, env, rhs);
-                  if (!expr) return nullptr;
-
-                  auto endTime = std::chrono::high_resolution_clock::now();
-                  auto diffTime = endTime - startTime;
-                  double consumedTime = diffTime.count() *
-                    (double)std::chrono::high_resolution_clock::period::num /
-                    (double)std::chrono::high_resolution_clock::period::den
-                    * 1000;
-
-                  std::cout << "Needed "
-                    << consumedTime
-                    << " ms." << std::endl;
-
-                  return expr;
-                }
-              }
-
-              lhs = ::eval(gc, env, lhs);
-              if (!lhs)
-                return nullptr; // Error forwarding
-
-              if (lhs->getExpressionType() != expr_lambda) {
-                // Evaluate rhs
-                Expr *newrhs = ::eval(gc, env, rhs);
-                if (newrhs == rhs)
-                  return this;
-                else if (!newrhs)
-                  return nullptr; // error forwarding
-                else
-                  return new BiOpExpr(gc, getTokenPos(),op_fn, lhs, newrhs);
-              }
-
-              return ((LambdaExpr*)lhs)->replace(gc, rhs);
-            }
+  case op_fn:
+    return evalLambdaSubstitution(gc, env, mergedPos,
+        this, lhs, rhs);
   }
 
   return reportSyntaxError(*env.lexer, 
@@ -478,6 +497,8 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
+  StackFrameObj<Expr> thisObj(env, this);
+
   const Expr *val = env.get(getName());
   if (!val) {
     return reportSyntaxError(*env.lexer, "Variable " + id + " doesn't exist.",
@@ -488,7 +509,9 @@ Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
-  Expr *resCondition = ::eval(gc, env, condition);
+  StackFrameObj<Expr> thisObj(env, this);
+
+  StackFrameObj<Expr> resCondition(env, ::eval(gc, env, condition));
   if (!resCondition)
     return nullptr;
 
@@ -498,7 +521,7 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
         getTokenPos());
   }
 
-  AtomExpr *cond = dynamic_cast<AtomExpr*>(resCondition);
+  AtomExpr *cond = dynamic_cast<AtomExpr*>(*resCondition);
 
   if (cond->getName() != "false")
     return ::eval(gc, env, exprTrue);
@@ -507,6 +530,8 @@ Expr *IfExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
+  StackFrameObj<Expr> thisObj(env, this);
+
   // create new scope
   Environment *scope = new Environment(gc, env.lexer, &env /* == parent */);
   // iterate through assignments and eval them
@@ -534,22 +559,24 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
 }
 
 Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
-  Expr *lambdaFn = nullptr;
-  Expr *noMatch = new BiOpExpr(gc, this->getTokenPos(), op_fn,
+  StackFrameObj<Expr> thisObj(env, this);
+
+  StackFrameObj<Expr> lambdaFn(env);
+  StackFrameObj<Expr> noMatch(env, new BiOpExpr(gc, this->getTokenPos(), op_fn,
       new IdExpr(gc, this->getTokenPos(), "error"),
-      new IdExpr(gc, this->getTokenPos(), "\"No Match\""));
+      new IdExpr(gc, this->getTokenPos(), "\"No Match\"")));
 
   for (auto it = fncases.rbegin(); it != fncases.rend(); ++it) {
     // Work on one function case
     const std::pair<std::vector<Expr*>, Expr*> &fncase = *it;
 
-    Expr *exprCondition = nullptr; // if condition
-    Expr *exprFnBody = fncase.second; // function body
+    StackFrameObj<Expr> exprCondition(env); // if condition
+    StackFrameObj<Expr> exprFnBody(env, fncase.second); // function body
 
     size_t xid = 0; // argument id
     for (Expr *expr : fncase.first) {
-      IdExpr *argumentId
-        = new IdExpr(gc, expr->getTokenPos(), std::string("_x") + std::to_string(xid++));
+      StackFrameObj<IdExpr> argumentId(env,
+        new IdExpr(gc, expr->getTokenPos(), std::string("_x") + std::to_string(xid++)));
 
       // let statement
       if (expr->getExpressionType() == expr_id
@@ -558,7 +585,7 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
         exprFnBody = new LetExpr(gc, expr->getTokenPos(),
             std::vector<BiOpExpr*>{new BiOpExpr(gc,
                 fncase.second->getTokenPos(),
-                op_asg, expr, argumentId)}, exprFnBody);
+                op_asg, expr, *argumentId)}, *exprFnBody);
       }
 
       // Check if equality check needed
@@ -567,37 +594,37 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
         continue;
 
       // For checking equality we need expr, where ids are replaced by ANY
-      Expr *noidexpr = expr->replace(gc,  "", nullptr);
-      Expr *equalityCheck = new BiOpExpr(gc, noidexpr->getTokenPos(),
-          op_eq, noidexpr, argumentId);
+      StackFrameObj<Expr> noidexpr(env, expr->replace(gc,  "", nullptr));
+      StackFrameObj<Expr> equalityCheck(env,
+          new BiOpExpr(gc, noidexpr->getTokenPos(), op_eq, *noidexpr, *argumentId));
       if (!exprCondition)
         exprCondition = equalityCheck; 
       else
-        exprCondition = new BiOpExpr(gc, op_land, exprCondition, equalityCheck);
+        exprCondition = new BiOpExpr(gc, op_land, *exprCondition, *equalityCheck);
     }
 
     // exprCondition might be nullptr
     if (!exprCondition)
-      lambdaFn = exprFnBody;
+      lambdaFn = *exprFnBody;
     else  {
       lambdaFn = new IfExpr(gc,
           TokenPos(fncase.first.at(0)->getTokenPos(),
                    fncase.first.at(fncase.first.size() - 1)->getTokenPos()),
-          exprCondition, exprFnBody, 
-          lambdaFn ? lambdaFn : noMatch);
+          *exprCondition, *exprFnBody, 
+          lambdaFn ? *lambdaFn : *noMatch);
     }
   }
 
   //  lambdaFn is not nullptr because at least one case exists
   // Now construct lambda Function (lambdaFn is only the body)
 
-  Expr *result = lambdaFn;
+  StackFrameObj<Expr> result(env, *lambdaFn);
   for (size_t i = fncases.at(0).first.size(); i > 0; --i) {
     result = new LambdaExpr(gc, this->getTokenPos(),
-      "_x" + std::to_string(i - 1), result); // Not type-able identifier
+      "_x" + std::to_string(i - 1), *result); // Not type-able identifier
   }
 
-  return result;
+  return *result;
 }
 
 // replace/substitute
@@ -674,14 +701,18 @@ Expr *LetExpr::replace(GCMain &gc, const std::string &name, Expr *expr) const no
 
 // evaluate
 
-Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept {
+Expr *eval(GCMain &gc, Environment &env, Expr *pexpr) noexcept {
 
-  Expr *oldExpr = expr;
+  StackFrameObj<Expr> expr(env, pexpr);
+  StackFrameObj<Expr> oldExpr(env, pexpr);
   while (expr && (expr = expr->evalWithLookup(gc, env)) != oldExpr) {
     oldExpr = expr;
+
+    env.mark(gc);
+    gc.collect();
   }
 
-  return expr;
+  return *expr;
 }
 
 // equals

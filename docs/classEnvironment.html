@@ -88,13 +88,15 @@ Inheritance diagram for Environment:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8af20dcd0719c1a5705abaae08ad193b"><td class="memItemLeft" align="right" valign="top"><a id="a8af20dcd0719c1a5705abaae08ad193b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> &amp;lexer, <a class="el" href="classEnvironment.html">Environment</a> *parent=nullptr)</td></tr>
-<tr class="separator:a8af20dcd0719c1a5705abaae08ad193b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae810e7fc63219ad060b7300ee847919b"><td class="memItemLeft" align="right" valign="top"><a id="ae810e7fc63219ad060b7300ee847919b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Environment</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classLexer.html">Lexer</a> *lexer=nullptr, <a class="el" href="classEnvironment.html">Environment</a> *parent=nullptr)</td></tr>
+<tr class="separator:ae810e7fc63219ad060b7300ee847919b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa97708c838b992f021bfb02b643b2960"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#aa97708c838b992f021bfb02b643b2960">contains</a> (const std::string &amp;name) const noexcept</td></tr>
 <tr class="separator:aa97708c838b992f021bfb02b643b2960"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bcf30670d63df729dc8802f8f9ec812"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#a4bcf30670d63df729dc8802f8f9ec812">get</a> (const std::string &amp;name) const noexcept</td></tr>
 <tr class="separator:a4bcf30670d63df729dc8802f8f9ec812"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac452a3f1636e77da4ca14f77f8cc9187"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#ac452a3f1636e77da4ca14f77f8cc9187">currentGet</a> (const std::string &amp;name) const noexcept</td></tr>
+<tr class="separator:ac452a3f1636e77da4ca14f77f8cc9187"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9176bf98537f657dcf617c5bd87778bb"><td class="memItemLeft" align="right" valign="top"><a id="a9176bf98537f657dcf617c5bd87778bb"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#a9176bf98537f657dcf617c5bd87778bb">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
 <tr class="memdesc:a9176bf98537f657dcf617c5bd87778bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
@@ -114,9 +116,13 @@ std::map&lt; std::string, const <a class="el" href="classExpr.html">Expr</a> * &
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a61c0005481ef0d848204a902d0400680"><td class="memItemLeft" align="right" valign="top"><a id="a61c0005481ef0d848204a902d0400680"></a>
-<a class="el" href="classLexer.html">Lexer</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>lexer</b></td></tr>
-<tr class="separator:a61c0005481ef0d848204a902d0400680"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a226bd282e78d2af2c09405fefbbdb67c"><td class="memItemLeft" align="right" valign="top"><a id="a226bd282e78d2af2c09405fefbbdb67c"></a>
+<a class="el" href="classLexer.html">Lexer</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lexer</b></td></tr>
+<tr class="separator:a226bd282e78d2af2c09405fefbbdb67c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ac61b8891c1e6acd97a1cddaa4c872"><td class="memItemLeft" align="right" valign="top"><a id="ac2ac61b8891c1e6acd97a1cddaa4c872"></a>
+std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEnvironment.html#ac2ac61b8891c1e6acd97a1cddaa4c872">ctx</a></td></tr>
+<tr class="memdesc:ac2ac61b8891c1e6acd97a1cddaa4c872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context to store e.g. stack variables. <br /></td></tr>
+<tr class="separator:ac2ac61b8891c1e6acd97a1cddaa4c872"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -153,6 +159,33 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>Returns name if in environment, nullptr if not. </dd></dl>
+
+</div>
+</div>
+<a id="ac452a3f1636e77da4ca14f77f8cc9187"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac452a3f1636e77da4ca14f77f8cc9187">&#9670;&nbsp;</a></span>currentGet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classExpr.html">Expr</a>* Environment::currentGet </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns associated expression (to name), nullptr if not found. But only looks in current scope/environment, not in parent. </dd></dl>
 
 </div>
 </div>

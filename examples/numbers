@@ -33,7 +33,7 @@ le .zero     (.succ _) = .true
 le _         _         = .false
 
 -- some numbers
-one   = .succ zero
+one   = succ zero
 two   = add one one
 three = add two one
 four  = add three one

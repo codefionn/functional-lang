@@ -43,6 +43,7 @@ class Environment : public GCObj {
   Environment *parent;
 public:
   Lexer *lexer;
+  std::vector<Expr*> ctx; //!< Context to store e.g. stack variables
 
   Environment(GCMain &gc, Lexer *lexer = nullptr, Environment *parent = nullptr)
     : GCObj(gc), lexer{lexer}, parent{parent}, variables() {}
@@ -71,7 +72,108 @@ public:
   Environment *getParent() const noexcept { return parent; }
 };
 
+std::vector<Expr*>::iterator find(std::vector<Expr*> &vec, Expr *expr) noexcept;
+
+/*!\brief Class for adding Expr's to stack frame of Environment.
+ *
+ * Should only be created in stack not heap. The class adds an expression
+ * to stack frame on initialization or assignment and removes the expression
+ * from stack frame on deconstruction or if new expression assigned.
+ */
+template<typename T>
+class StackFrameObj {
+  Environment &env;
+  T* expr;
+public:
+  StackFrameObj(Environment &env, T *expr = nullptr) noexcept
+      : env{env}, expr{expr} {
+
+    if (this->expr) env.ctx.push_back(dynamic_cast<Expr*>(expr));
+  }
+  
+  ~StackFrameObj() {
+    if (this->expr) {
+      auto it = find(env.ctx, dynamic_cast<Expr*>(this->expr));
+      if (it != env.ctx.end()) env.ctx.erase(it);
+    }
+  }
+  
+  /*\return Returns contained expression.
+   */
+  T* operator ->() const noexcept {
+    return expr;
+  }
+  
+  /*!\return Returns contained expression.
+   */
+  T* operator *() const noexcept {
+    return expr;
+  }
+  
+  /*!\return Returns **this == expr.
+   * \param expr
+   */
+  bool operator ==(T *expr) const noexcept {
+    return this->expr == expr;
+  }
+
+  /*!\return Returns **this == *obj.
+   * \param
+   */
+  bool operator ==(StackFrameObj<T> &obj) const noexcept {
+    return this->expr == *obj;
+  }
+
+  /*!\return Returns **this != expr.
+   * \param expr
+   */
+  bool operator !=(T *expr) const noexcept {
+    return this->expr != expr;
+  }
+
+  /*!\return Returns **this == *obj.
+   * \param obj
+   */
+  bool operator !=(StackFrameObj<T> &obj) const noexcept {
+    return this->expr != *obj;
+  }
+  
+  /*!\return Assigns expression to expr. Removes old expression from stack
+   * frame and adds expr to stack frame.
+   * \param expr
+   */
+  StackFrameObj<T>& operator=(T *expr) noexcept {
+    if (expr) env.ctx.push_back(dynamic_cast<Expr*>(expr));
+
+    if (this->expr) {
+      auto it = find(env.ctx, dynamic_cast<Expr*>(this->expr));
+      if (it != env.ctx.end()) env.ctx.erase(it);
+    }
+  
+    this->expr = expr; return *this;
+  }
+ 
+  /*!\brief Assigns **this = *obj. Removes old expression from stack frame
+   * and adds *obj to stack frame.
+   * \return Returns this.
+   * \param obj
+   */
+  StackFrameObj<T>& operator=(StackFrameObj<T> &obj) noexcept {
+    *this = *obj;
+    return *this;
+  }
+ 
+  /*!\return Returns **this != nullptr.
+   */
+  operator bool() const {
+    return expr != nullptr;
+  }
+};
+
 /*!\brief Main expression handle (should only be used as parent class).
+ * \see StackFrameObj
+ *
+ * To use Expr as local heap variable, use a StackFrameObj.
  */
 class Expr : public GCObj {
   TokenPos pos;
@@ -81,7 +183,8 @@ protected:
 public:
   Expr(GCMain &gc, ExprType type, const TokenPos &pos)
     : GCObj(gc), type{type}, pos(pos) {}
-  virtual ~Expr() {}
+  virtual ~Expr() {
+  }
 
   /*!\return Returns position of token in code.
    */
@@ -585,6 +688,10 @@ public:
   virtual void mark(GCMain &gc) noexcept override;
 
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept;
+
+  virtual std::string toString() const noexcept override {
+    return getName();
+  }
 };
 
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg,

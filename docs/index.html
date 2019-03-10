@@ -71,7 +71,7 @@ $(function() {
 &lt;expr&gt; := &lt;id&gt;
         | &lt;num&gt;
         | '(' &lt;expr&gt; ')'
-        | &lt;id&gt; '=' &lt;expr&gt;
+        | &lt;asg-expr&gt; '=' &lt;expr&gt;
         | &lt;expr&gt; '==' &lt;expr&gt;
         | &lt;expr&gt; '&lt;=' &lt;expr&gt;
         | &lt;expr&gt; '&gt;=' &lt;expr&gt;
@@ -87,6 +87,13 @@ $(function() {
         | '.' &lt;id&gt;
         | '$' &lt;expr&gt;
         | '_'
+        | 'let' &lt;let-expr&gt; 'in' &lt;expr&gt;
+        | 'if' &lt;expr&gt; 'then' &lt;expr&gt; 'else' &lt;expr&gt;
+&lt;let-expr&gt; := &lt;asg-expr&gt; '=' &lt;expr&gt;
+            | &lt;asg-expr&gt; '=' &lt;expr&gt; ';' &lt;let-expr&gt;
+            | &lt;asg-expr&gt; '=' &lt;expr&gt; &lt;newline&gt; &lt;let-expr&gt;
+&lt;asg-expr&gt; := &lt;id&gt; | &lt;atom-asg-expr&gt; | &lt;id&gt; &lt;asg-expr&gt;
+&lt;atom-asg-expr&gt; := '.'&lt;id&gt; &lt;asg-expr&gt;
 </pre><p>Precedence:</p>
 <ul>
 <li>'=': 1</li>

@@ -16,7 +16,7 @@ static bool isPrimaryToken(Token tok) {
 }
 
 Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
-  Expr* result = nullptr;
+  StackFrameObj<Expr> result(env);
 
   while (lexer.currentToken() == tok_eol) {
     if (!lexer.skippedNewLinePrefix.empty())
@@ -26,25 +26,21 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
 
   switch (lexer.currentToken()) {
     case tok_id: {
-       IdExpr *idexpr = new IdExpr(gc, lexer.getTokenPos(),
-           lexer.currentIdentifier());
-       result = idexpr;
+        result = new IdExpr(gc, lexer.getTokenPos(), lexer.currentIdentifier());
 
         lexer.nextToken(); // eat id
         break;
       } // end case tok_id
     case tok_num: {
-        NumExpr *numexpr = new NumExpr(gc, lexer.getTokenPos(),
+        result = new NumExpr(gc, lexer.getTokenPos(),
             lexer.currentNumber());
-        result = numexpr;
 
         lexer.nextToken(); // eat num
         break;
       } // end case tok_num
     case tok_int: {
-        IntExpr *numexpr = new IntExpr(gc, lexer.getTokenPos(),
+        result = new IntExpr(gc, lexer.getTokenPos(),
             lexer.currentInteger());
-        result = numexpr;
 
         lexer.nextToken(); // eat num
         break;
@@ -80,19 +76,16 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
 
         lexer.nextToken(); // eat =
 
-        Expr *expr = parse(gc, lexer, env, false);
+        StackFrameObj<Expr> expr(env, parse(gc, lexer, env, false));
         if (!expr)
           return nullptr; // Error forwarding
 
-        Expr *lambdaExpr = new LambdaExpr(gc, lexer.getTokenPos(),
-            idname, expr);
-
-        result = lambdaExpr;
+        result = new LambdaExpr(gc, lexer.getTokenPos(), idname, *expr);
 
         break;
       } // end case tok_lambda
     case tok_atom: {
-         TokenPos atompos = lexer.getTokenPos();
+        TokenPos atompos = lexer.getTokenPos();
         lexer.nextToken(); // eat .
         if (lexer.currentToken() != tok_id)
           return reportSyntaxError(lexer, "Expected identifier!",
@@ -102,9 +95,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
         std::string idname = lexer.currentIdentifier();
         lexer.nextToken(); // eat id
 
-        Expr *atom = new AtomExpr(gc, atompos, idname);
-        result = atom;
-
+        result = new AtomExpr(gc, atompos, idname);
         break;
       } //end case tok_atom
     case tok_if: {
@@ -112,7 +103,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
         lexer.skipNewLine = true;
         lexer.nextToken(); // eat if
 
-        Expr *condition = parse(gc, lexer, env,false);
+        StackFrameObj<Expr> condition(env, parse(gc, lexer, env,false));
         if (!condition) {
           lexer.skipNewLine = false;
           return nullptr;
@@ -123,7 +114,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
               lexer.getTokenPos());
         lexer.nextToken(); // eat then
 
-        Expr *exprTrue = parse(gc, lexer, env, false);
+        StackFrameObj<Expr> exprTrue(env, parse(gc, lexer, env, false));
         if (!exprTrue) {
           lexer.skipNewLine = false;
           return nullptr;
@@ -135,24 +126,22 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
         lexer.skipNewLine = false;
         lexer.nextToken(); // eat else
 
-        Expr *exprFalse = parse(gc, lexer, env, false);
+        StackFrameObj<Expr> exprFalse(env, parse(gc, lexer, env, false));
         if (!exprFalse)
           return nullptr;
 
-        Expr *ifExpr = new IfExpr(gc, ifpos, condition, exprTrue, exprFalse);
-        result = ifExpr;
+        result = new IfExpr(gc, ifpos, *condition, *exprTrue, *exprFalse);
 
         break;
       } // end case tok_if
     case tok_literal: {
         lexer.nextToken(); // eat $
 
-        Expr *expr = parse(gc, lexer, env, false);
+        StackFrameObj<Expr> expr(env, parse(gc, lexer, env, false));
         if (!expr) return nullptr;
 
-        Expr *literal = ::eval(gc, env, expr);
-        if (!literal)
-          return nullptr; // error forwarding
+        StackFrameObj<Expr> literal(env, ::eval(gc, env, *expr));
+        if (!literal) return nullptr; // error forwarding
 
         result = literal;
 
@@ -177,12 +166,12 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
           if (assignments.size() > 0 && lexer.currentToken() == tok_delim)
             lexer.nextToken(); // eat ;
           
-          Expr *asg = parse(gc, lexer, env, false);
+          StackFrameObj<Expr> asg(env, parse(gc, lexer, env, false));
           if (!asg)
             return nullptr;
 
           if (asg->getExpressionType() != expr_biop
-              || dynamic_cast<BiOpExpr*>(asg)->getOperator() != op_asg)
+              || dynamic_cast<BiOpExpr*>(*asg)->getOperator() != op_asg)
             return reportSyntaxError(lexer, "Assignment expected!",
                 asg->getTokenPos());
 
@@ -192,7 +181,7 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
             return reportSyntaxError(lexer, "Expected ';', 'in' or EOL.",
                 lexer.getTokenPos());
 
-          assignments.push_back(dynamic_cast<BiOpExpr*>(asg));
+          assignments.push_back(dynamic_cast<BiOpExpr*>(*asg));
         }
 
         if (assignments.size() == 0)
@@ -204,12 +193,11 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
 
         lexer.nextToken(); // eat in
 
-        Expr *body = parse(gc, lexer, env, false);
+        StackFrameObj<Expr> body(env, parse(gc, lexer, env, false));
         if (!body)
           return nullptr;
 
-        Expr *letExpr = new LetExpr(gc, letpos, assignments, body);
-        result = letExpr;
+        result = new LetExpr(gc, letpos, assignments, *body);
 
         break;
       } // end case tok_let
@@ -225,11 +213,11 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
   // Top level bool is needed because otherwise this would
   // result in a right-associative expression (we want a left associative one)
   while (topLevel && isPrimaryToken(lexer.currentToken())) {
-    Expr *primaryExpr = parsePrimary(gc, lexer, env, false);
+    StackFrameObj<Expr> primaryExpr(env, parsePrimary(gc, lexer, env, false));
     if (!primaryExpr) return nullptr; // error forwarding
 
-    result = new BiOpExpr(gc, op_fn, result, primaryExpr);
+    result = new BiOpExpr(gc, op_fn, *result, *primaryExpr);
   }
 
-  return result;
+  return *result;
 }
