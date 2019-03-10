@@ -595,9 +595,11 @@ Expr *reportSyntaxError(Lexer &lexer, const std::string &msg,
  * \param gc
  * \param lexer
  * \param env Environment to access variables.
+ * \param topLevel Is the primary a top level primary expression (typically
+ * true).
  * \return Returns nullptr on error, otherwise primary expression(s).
  */
-Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env);
+Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel = true);
 
 /*!\return Returns nullptr on error, otherwise parsed tokens from
  * lexer.nextToken().
