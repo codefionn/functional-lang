@@ -564,6 +564,14 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
     result = result->replace(gc, p.first, const_cast<Expr*>(p.second));
   }
 
+  std::map<std::string, const Expr*> newvars;
+  for (auto it = vars.begin(); it != vars.end(); ++it) {
+    if (!scope->getParent()->get(it->first))
+      newvars.insert(*it);
+  }
+
+  scope->getVariables() = newvars;
+
   return ::eval(gc, *scope, result);
 }
 
