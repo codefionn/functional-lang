@@ -412,8 +412,9 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                 } else if (id == "print") { // print expression and return expr
                   std::cout << rhs->toString() << std::endl;
                   return rhs;
-                } else if (id == "to_int") {
+                } else if (id == "to_int") { // truncate float to int
                   Expr *expr = ::eval(gc, env, rhs);
+                  if (!expr) return nullptr; // error forwarding
                   switch (expr->getExpressionType()) {
                   case expr_int:
                     return expr;
@@ -423,13 +424,32 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
                   }
                 } else if (id == "round_int") {
                   Expr *expr = ::eval(gc, env, rhs);
-                  switch (expr->getExpressionType()) {
+                  if (!expr) return nullptr; // error forwarding
+                  switch (expr->getExpressionType()) { // rounded float to int
                   case expr_int:
                     return expr;
                   case expr_num:
                     return new IntExpr(gc, mergedPos,
                         (int64_t) round(dynamic_cast<NumExpr*>(expr)->getNumber()));
                   }
+                } else if(id == "time") { // prints time spent evaluating RHS
+                  auto startTime = std::chrono::high_resolution_clock::now();
+
+                  Expr *expr = ::eval(gc, env, rhs);
+                  if (!expr) return nullptr;
+
+                  auto endTime = std::chrono::high_resolution_clock::now();
+                  auto diffTime = endTime - startTime;
+                  double consumedTime = diffTime.count() *
+                    (double)std::chrono::high_resolution_clock::period::num /
+                    (double)std::chrono::high_resolution_clock::period::den
+                    * 1000;
+
+                  std::cout << "Needed "
+                    << consumedTime
+                    << " ms." << std::endl;
+
+                  return expr;
                 }
               }
 
