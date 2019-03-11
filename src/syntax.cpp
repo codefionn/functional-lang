@@ -246,7 +246,7 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *plhs, int prec)
     if (!rhs) return nullptr; // Error forwarding
 
     if (rhs->equals(*lhs))
-      rhs = lhs;
+      lhs = rhs;
 
     while (lexer.currentToken() == tok_op
         && (lexer.currentPrecedence() > opprec
