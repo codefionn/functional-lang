@@ -183,8 +183,7 @@ protected:
 public:
   Expr(GCMain &gc, ExprType type, const TokenPos &pos)
     : GCObj(gc), type{type}, pos(pos) {}
-  virtual ~Expr() {
-  }
+  virtual ~Expr() {}
 
   /*!\return Returns true, if has last evaluation (not nullptr), otherwise
    * false.
@@ -247,13 +246,12 @@ public:
     return std::vector<std::string>();
   }
 
-  virtual void mark(GCMain &gc) noexcept override {
-    if (isMarked(gc))
-      return;
+  virtual void mark(GCMain &gc) noexcept override;
 
-    markSelf(gc);
-    if (lastEval) lastEval->mark(gc);
-  }
+  /*!\return Returns an optimized version of this expression. If nothing was
+   * optimized, returns itself.
+   */
+  virtual Expr *optimize(GCMain &gc) noexcept;
 };
 
 /*!\brief Binary operator expression.
@@ -264,17 +262,11 @@ class BiOpExpr : public Expr {
 public:
   BiOpExpr(GCMain &gc, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, TokenPos(lhs->getTokenPos(), rhs->getTokenPos())),
-      op(op), lhs{lhs}, rhs{rhs} {
-    if (!lhs) exit(1);
-    if (!rhs) exit(1);
-  }
+      op(op), lhs{lhs}, rhs{rhs} {}
 
   BiOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, pos),
-      op(op), lhs{lhs}, rhs{rhs} {
-    if (!lhs) exit(1);
-    if (!rhs) exit(1);
-   }
+      op(op), lhs{lhs}, rhs{rhs} {}
 
   virtual ~BiOpExpr() {}
 
@@ -336,6 +328,13 @@ public:
 
     return result;
   }
+
+  virtual Expr *optimize(GCMain &gc) noexcept override;
+
+  /*!\return Returns optimized binary operator expressions.
+   * \param exprs Unique expressions to share memory references with.
+   */
+  BiOpExpr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
 };
 
 const Expr *assignExpressions(GCMain &gc, Environment &env,
@@ -687,6 +686,8 @@ public:
    */
   const std::string &getName() const noexcept { return name; }
 
+  std::vector<std::pair<std::vector<Expr*>, Expr*>> &getFunctionCases()
+    noexcept { return fncases; }
   const std::vector<std::pair<std::vector<Expr*>, Expr*>> &getFunctionCases()
     const noexcept { return fncases; }
 

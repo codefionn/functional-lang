@@ -16,16 +16,71 @@ Expr *Expr::evalWithLookup(GCMain &gc, Environment &env) noexcept {
           || dynamic_cast<const BiOpExpr*>(this)->getOperator() != op_asg))
     return lastEval;
 
-  /*size_t maxLookups = 1000;
-  for (auto it = env.ctx.rbegin();
-      it != env.ctx.rend() && maxLookups-- > 0; ++it) {
-    if ((*it)->hasLastEval() && equals(*it)) {
-      std::cout << "F";
-      return lastEval = *it;
-    }
-  }*/
-
   return lastEval = eval(gc, env);
+}
+
+// optimize
+
+Expr *Expr::optimize(GCMain &gc) noexcept {
+  return this;
+}
+
+Expr *BiOpExpr::optimize(GCMain &gc) noexcept {
+  if (getOperator() == op_asg) {
+    // because binary operator is an assignment, any optimizations
+    // where equal expressions have share the same objects will cause
+    // wrong behaviour (except if LHS and RHS are equal, but this is already
+    // handled by the syntax analysis).
+    // so only rhs is optimized
+
+    Expr *newrhs = rhs->optimize(gc);
+    if (newrhs == rhs) return this; // No changes
+
+    // RHS changed, create new biopexpr
+    return new BiOpExpr(gc, getTokenPos(), op_asg, lhs, newrhs);
+  }
+
+  // Equal expressions should share the same memory reference
+  
+  std::vector<Expr*> sharedPool;
+  return optimize(gc, sharedPool);
+}
+
+static Expr *biopexprOptimize(GCMain &gc,
+    std::vector<Expr*> &exprs, Expr *optexpr) {
+  // Search for optexpr in shared pool and if found return the found expr
+  for (Expr *expr : exprs)
+    if (expr->equals(optexpr))
+      return expr;
+
+  // No object to share found ... add to shared pool
+  exprs.push_back(optexpr);
+  // Return the expression
+  return optexpr;
+}
+
+BiOpExpr *BiOpExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
+  if (getOperator() == op_asg)
+    return dynamic_cast<BiOpExpr*>(optimize(gc));
+
+  Expr *newlhs;
+  if (lhs->getExpressionType() == expr_biop)
+    newlhs = dynamic_cast<BiOpExpr*>(lhs)->optimize(gc, exprs);
+  else
+    newlhs = lhs->optimize(gc);
+
+  Expr *newrhs;
+  if (rhs->getExpressionType() == expr_biop)
+    newrhs = dynamic_cast<BiOpExpr*>(rhs)->optimize(gc, exprs);
+  else
+    newrhs = rhs->optimize(gc);
+
+  Expr *sharednewlhs = biopexprOptimize(gc, exprs, lhs);
+  Expr *sharednewrhs = biopexprOptimize(gc, exprs, rhs);
+  if (sharednewrhs == rhs && sharednewlhs == lhs) return this; // no changes
+
+  return new BiOpExpr(gc, getTokenPos(), getOperator(),
+      sharednewlhs, sharednewrhs);
 }
 
 // Environment
@@ -70,6 +125,14 @@ void Environment::mark(GCMain &gc) noexcept {
 }
 
 // mark
+
+void Expr::mark(GCMain &gc) noexcept {
+  if (isMarked(gc))
+    return;
+
+  markSelf(gc);
+  if (lastEval) lastEval->mark(gc);
+}
 
 void FunctionExpr::mark(GCMain &gc) noexcept {
   if (isMarked(gc))
@@ -155,8 +218,11 @@ Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
       return primaryExpr;
   }
 
-  return parseRHS(gc, lexer, env, primaryExpr, 0); // 0 = minimum precedence
-  // (least binding)
+  // 0 is least binding precedence
+  Expr *expr = parseRHS(gc, lexer, env, primaryExpr, 0);
+  if (!expr) return nullptr;
+
+  return expr->optimize(gc);
 }
 
 Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *plhs, int prec) {
@@ -305,6 +371,10 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
     StackFrameObj<Expr> fnexpr(env, const_cast<Expr*>(env.currentGet(fnname)));
     if (!fnexpr) {
       fnexpr = new FunctionExpr(gc, expr->getTokenPos(), fnname, fncase);
+
+      // replace recursive call with FunctionExpr
+      dynamic_cast<FunctionExpr*>(*fnexpr)->getFunctionCases().front().second = fncase.second->replace(gc, fnname, *fnexpr);
+
       env.getVariables().insert(
           std::pair<std::string, Expr*>(fnname, const_cast<Expr*>(*fnexpr)));
       return thisExpr;
@@ -313,6 +383,9 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
         return reportSyntaxError(*env.lexer,
             "Function argument length of \"" + fnname + "\" don't match.",
             expr->getTokenPos());
+
+      // replace recursive call with FunctionExpr
+      dynamic_cast<FunctionExpr*>(*fnexpr)->getFunctionCases().back().second = fncase.second->replace(gc, fnname, *fnexpr);
 
       return thisExpr;
     }
