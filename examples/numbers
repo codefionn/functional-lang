@@ -14,7 +14,6 @@ sub (.succ x) .zero     = .succ x
 
 -- multiply x and y
 mul .zero         y = .zero
-mul (.succ .zero) y = y
 mul (.succ x)     y = add (mul x y) y
 
 -- are x and y equal ?
