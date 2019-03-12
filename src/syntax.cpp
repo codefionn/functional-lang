@@ -19,6 +19,40 @@ Expr *Expr::evalWithLookup(GCMain &gc, Environment &env) noexcept {
   return lastEval = eval(gc, env);
 }
 
+// FunctionExpr
+
+FunctionExpr::FunctionExpr(GCMain &gc, const TokenPos &pos,
+      const std::string &name,
+      std::pair<std::vector<Expr*>, Expr*> fncase) noexcept
+    : Expr(gc, expr_fn, pos), name(name), fncases{fncase} {
+
+  calcDepth();
+}
+
+void FunctionExpr::calcDepth() noexcept {
+  depth = 1;
+  for (std::pair<std::vector<Expr*>, Expr*> fncase : fncases) {
+    depth += fncase.second->getDepth();
+    for (Expr *expr : fncase.first)
+      depth += expr->getDepth();
+  }
+}
+
+bool FunctionExpr::addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept {
+  if (fncase.first.size() != fncases.at(0).first.size())
+    return false;
+
+  // Reset evaluation
+  lastEval = nullptr;
+
+  fncases.push_back(std::move(fncase));
+
+  // Recalculate expression depth
+  calcDepth();
+
+  return true;
+}
+
 // optimize
 
 Expr *Expr::optimize(GCMain &gc) noexcept {
@@ -405,7 +439,8 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
   if (lhs->getExpressionType() == expr_id) {
     std::string id = ((IdExpr*) lhs)->getName();
     if (env.getVariables().count(id) == 0) {
-      env.getVariables().insert(std::pair<std::string, const Expr*>(id, rhs));
+      env.getVariables().insert(
+          std::pair<std::string, Expr*>(id, const_cast<Expr*>(rhs)));
       return thisExpr;
     }
 
@@ -679,7 +714,6 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   case op_pow: {
               StackFrameObj<Expr> newlhs(env, ::eval(gc, env, lhs));
               if (!newlhs) return nullptr; // error forwarding
-
               StackFrameObj<Expr> newrhs(env, ::eval(gc, env, rhs));
               if (!newrhs) return nullptr; // error forwarding
 
@@ -796,7 +830,7 @@ Expr *LetExpr::eval(GCMain &gc, Environment &env) noexcept {
     result = result->replace(gc, p.first, const_cast<Expr*>(p.second));
   }
 
-  std::map<std::string, const Expr*> newvars;
+  std::map<std::string, Expr*> newvars;
   for (auto it = vars.begin(); it != vars.end(); ++it) {
     if (!scope->getParent()->get(it->first))
       newvars.insert(*it);
@@ -967,9 +1001,30 @@ Expr *eval(GCMain &gc, Environment &env, Expr *pexpr) noexcept {
   return *expr;
 }
 
+void breadthEval(GCMain &gc, Environment &env,
+    StackFrameObj<Expr> &lhs, StackFrameObj<Expr> &rhs) noexcept {
+  StackFrameObj<Expr> oldlhs(env, *lhs);
+  StackFrameObj<Expr> oldrhs(env, *rhs);
+
+  while (lhs && rhs
+      && ((lhs = lhs->evalWithLookup(gc, env)) != oldlhs
+        || (rhs = rhs->evalWithLookup(gc, env)) != oldrhs)) {
+    oldlhs = lhs;
+    oldrhs = rhs;
+
+    if (gc.getCountNewObjects() < 200)
+      continue;
+
+    env.mark(gc);
+    gc.collect();
+  }
+}
+
 // equals
 
 bool NumExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (exact && getDepth() != expr->getDepth()) return false;
+
   if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_int
       && expr->getExpressionType() != expr_num) return false;
@@ -981,6 +1036,8 @@ bool NumExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool IntExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (exact && getDepth() != expr->getDepth()) return false;
+
   if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_int
       && expr->getExpressionType() != expr_num) return false;
@@ -992,6 +1049,8 @@ bool IntExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool UnOpExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (exact && getDepth() != expr->getDepth()) return false;
+
   if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_unop) return false;
 

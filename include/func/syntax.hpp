@@ -40,7 +40,7 @@ enum ExprType : int {
 /*!\brief Environment for accessing variables.
  */
 class Environment : public GCObj {
-  std::map<std::string, const Expr*> variables;
+  std::map<std::string, Expr*> variables;
   Environment *parent;
 public:
   Lexer *lexer;
@@ -65,7 +65,7 @@ public:
 
   virtual void mark(GCMain &gc) noexcept override;
 
-  std::map<std::string, const Expr*> &getVariables() noexcept
+  std::map<std::string, Expr*> &getVariables() noexcept
     { return variables; }
 
   /*!\return Returns parent of environment/scope. May be nullptr.
@@ -180,11 +180,17 @@ class Expr : public GCObj {
   TokenPos pos;
   ExprType type;
 protected:
+  std::size_t depth;
   Expr *lastEval = nullptr;
 public:
   Expr(GCMain &gc, ExprType type, const TokenPos &pos)
-    : GCObj(gc), type{type}, pos(pos) {}
+      : GCObj(gc), type{type}, pos(pos) {}
+
   virtual ~Expr() {}
+
+  /*\return Returns a pre-calculated depth of the expresssion.
+   */
+  std::size_t getDepth() const noexcept { return depth; }
 
   /*!\return Returns true, if has last evaluation (not nullptr), otherwise
    * false.
@@ -265,11 +271,15 @@ class BiOpExpr : public Expr {
 public:
   BiOpExpr(GCMain &gc, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, TokenPos(lhs->getTokenPos(), rhs->getTokenPos())),
-      op(op), lhs{lhs}, rhs{rhs} {}
+      op(op), lhs{lhs}, rhs{rhs} {
+    depth = 1 + lhs->getDepth() + rhs->getDepth();
+  }
 
   BiOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *lhs, Expr *rhs)
     : Expr(gc, expr_biop, pos),
-      op(op), lhs{lhs}, rhs{rhs} {}
+      op(op), lhs{lhs}, rhs{rhs} {
+    depth = 1 + lhs->getDepth() + rhs->getDepth();   
+  }
 
   virtual ~BiOpExpr() {}
 
@@ -302,6 +312,8 @@ public:
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_biop) return false;
 
@@ -345,7 +357,10 @@ class UnOpExpr : public Expr {
   Expr *expr;
 public:
   UnOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *expr)
-    : Expr(gc, expr_unop, pos), op{op}, expr{expr} {}
+    : Expr(gc, expr_unop, pos), op{op}, expr{expr} {
+    
+    depth = 1 + expr->getDepth();
+  }
 
   Operator getOperator() const noexcept { return op; }
   const Expr &getExpression() const noexcept { return *expr; }
@@ -369,7 +384,10 @@ class NumExpr : public Expr {
   double num;
 public:
   NumExpr(GCMain &gc, const TokenPos &pos, double num)
-    : Expr(gc, expr_num, pos), num{num} {}
+      : Expr(gc, expr_num, pos), num{num} {
+    depth = 1;
+  }
+
   virtual ~NumExpr() {}
 
   double getNumber() const noexcept { return num; }
@@ -387,7 +405,10 @@ class IntExpr : public Expr {
   std::int64_t num;
 public:
   IntExpr(GCMain &gc, const TokenPos &pos, std::int64_t num)
-    : Expr(gc, expr_int, pos), num{num} {}
+      : Expr(gc, expr_int, pos), num{num} {
+    depth = 1;
+  }
+
   virtual ~IntExpr() {}
 
   std::int64_t getNumber() const noexcept { return num; }
@@ -406,7 +427,10 @@ class IdExpr : public Expr {
   std::string id;
 public:
   IdExpr(GCMain &gc, const TokenPos &pos, const std::string &id)
-    : Expr(gc, expr_id, pos), id(id) {}
+      : Expr(gc, expr_id, pos), id(id) {
+    depth = 1;
+  }
+
   virtual ~IdExpr() {}
 
   const std::string &getName() const noexcept { return id; }
@@ -419,6 +443,8 @@ public:
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != getExpressionType()) return false;
 
@@ -440,8 +466,11 @@ class LambdaExpr : public Expr {
 public:
   LambdaExpr(GCMain &gc, const TokenPos &pos, const std::string &name,
              Expr* expr)
-    : Expr(gc, expr_lambda, TokenPos(pos, expr->getTokenPos())),
-      name(name), expr(std::move(expr)) {}
+      : Expr(gc, expr_lambda, TokenPos(pos, expr->getTokenPos())),
+        name(name), expr(std::move(expr)) {
+    depth = 1 + expr->getDepth();  
+  }
+
   virtual ~LambdaExpr() {}
 
   const std::string &getName() const noexcept { return name; }
@@ -470,6 +499,8 @@ public:
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_lambda) return false;
 
@@ -494,7 +525,10 @@ class AtomExpr : public Expr {
   std::string id;
 public:
   AtomExpr(GCMain &gc, const TokenPos &pos, const std::string &id)
-    : Expr(gc, expr_atom, pos), id(id) {}
+      : Expr(gc, expr_atom, pos), id(id) {
+    depth = 1;
+  }
+
   virtual ~AtomExpr() {}
 
   const std::string &getName() const noexcept { return id; }
@@ -504,6 +538,8 @@ public:
   }
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_atom) return false;
 
@@ -520,7 +556,11 @@ class IfExpr : public Expr {
 public:
   IfExpr(GCMain &gc, const TokenPos &pos, Expr *condition, Expr *exprTrue, Expr *exprFalse)
     : Expr(gc, expr_if, TokenPos(pos, exprFalse->getTokenPos())),
-      condition{condition}, exprTrue{exprTrue}, exprFalse{exprFalse} {}
+      condition{condition}, exprTrue{exprTrue}, exprFalse{exprFalse} {
+    depth = 1 + condition->getDepth()
+      + exprTrue->getDepth() + exprFalse->getDepth();
+  }
+
   virtual ~IfExpr() {}
 
   /*!\brief Condition of the if-then-else expression.
@@ -557,6 +597,8 @@ public:
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_if) return false;
 
@@ -588,7 +630,10 @@ public:
  */
 class AnyExpr : public Expr {
 public:
-  AnyExpr(GCMain &gc, const TokenPos &pos) : Expr(gc, expr_any, pos) {}
+  AnyExpr(GCMain &gc, const TokenPos &pos)
+      : Expr(gc, expr_any, pos) {
+    depth = 1;
+  }
   virtual ~AnyExpr() {}
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
@@ -615,7 +660,11 @@ public:
    */
   LetExpr(GCMain &gc, const TokenPos &pos, const std::vector<BiOpExpr*> &assignments, Expr *body)
     : Expr(gc, expr_let, TokenPos(pos, body->getTokenPos())),
-      assignments(assignments), body{body} {}
+      assignments(assignments), body{body} {
+    depth = 1 + body->getDepth();
+    for (BiOpExpr *expr : assignments) depth += expr->getDepth();
+  }
+
   virtual ~LetExpr() {}
 
   /*!\return Returns assignments done between let ... in (separated by ';').
@@ -652,6 +701,8 @@ public:
   }
 
   virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact && getDepth() != expr->getDepth()) return false;
+
     if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_let) return false;
 
@@ -700,20 +751,19 @@ class FunctionExpr : public Expr {
 public:
   FunctionExpr(GCMain &gc, const TokenPos &pos,
       const std::string &name,
-      std::pair<std::vector<Expr*>, Expr*> fncase) noexcept
-    : Expr(gc, expr_fn, pos), name(name), fncases{fncase} {}
+      std::pair<std::vector<Expr*>, Expr*> fncase) noexcept;
+
   virtual ~FunctionExpr() {}
 
-  bool addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept {
-    if (fncase.first.size() != fncases.at(0).first.size())
-      return false;
+  void calcDepth() noexcept;
 
-    // Reset evaluation
-    lastEval = nullptr;
-
-    fncases.push_back(std::move(fncase));
-    return true;
-  }
+  /*!\brief Adds function evaluation case to function.
+   * \param fncase 
+   * \return Returns
+   *
+   *     fncase.first.size() == getFunctionCases().front().first.size()
+   */
+  bool addCase(std::pair<std::vector<Expr*>, Expr*> fncase) noexcept;
 
   /*!\return Returns name of function.
    */
@@ -773,5 +823,15 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec);
  * \param expr Expression to evaluate
  */
 Expr *eval(GCMain &gc, Environment &env, Expr *expr) noexcept;
+
+/*!\brief Executes eval function for given expressions as long as differenct
+ * expr returned. Breadth first execution.
+ * \param gc
+ * \param  env
+ * \param lhs
+ * \param rhs
+ */
+void breadthEval(GCMain &gc, Environment &env,
+    StackFrameObj<Expr> &lhs, StackFrameObj<Expr> &rhs) noexcept;
 
 #endif /* FUNC_SYNTAX_HPP */
