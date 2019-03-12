@@ -237,8 +237,10 @@ public:
   /*!\brief Checks if this expression and expr have the same structure, Every
    * expression has the same structure as '_' (it's called ANY after all).
    * \param expr The expression to compare to this.
+   * \param exact If true any must equal any and nothing else. Otherwise
+   * any is equal to anyting else.
    */
-  virtual bool equals(const Expr *expr) const noexcept
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept
     { return this == expr; }
 
   /*!\return Returns all identifiers used in expression.
@@ -299,14 +301,14 @@ public:
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_biop) return false;
 
     const BiOpExpr *biOpExpr = dynamic_cast<const BiOpExpr*>(expr);
     if (biOpExpr->getOperator() != this->getOperator()) return false;
-    if (!biOpExpr->getRHS().equals(&this->getRHS())) return false;
-    return biOpExpr->getLHS().equals(&this->getLHS());
+    if (!biOpExpr->getRHS().equals(&this->getRHS(), exact)) return false;
+    return biOpExpr->getLHS().equals(&this->getLHS(), exact);
   }
 
   /*!\return Returns true if all expressions are binary operator functions with
@@ -351,7 +353,7 @@ public:
   virtual void mark(GCMain &gc) noexcept override;
 
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
-  virtual bool equals(const Expr *expr) const noexcept override;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override;
 
   virtual Expr *optimize(GCMain &gc) noexcept override;
   virtual UnOpExpr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
@@ -376,7 +378,7 @@ public:
     return std::to_string(num);
   }
 
-  virtual bool equals(const Expr *expr) const noexcept override;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override;
 };
 
 /*!\brief Integer number expression.
@@ -394,7 +396,7 @@ public:
     return std::to_string(num);
   }
 
-  virtual bool equals(const Expr *expr) const noexcept override;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override;
 };
 
 
@@ -416,8 +418,8 @@ public:
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != getExpressionType()) return false;
 
     return dynamic_cast<const IdExpr*>(expr)->getName() == getName();
@@ -467,13 +469,13 @@ public:
   Expr *replace(GCMain &gc, Expr *expr) const noexcept;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
-    if (expr->getExpressionType() != getExpressionType()) return false;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != expr_lambda) return false;
 
     const LambdaExpr *lambdaExpr = dynamic_cast<const LambdaExpr*>(expr);
     return lambdaExpr->getName() == getName()
-      && lambdaExpr->getExpression().equals(&getExpression());
+      && lambdaExpr->getExpression().equals(&getExpression(), exact);
   }
 
   virtual std::vector<std::string> getIdentifiers() const noexcept override {
@@ -501,9 +503,9 @@ public:
     return "." + id;
   }
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
-    if (expr->getExpressionType() != getExpressionType()) return false;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
+    if (expr->getExpressionType() != expr_atom) return false;
 
     return dynamic_cast<const AtomExpr*>(expr)->getName() == getName();
   }
@@ -554,14 +556,14 @@ public:
   virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
   virtual Expr *replace(GCMain &gc, const std::string &name, Expr *expr) const noexcept override;
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_if) return false;
 
     const IfExpr *ifExpr = dynamic_cast<const IfExpr*>(expr);
-    if (!ifExpr->getCondition().equals(&getCondition())) return false;
-    if (!ifExpr->getTrue().equals(&getTrue())) return false;
-    if (!ifExpr->getFalse().equals(&getFalse())) return false;
+    if (!ifExpr->getCondition().equals(&getCondition(), exact)) return false;
+    if (!ifExpr->getTrue().equals(&getTrue(), exact)) return false;
+    if (!ifExpr->getFalse().equals(&getFalse(), exact)) return false;
 
     return true;
   }
@@ -575,6 +577,9 @@ public:
 
     return result;
   }
+
+  virtual Expr *optimize(GCMain &gc) noexcept override;
+  virtual Expr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
 };
 
 /*!\brief any expression
@@ -586,7 +591,9 @@ public:
   AnyExpr(GCMain &gc, const TokenPos &pos) : Expr(gc, expr_any, pos) {}
   virtual ~AnyExpr() {}
 
-  virtual bool equals(const Expr *expr) const noexcept override {
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (exact) return expr->getExpressionType() == expr_any;
+
     return true;
   }
 
@@ -644,8 +651,8 @@ public:
     return result;
   }
 
-  virtual bool equals(const Expr *expr) const noexcept override {
-    if (expr->getExpressionType() == expr_any) return true;
+  virtual bool equals(const Expr *expr, bool exact = false) const noexcept override {
+    if (!exact && expr->getExpressionType() == expr_any) return true;
     if (expr->getExpressionType() != expr_let) return false;
 
     const LetExpr *letexpr = dynamic_cast<const LetExpr*>(expr);
@@ -658,14 +665,14 @@ public:
     for (; thisIt != assignments.end()
         && exprIt != letexpr->getAssignments().end();) {
       
-      if (!(*thisIt)->equals(*exprIt))
+      if (!(*thisIt)->equals(*exprIt, exact))
         return false;
 
       ++thisIt;
       ++exprIt;
     }
 
-    return body->equals(&(letexpr->getBody()));
+    return body->equals(&(letexpr->getBody()), exact);
   }
 
   virtual std::string toString() const noexcept override {

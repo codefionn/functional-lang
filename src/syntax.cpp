@@ -50,7 +50,7 @@ static Expr *biopexprOptimize(GCMain &gc,
     std::vector<Expr*> &exprs, Expr *optexpr) {
   // Search for optexpr in shared pool and if found return the found expr
   for (Expr *expr : exprs)
-    if (expr->equals(optexpr))
+    if (expr->equals(optexpr, true))
       return expr;
 
   // No object to share found ... add to shared pool
@@ -71,6 +71,12 @@ static Expr *exprOptimizeList(GCMain &gc,
     break;
   case expr_let:
     newexpr = dynamic_cast<LetExpr*>(expr)->optimize(gc, exprs);
+    break;
+  case expr_lambda:
+    newexpr = dynamic_cast<LambdaExpr*>(expr)->optimize(gc, exprs);
+    break;
+  case expr_if:
+    newexpr = dynamic_cast<IfExpr*>(expr)->optimize(gc, exprs);
     break;
   default:
     newexpr = expr->optimize(gc);
@@ -106,7 +112,7 @@ UnOpExpr *UnOpExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
 Expr *LetExpr::optimize(GCMain &gc) noexcept {
   bool allEqual = true; // If all assignments RHS and LHS are equal
   for (BiOpExpr *asg : assignments) {
-    if (!asg->getLHS().equals(&asg->getRHS()))
+    if (!asg->getLHS().equals(&asg->getRHS(), true))
       allEqual = false;
   }
 
@@ -164,10 +170,8 @@ Expr *LetExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
 }
 
 Expr *LambdaExpr::optimize(GCMain &gc) noexcept {
-  Expr *newexpr = expr->optimize(gc);
-  if (newexpr == expr) return this; // no changes
-
-  return new LambdaExpr(gc, getTokenPos(), name, newexpr);
+  std::vector<Expr*> exprs;
+  return optimize(gc, exprs);
 }
 
 LambdaExpr *LambdaExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
@@ -175,6 +179,29 @@ LambdaExpr *LambdaExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept
   if (newexpr == expr) return this; // no changes
 
   return new LambdaExpr(gc, getTokenPos(), name, newexpr);
+}
+
+Expr *IfExpr::optimize(GCMain &gc) noexcept {
+  std::vector<Expr*> exprs;
+  return optimize(gc, exprs);
+}
+
+Expr *IfExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
+  if (condition->getExpressionType() == expr_atom) {
+    if (dynamic_cast<AtomExpr*>(condition)->getName() != "false")
+      return exprOptimizeList(gc, exprs, exprTrue);
+    else // false
+      return exprOptimizeList(gc, exprs, exprFalse);
+  }
+
+  Expr *newcondition = exprOptimizeList(gc, exprs, condition);
+  Expr *newTrue = exprOptimizeList(gc, exprs, exprTrue);
+  Expr *newFalse = exprOptimizeList(gc, exprs, exprFalse);
+  if (newcondition == condition
+      && newTrue == exprTrue && newFalse == exprFalse)
+    return this; // no changes
+
+  return new IfExpr(gc, getTokenPos(), newcondition, newTrue, newFalse);
 }
 
 // Environment
@@ -348,7 +375,7 @@ Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *plhs, int prec)
     StackFrameObj<Expr> rhs(env, parsePrimary(gc, lexer, env));
     if (!rhs) return nullptr; // Error forwarding
 
-    if (rhs->equals(*lhs))
+    if (rhs->equals(*lhs, true))
       lhs = rhs;
 
     while (lexer.currentToken() == tok_op
@@ -942,8 +969,8 @@ Expr *eval(GCMain &gc, Environment &env, Expr *pexpr) noexcept {
 
 // equals
 
-bool NumExpr::equals(const Expr *expr) const noexcept {
-  if (expr->getExpressionType() == expr_any) return true;
+bool NumExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_int
       && expr->getExpressionType() != expr_num) return false;
 
@@ -953,8 +980,8 @@ bool NumExpr::equals(const Expr *expr) const noexcept {
   return dynamic_cast<const NumExpr*>(expr)->getNumber() == getNumber();
 }
 
-bool IntExpr::equals(const Expr *expr) const noexcept {
-  if (expr->getExpressionType() == expr_any) return true;
+bool IntExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_int
       && expr->getExpressionType() != expr_num) return false;
 
@@ -964,12 +991,12 @@ bool IntExpr::equals(const Expr *expr) const noexcept {
   return dynamic_cast<const IntExpr*>(expr)->getNumber() == getNumber();
 }
 
-bool UnOpExpr::equals(const Expr *expr) const noexcept {
-  if (expr->getExpressionType() == expr_any) return true;
+bool UnOpExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (!exact && expr->getExpressionType() == expr_any) return true;
   if (expr->getExpressionType() != expr_unop) return false;
 
   auto unopexpr = dynamic_cast<const UnOpExpr*>(expr);
 
   return op == unopexpr->getOperator()
-    && expr->equals(&unopexpr->getExpression());
+    && expr->equals(&unopexpr->getExpression(), exact);
 }
