@@ -1,4 +1,4 @@
-#include "func/syntax.hpp"
+#include "func/parser.hpp"
 
 /* only for parsing primary expression */
 

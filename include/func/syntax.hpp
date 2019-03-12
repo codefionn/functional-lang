@@ -716,36 +716,6 @@ public:
 Expr *reportSyntaxError(Lexer &lexer, const std::string &msg,
     const TokenPos &pos);
 
-/*!\brief Parses primary expression(s). Also parses lambda function
- * substitutions (so also expressions, not only one primary one).
- * \param gc
- * \param lexer
- * \param env Environment to access variables.
- * \param topLevel Is the primary a top level primary expression (typically
- * true).
- * \return Returns nullptr on error, otherwise primary expression(s).
- */
-Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel = true);
-
-/*!\return Returns nullptr on error, otherwise parsed tokens from
- * lexer.nextToken().
- *
- * \param gc
- * \param lexer
- * \param env Environment to access variables.
- * \param topLevel If top level, nullptr is returned if eol occured.
- */
-Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel = true);
-
-/*!\brief Parse right-hand-side
- * \param gc
- * \param lexer
- * \param lhs Already parsed Left-hand-side
- * \param prec current minimum precedence
- * \return Returns nullptr on error, otherwise parsed RHS.
- */
-Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *lhs, int prec);
-
 /*!\brief Executes eval function for given expr as long as different expr
  * is returned.
  * \param gc

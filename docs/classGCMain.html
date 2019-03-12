@@ -80,6 +80,8 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a04861757734ef683dddefa34fd96015c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCMain.html#a04861757734ef683dddefa34fd96015c">getMarkBit</a> () const noexcept</td></tr>
 <tr class="separator:a04861757734ef683dddefa34fd96015c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6f0b3fdc8a28972ac888f7b14f64d6"><td class="memItemLeft" align="right" valign="top">std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCMain.html#a7f6f0b3fdc8a28972ac888f7b14f64d6">getCountNewObjects</a> () const noexcept</td></tr>
+<tr class="separator:a7f6f0b3fdc8a28972ac888f7b14f64d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6afe68dec80950b618834666d8a8004"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCMain.html#aa6afe68dec80950b618834666d8a8004">add</a> (<a class="el" href="classGCObj.html">GCObj</a> *obj)</td></tr>
 <tr class="memdesc:aa6afe68dec80950b618834666d8a8004"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds obj to all objects available.  <a href="#aa6afe68dec80950b618834666d8a8004">More...</a><br /></td></tr>
 <tr class="separator:aa6afe68dec80950b618834666d8a8004"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,7 +134,34 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Collects garbage. </p>
-<p>Use mark function of directly reachable objects (roots). </p>
+<p>Use mark function of directly reachable objects (roots). Resets getCountNewObjects to 0. </p>
+
+</div>
+</div>
+<a id="a7f6f0b3fdc8a28972ac888f7b14f64d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f6f0b3fdc8a28972ac888f7b14f64d6">&#9670;&nbsp;</a></span>getCountNewObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t GCMain::getCountNewObjects </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns count of new objects since last collect call. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classGCMain.html#afc3cd644f2dab3b790c6533ec10bcb36" title="Collects garbage.">collect</a> </dd></dl>
 
 </div>
 </div>

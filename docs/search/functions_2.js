@@ -1,6 +1,13 @@
 var searchData=
 [
-  ['equals',['equals',['../classExpr.html#a32b38240484e4470dc14955b8b356ded',1,'Expr::equals()'],['../classBiOpExpr.html#a7583bdd8dd663170f56b41c4fa1ceb79',1,'BiOpExpr::equals()'],['../classNumExpr.html#abf72aaf8a8877b005afff50cb5bccdca',1,'NumExpr::equals()'],['../classIntExpr.html#a086dff7aa283188c20c8c99d80c74bc2',1,'IntExpr::equals()'],['../classIdExpr.html#a176278af96295b85da41e24f60f5a677',1,'IdExpr::equals()'],['../classLambdaExpr.html#a3f5d5b6dab0ecbd2fbb943813991c895',1,'LambdaExpr::equals()'],['../classAtomExpr.html#a08685763c5909ef5f018d7747a61c509',1,'AtomExpr::equals()'],['../classIfExpr.html#a6f52208304e9211ba89651eac6385699',1,'IfExpr::equals()'],['../classAnyExpr.html#a31cfe2f94ff7d66d2fbb507b3bc70df3',1,'AnyExpr::equals()'],['../classLetExpr.html#a09d3d0e8b15fe9d013762d5c70b0f54d',1,'LetExpr::equals()']]],
-  ['eval',['eval',['../classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7',1,'Expr::eval()'],['../classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9',1,'BiOpExpr::eval()'],['../classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9',1,'IdExpr::eval()'],['../classIfExpr.html#a45894d8f52fe169f37263083802a039d',1,'IfExpr::eval()'],['../classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd',1,'LetExpr::eval()'],['../classFunctionExpr.html#a28eaea8e9e7932cf8e8d8ce1edaacabf',1,'FunctionExpr::eval()'],['../syntax_8hpp.html#a0f9938cd76957bee48537f5ad2fada1f',1,'eval():&#160;syntax.hpp']]],
-  ['evalwithlookup',['evalWithLookup',['../classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246',1,'Expr']]]
+  ['collect',['collect',['../classGCMain.html#afc3cd644f2dab3b790c6533ec10bcb36',1,'GCMain']]],
+  ['contains',['contains',['../classEnvironment.html#aa97708c838b992f021bfb02b643b2960',1,'Environment']]],
+  ['currentchar',['currentChar',['../classLexer.html#a8ee0e39bac505ed42a26d7e31ff5729d',1,'Lexer']]],
+  ['currentget',['currentGet',['../classEnvironment.html#ac452a3f1636e77da4ca14f77f8cc9187',1,'Environment']]],
+  ['currentidentifier',['currentIdentifier',['../classLexer.html#a077ad7464e2aaad06ed316b95b3b807a',1,'Lexer']]],
+  ['currentinteger',['currentInteger',['../classLexer.html#a5999b9481726b0b2398d873e30c13009',1,'Lexer']]],
+  ['currentnumber',['currentNumber',['../classLexer.html#a1d624e7197e96c22f3e09237db66e110',1,'Lexer']]],
+  ['currentoperator',['currentOperator',['../classLexer.html#a116c84590168fa755818692ddd35c118',1,'Lexer']]],
+  ['currentprecedence',['currentPrecedence',['../classLexer.html#a83aeb88258b6516d490b57910c2d9a65',1,'Lexer']]],
+  ['currenttoken',['currentToken',['../classLexer.html#ae9ab5989b9d977a44aedbb534128fe61',1,'Lexer']]]
 ];

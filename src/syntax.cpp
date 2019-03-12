@@ -360,71 +360,7 @@ Expr *reportSyntaxError(Lexer &lexer, const std::string &msg, const TokenPos &po
 }
 
 
-Expr *parse(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
-  if (topLevel && lexer.currentToken() == tok_eol)
-    return nullptr;
 
-  switch(lexer.currentToken()) {
-    case tok_err:
-    case tok_eof:
-      return nullptr;
-  }
-
-  Expr *primaryExpr = parsePrimary(gc, lexer, env);
-  if (!primaryExpr)
-    return nullptr; // error forwarding
-
-  switch(lexer.currentToken()) {
-    case tok_err:
-      return nullptr; // Error forwarding
-    case tok_eol:
-    case tok_eof:
-      return primaryExpr;
-  }
-
-  // 0 is least binding precedence
-  Expr *expr = parseRHS(gc, lexer, env, primaryExpr, 0);
-  if (!expr) return nullptr;
-
-  return expr->optimize(gc);
-}
-
-Expr *parseRHS(GCMain &gc, Lexer &lexer, Environment &env, Expr *plhs, int prec) {
-  StackFrameObj<Expr> lhs(env, plhs);
-
-  while (lexer.currentToken() == tok_op && lexer.currentPrecedence() >= prec) {
-    Operator op = lexer.currentOperator();
-    int opprec = lexer.currentPrecedence();
-
-    // exceptions
-    /*if (op == op_asg
-        && lhs->getExpressionType() != expr_id
-        && (lhs->getExpressionType() == expr_biop
-          && !dynamic_cast<BiOpExpr*>(lhs)->isAtomConstructor())
-        && lhs->getExpressionType() != expr_any)
-      return reportSyntaxError(lexer, "Expected identifier, atom constructor or any!", lhs->getTokenPos());*/
-
-    lexer.nextToken(); // eat op
-
-    StackFrameObj<Expr> rhs(env, parsePrimary(gc, lexer, env));
-    if (!rhs) return nullptr; // Error forwarding
-
-    if (rhs->equals(*lhs, true))
-      lhs = rhs;
-
-    while (lexer.currentToken() == tok_op
-        && (lexer.currentPrecedence() > opprec
-            || (lexer.currentOperator() == op_asg // left associative
-                && lexer.currentPrecedence() == opprec))) {
-      rhs = parseRHS(gc, lexer, env, *rhs, lexer.currentPrecedence());
-      if (!rhs) return nullptr; // Errorforwarding
-    }
-
-    lhs = new BiOpExpr(gc, op, *lhs, *rhs);
-  }
-
-  return *lhs;
-}
 
 // interpreter stuff
 
@@ -712,11 +648,12 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
   case op_mul:
   case op_div:
   case op_pow: {
-              StackFrameObj<Expr> newlhs(env, ::eval(gc, env, lhs));
-              if (!newlhs) return nullptr; // error forwarding
-              StackFrameObj<Expr> newrhs(env, ::eval(gc, env, rhs));
-              if (!newrhs) return nullptr; // error forwarding
-
+              StackFrameObj<Expr> newlhs(env), newrhs(env);
+              newlhs = ::eval(gc, env, lhs);
+              if (!newlhs) return nullptr;
+              newrhs = ::eval(gc, env, rhs);
+              if (!newrhs) return nullptr;
+             
               if (op == op_eq)
                 return new AtomExpr(gc, mergedPos,
                     boolToAtom(newlhs->equals(*newrhs, false)));
@@ -1009,6 +946,7 @@ void breadthEval(GCMain &gc, Environment &env,
   while (lhs && rhs
       && ((lhs = lhs->evalWithLookup(gc, env)) != oldlhs
         || (rhs = rhs->evalWithLookup(gc, env)) != oldrhs)) {
+
     oldlhs = lhs;
     oldrhs = rhs;
 
@@ -1023,6 +961,7 @@ void breadthEval(GCMain &gc, Environment &env,
 // equals
 
 bool BiOpExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1035,6 +974,7 @@ bool BiOpExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool IdExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1044,6 +984,7 @@ bool IdExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool LambdaExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1055,6 +996,7 @@ bool LambdaExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool AtomExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1068,6 +1010,7 @@ bool AnyExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool LetExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1093,6 +1036,7 @@ bool LetExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool IfExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;
@@ -1107,6 +1051,7 @@ bool IfExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool NumExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (!exact && expr->getExpressionType() == expr_any) return true;
 
   if (expr->getExpressionType() == expr_int)
@@ -1119,6 +1064,7 @@ bool NumExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool IntExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (!exact && expr->getExpressionType() == expr_any) return true;
 
   if (expr->getExpressionType() == expr_num)
@@ -1131,6 +1077,7 @@ bool IntExpr::equals(const Expr *expr, bool exact) const noexcept {
 }
 
 bool UnOpExpr::equals(const Expr *expr, bool exact) const noexcept {
+  if (this == expr) return true;
   if (exact && getDepth() != expr->getDepth()) return false;
 
   if (!exact && expr->getExpressionType() == expr_any) return true;

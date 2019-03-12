@@ -4,6 +4,7 @@
 #include "func/global.hpp"
 #include "func/lexer.hpp"
 #include "func/syntax.hpp"
+#include "func/parser.hpp"
 
 /*!\file func/func.hpp
  * \brief Main file of the project. You want to include this, nothing else.

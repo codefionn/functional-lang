@@ -91,11 +91,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa48148d5b674b7f705c16754b52a1de7"><td class="memItemLeft" align="right" valign="top"><a id="aa48148d5b674b7f705c16754b52a1de7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>FunctionExpr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos, const std::string &amp;name, std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt; fncase) noexcept</td></tr>
 <tr class="separator:aa48148d5b674b7f705c16754b52a1de7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acdf6f9f580e19133299719499722da4b"><td class="memItemLeft" align="right" valign="top"><a id="acdf6f9f580e19133299719499722da4b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>addCase</b> (std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt; fncase) noexcept</td></tr>
+<tr class="memitem:a51a371957cfe3c2ea4b5b6f65e9977ae"><td class="memItemLeft" align="right" valign="top"><a id="a51a371957cfe3c2ea4b5b6f65e9977ae"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>calcDepth</b> () noexcept</td></tr>
+<tr class="separator:a51a371957cfe3c2ea4b5b6f65e9977ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdf6f9f580e19133299719499722da4b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionExpr.html#acdf6f9f580e19133299719499722da4b">addCase</a> (std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt; fncase) noexcept</td></tr>
+<tr class="memdesc:acdf6f9f580e19133299719499722da4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds function evaluation case to function.  <a href="#acdf6f9f580e19133299719499722da4b">More...</a><br /></td></tr>
 <tr class="separator:acdf6f9f580e19133299719499722da4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd464aa8fe384c1e79899c1b5330c4a2"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFunctionExpr.html#afd464aa8fe384c1e79899c1b5330c4a2">getName</a> () const noexcept</td></tr>
 <tr class="separator:afd464aa8fe384c1e79899c1b5330c4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f1ef24d67c718a7356895779b0b6bf1"><td class="memItemLeft" align="right" valign="top"><a id="a8f1ef24d67c718a7356895779b0b6bf1"></a>
+std::vector&lt; std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionCases</b> () noexcept</td></tr>
+<tr class="separator:a8f1ef24d67c718a7356895779b0b6bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71f16b90fabbe77da2da4e1bcb608872"><td class="memItemLeft" align="right" valign="top"><a id="a71f16b90fabbe77da2da4e1bcb608872"></a>
 const std::vector&lt; std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionCases</b> () const noexcept</td></tr>
 <tr class="separator:a71f16b90fabbe77da2da4e1bcb608872"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,6 +118,11 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
 <tr class="separator:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fc56354ce9a734072e6ab6bf6d43662 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a0fc56354ce9a734072e6ab6bf6d43662"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getDepth</b> () const noexcept</td></tr>
+<tr class="separator:a0fc56354ce9a734072e6ab6bf6d43662 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae971bf50b2d193292b4a27f8c1f29bba inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ae971bf50b2d193292b4a27f8c1f29bba">hasLastEval</a> () const noexcept</td></tr>
+<tr class="separator:ae971bf50b2d193292b4a27f8c1f29bba inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a120d6424e516aa6f8f15caf470bc50b2">getTokenPos</a> () const noexcept</td></tr>
 <tr class="separator:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">getExpressionType</a> () const noexcept</td></tr>
@@ -121,11 +132,13 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">replace</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const std::string &amp;name, <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept</td></tr>
 <tr class="memdesc:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replace all identifiers equal to name with expr.  <a href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">More...</a><br /></td></tr>
 <tr class="separator:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b38240484e4470dc14955b8b356ded inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a32b38240484e4470dc14955b8b356ded">equals</a> (const <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept</td></tr>
-<tr class="memdesc:a32b38240484e4470dc14955b8b356ded inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="classExpr.html#a32b38240484e4470dc14955b8b356ded">More...</a><br /></td></tr>
-<tr class="separator:a32b38240484e4470dc14955b8b356ded inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab91b3aaa05410eba1a9e59d737ddc4f3 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab91b3aaa05410eba1a9e59d737ddc4f3">equals</a> (const <a class="el" href="classExpr.html">Expr</a> *expr, bool exact=false) const noexcept</td></tr>
+<tr class="memdesc:ab91b3aaa05410eba1a9e59d737ddc4f3 inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="classExpr.html#ab91b3aaa05410eba1a9e59d737ddc4f3">More...</a><br /></td></tr>
+<tr class="separator:ab91b3aaa05410eba1a9e59d737ddc4f3 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3">getIdentifiers</a> () const noexcept</td></tr>
 <tr class="separator:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada53c812416c9d17910b49263381aee9 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ada53c812416c9d17910b49263381aee9">optimize</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept</td></tr>
+<tr class="separator:ada53c812416c9d17910b49263381aee9 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7">GCObj</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
@@ -142,6 +155,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:aa97795406e681c35d2899a29a4cbbf1e inherit pro_methods_classGCObj"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks itself. <br /></td></tr>
 <tr class="separator:aa97795406e681c35d2899a29a4cbbf1e inherit pro_methods_classGCObj"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classExpr"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classExpr')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classExpr.html">Expr</a></td></tr>
+<tr class="memitem:ac0fd987d5744b916853101fb049b8a31 inherit pro_attribs_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="ac0fd987d5744b916853101fb049b8a31"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b></td></tr>
+<tr class="separator:ac0fd987d5744b916853101fb049b8a31 inherit pro_attribs_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad393bcfb5b5a38d85d6423867d29360b inherit pro_attribs_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="ad393bcfb5b5a38d85d6423867d29360b"></a>
 <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastEval</b> = nullptr</td></tr>
 <tr class="separator:ad393bcfb5b5a38d85d6423867d29360b inherit pro_attribs_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +165,42 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a named function. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="acdf6f9f580e19133299719499722da4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdf6f9f580e19133299719499722da4b">&#9670;&nbsp;</a></span>addCase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FunctionExpr::addCase </td>
+          <td>(</td>
+          <td class="paramtype">std::pair&lt; std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt;, <a class="el" href="classExpr.html">Expr</a> * &gt;&#160;</td>
+          <td class="paramname"><em>fncase</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds function evaluation case to function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fncase</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <pre class="fragment">fncase.first.size() == getFunctionCases().front().first.size()
+</pre> </dd></dl>
+
+</div>
+</div>
 <a id="a28eaea8e9e7932cf8e8d8ce1edaacabf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a28eaea8e9e7932cf8e8d8ce1edaacabf">&#9670;&nbsp;</a></span>eval()</h2>
 

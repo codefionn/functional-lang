@@ -8,6 +8,7 @@ var searchData=
   ['getatomconstructor',['getAtomConstructor',['../classBiOpExpr.html#ad28f6707f6ca2255be07a87b4d01495d',1,'BiOpExpr']]],
   ['getbody',['getBody',['../classLetExpr.html#a4ef5fef12c68f5ce4c5d65000b08b9ea',1,'LetExpr']]],
   ['getcondition',['getCondition',['../classIfExpr.html#af168756a2f4e82a13fa44036831ec510',1,'IfExpr']]],
+  ['getcountnewobjects',['getCountNewObjects',['../classGCMain.html#a7f6f0b3fdc8a28972ac888f7b14f64d6',1,'GCMain']]],
   ['getexpressiontype',['getExpressionType',['../classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed',1,'Expr']]],
   ['getfalse',['getFalse',['../classIfExpr.html#a2e04f122d5b25b61f54918fdb83fa931',1,'IfExpr']]],
   ['getidentifiers',['getIdentifiers',['../classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3',1,'Expr::getIdentifiers()'],['../classBiOpExpr.html#ab946290ab5bc93516610dffac93bf28d',1,'BiOpExpr::getIdentifiers()'],['../classIdExpr.html#aca5d9722810a2480bda8872dbb460b4a',1,'IdExpr::getIdentifiers()'],['../classLambdaExpr.html#a535ba2c7ad426d98271b5d82647f5924',1,'LambdaExpr::getIdentifiers()'],['../classIfExpr.html#a2beb4e56748e28227797ed114c0df067',1,'IfExpr::getIdentifiers()'],['../classLetExpr.html#ab1ad89ec98822c054338328b3daf9270',1,'LetExpr::getIdentifiers()']]],

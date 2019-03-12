@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Functional-lang: AnyExpr Class Reference</title>
+<title>Functional-lang: UnOpExpr Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -65,37 +65,48 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classAnyExpr-members.html">List of all members</a>  </div>
+<a href="classUnOpExpr-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">AnyExpr Class Reference</div>  </div>
+<div class="title">UnOpExpr Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>any expression  
- <a href="classAnyExpr.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="syntax_8hpp_source.html">syntax.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for AnyExpr:</div>
+Inheritance diagram for UnOpExpr:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="classAnyExpr.png" usemap="#AnyExpr_map" alt=""/>
-  <map id="AnyExpr_map" name="AnyExpr_map">
-<area href="classExpr.html" title="Main expression handle (should only be used as parent class)." alt="Expr" shape="rect" coords="0,56,61,80"/>
-<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="0,0,61,24"/>
+  <img src="classUnOpExpr.png" usemap="#UnOpExpr_map" alt=""/>
+  <map id="UnOpExpr_map" name="UnOpExpr_map">
+<area href="classExpr.html" title="Main expression handle (should only be used as parent class)." alt="Expr" shape="rect" coords="0,56,70,80"/>
+<area href="classGCObj.html" title="Garbage collection object (objects to collect)." alt="GCObj" shape="rect" coords="0,0,70,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae5e5f58bc9783df6f9680d5dd478a001"><td class="memItemLeft" align="right" valign="top"><a id="ae5e5f58bc9783df6f9680d5dd478a001"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>AnyExpr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
-<tr class="separator:ae5e5f58bc9783df6f9680d5dd478a001"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1de0b7772f3db4aff9d18118bbd7f477"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAnyExpr.html#a1de0b7772f3db4aff9d18118bbd7f477">equals</a> (const <a class="el" href="classExpr.html">Expr</a> *expr, bool exact=false) const noexcept override</td></tr>
-<tr class="memdesc:a1de0b7772f3db4aff9d18118bbd7f477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="#a1de0b7772f3db4aff9d18118bbd7f477">More...</a><br /></td></tr>
-<tr class="separator:a1de0b7772f3db4aff9d18118bbd7f477"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a36d245a1792ef3fa5a5663d14c2d99"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAnyExpr.html#a9a36d245a1792ef3fa5a5663d14c2d99">toString</a> () const noexcept override</td></tr>
-<tr class="separator:a9a36d245a1792ef3fa5a5663d14c2d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbd3a5aef67160dda990cb30b7092a46"><td class="memItemLeft" align="right" valign="top"><a id="afbd3a5aef67160dda990cb30b7092a46"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UnOpExpr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos, <a class="el" href="lexer_8hpp.html#a7215803e478cdd4bdf4f1b8087cae87b">Operator</a> op, <a class="el" href="classExpr.html">Expr</a> *expr)</td></tr>
+<tr class="separator:afbd3a5aef67160dda990cb30b7092a46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e55f82474b0805031909122847c4e2f"><td class="memItemLeft" align="right" valign="top"><a id="a4e55f82474b0805031909122847c4e2f"></a>
+<a class="el" href="lexer_8hpp.html#a7215803e478cdd4bdf4f1b8087cae87b">Operator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getOperator</b> () const noexcept</td></tr>
+<tr class="separator:a4e55f82474b0805031909122847c4e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08b2b78614129c3a15e05f60d8573ded"><td class="memItemLeft" align="right" valign="top"><a id="a08b2b78614129c3a15e05f60d8573ded"></a>
+const <a class="el" href="classExpr.html">Expr</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getExpression</b> () const noexcept</td></tr>
+<tr class="separator:a08b2b78614129c3a15e05f60d8573ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a216e6a2c8f26303785f8326523cd3df4"><td class="memItemLeft" align="right" valign="top"><a id="a216e6a2c8f26303785f8326523cd3df4"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnOpExpr.html#a216e6a2c8f26303785f8326523cd3df4">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
+<tr class="memdesc:a216e6a2c8f26303785f8326523cd3df4"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
+<tr class="separator:a216e6a2c8f26303785f8326523cd3df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9e1f1d56edc1a4aa62454002694f5f4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnOpExpr.html#ad9e1f1d56edc1a4aa62454002694f5f4">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept override</td></tr>
+<tr class="memdesc:ad9e1f1d56edc1a4aa62454002694f5f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates expression one time.  <a href="#ad9e1f1d56edc1a4aa62454002694f5f4">More...</a><br /></td></tr>
+<tr class="separator:ad9e1f1d56edc1a4aa62454002694f5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedef718afa85b7ea8a43ed79d98a30ac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnOpExpr.html#aedef718afa85b7ea8a43ed79d98a30ac">equals</a> (const <a class="el" href="classExpr.html">Expr</a> *expr, bool exact=false) const noexcept override</td></tr>
+<tr class="memdesc:aedef718afa85b7ea8a43ed79d98a30ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this expression and expr have the same structure, Every expression has the same structure as '_' (it's called ANY after all).  <a href="#aedef718afa85b7ea8a43ed79d98a30ac">More...</a><br /></td></tr>
+<tr class="separator:aedef718afa85b7ea8a43ed79d98a30ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99fc743fc8068d6248af4a301b163d85"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classUnOpExpr.html#a99fc743fc8068d6248af4a301b163d85">optimize</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
+<tr class="separator:a99fc743fc8068d6248af4a301b163d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb6fd9db9f1e6fbe24d3a6f944b078b9"><td class="memItemLeft" align="right" valign="top"><a id="afb6fd9db9f1e6fbe24d3a6f944b078b9"></a>
+virtual <a class="el" href="classUnOpExpr.html">UnOpExpr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>optimize</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, std::vector&lt; <a class="el" href="classExpr.html">Expr</a> * &gt; &amp;exprs) noexcept</td></tr>
+<tr class="separator:afb6fd9db9f1e6fbe24d3a6f944b078b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classExpr"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classExpr')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classExpr.html">Expr</a></td></tr>
 <tr class="memitem:a8f56d3dabb6f978fae788a89ec6c4d40 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a8f56d3dabb6f978fae788a89ec6c4d40"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Expr</b> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a> type, const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;pos)</td></tr>
@@ -107,11 +118,10 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getDepth</b> (
 <tr class="separator:ae971bf50b2d193292b4a27f8c1f29bba inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classTokenPos.html">TokenPos</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a120d6424e516aa6f8f15caf470bc50b2">getTokenPos</a> () const noexcept</td></tr>
 <tr class="separator:a120d6424e516aa6f8f15caf470bc50b2 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2c8219dfe666c876ee2adc0d7e65f22 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22">toString</a> () const noexcept</td></tr>
+<tr class="separator:ab2c8219dfe666c876ee2adc0d7e65f22 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3">ExprType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed">getExpressionType</a> () const noexcept</td></tr>
 <tr class="separator:ab6fd9b3b8cb3c300356666794dedb9ed inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a690c0bb8c75125258cc6f79ed779b3a7 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">eval</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
-<tr class="memdesc:a690c0bb8c75125258cc6f79ed779b3a7 inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates expression one time.  <a href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">More...</a><br /></td></tr>
-<tr class="separator:a690c0bb8c75125258cc6f79ed779b3a7 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1a1f7958b9435107a7b176a5cf6e246 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246">evalWithLookup</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, <a class="el" href="classEnvironment.html">Environment</a> &amp;env) noexcept</td></tr>
 <tr class="separator:ad1a1f7958b9435107a7b176a5cf6e246 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ab6f4e5b04bae018f159386b748a3cbb9">replace</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc, const std::string &amp;name, <a class="el" href="classExpr.html">Expr</a> *expr) const noexcept</td></tr>
@@ -119,12 +129,6 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getDepth</b> (
 <tr class="separator:ab6f4e5b04bae018f159386b748a3cbb9 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3">getIdentifiers</a> () const noexcept</td></tr>
 <tr class="separator:af72fbb8fee9e5cc20752acad334e8ad3 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top"><a id="a81c40366518452e0f22224464cb1e41e"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#a81c40366518452e0f22224464cb1e41e">mark</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept override</td></tr>
-<tr class="memdesc:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="mdescLeft">&#160;</td><td class="mdescRight">If not marked mark itself and children. <br /></td></tr>
-<tr class="separator:a81c40366518452e0f22224464cb1e41e inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada53c812416c9d17910b49263381aee9 inherit pub_methods_classExpr"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExpr.html#ada53c812416c9d17910b49263381aee9">optimize</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;gc) noexcept</td></tr>
-<tr class="separator:ada53c812416c9d17910b49263381aee9 inherit pub_methods_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classGCObj"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classGCObj')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classGCObj.html">GCObj</a></td></tr>
 <tr class="memitem:a82f40b5e2c6e26139edbb9b97a134bb7 inherit pub_methods_classGCObj"><td class="memItemLeft" align="right" valign="top"><a id="a82f40b5e2c6e26139edbb9b97a134bb7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7">GCObj</a> (<a class="el" href="classGCMain.html">GCMain</a> &amp;main) noexcept</td></tr>
@@ -148,12 +152,9 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b></td>
 <a class="el" href="classExpr.html">Expr</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>lastEval</b> = nullptr</td></tr>
 <tr class="separator:ad393bcfb5b5a38d85d6423867d29360b inherit pro_attribs_classExpr"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>any expression </p>
-<pre class="fragment">'_'
-</pre> </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1de0b7772f3db4aff9d18118bbd7f477"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1de0b7772f3db4aff9d18118bbd7f477">&#9670;&nbsp;</a></span>equals()</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aedef718afa85b7ea8a43ed79d98a30ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedef718afa85b7ea8a43ed79d98a30ac">&#9670;&nbsp;</a></span>equals()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -162,7 +163,7 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b></td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool AnyExpr::equals </td>
+          <td class="memname">virtual bool UnOpExpr::equals </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classExpr.html">Expr</a> *&#160;</td>
           <td class="paramname"><em>expr</em>, </td>
@@ -199,8 +200,8 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b></td>
 
 </div>
 </div>
-<a id="a9a36d245a1792ef3fa5a5663d14c2d99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9a36d245a1792ef3fa5a5663d14c2d99">&#9670;&nbsp;</a></span>toString()</h2>
+<a id="ad9e1f1d56edc1a4aa62454002694f5f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9e1f1d56edc1a4aa62454002694f5f4">&#9670;&nbsp;</a></span>eval()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,21 +210,70 @@ std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>depth</b></td>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string AnyExpr::toString </td>
+          <td class="memname">virtual <a class="el" href="classExpr.html">Expr</a>* UnOpExpr::eval </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classEnvironment.html">Environment</a> &amp;&#160;</td>
+          <td class="paramname"><em>env</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Returns expression in functional-lang (the programming language to parse). </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classExpr.html#ab2c8219dfe666c876ee2adc0d7e65f22">Expr</a>.</p>
+<p>Evaluates expression one time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gc</td><td></td></tr>
+    <tr><td class="paramname">env</td><td><a class="el" href="classEnvironment.html" title="Environment for accessing variables.">Environment</a> for accessing variables. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns itself if nothing evaluated, otherwise a new expression. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7">Expr</a>.</p>
+
+</div>
+</div>
+<a id="a99fc743fc8068d6248af4a301b163d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99fc743fc8068d6248af4a301b163d85">&#9670;&nbsp;</a></span>optimize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classExpr.html">Expr</a>* UnOpExpr::optimize </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGCMain.html">GCMain</a> &amp;&#160;</td>
+          <td class="paramname"><em>gc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>Returns an optimized version of this expression. If nothing was optimized, returns itself. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classExpr.html#ada53c812416c9d17910b49263381aee9">Expr</a>.</p>
 
 </div>
 </div>

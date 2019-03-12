@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['operator_20_21_3d',['operator !=',['../classStackFrameObj.html#a7b3c9ea491d868cc1845602cb846a93e',1,'StackFrameObj::operator !=(T *expr) const noexcept'],['../classStackFrameObj.html#a3b9dfad26a4825698a8d43048595ef58',1,'StackFrameObj::operator !=(StackFrameObj&lt; T &gt; &amp;obj) const noexcept']]],
-  ['operator_20_2a',['operator *',['../classStackFrameObj.html#af4dd0031a766ab727c7dcafa6f7d8a96',1,'StackFrameObj']]],
-  ['operator_20bool',['operator bool',['../classStackFrameObj.html#ade2a1925eaec5610da23f1a24a88f036',1,'StackFrameObj']]],
-  ['operator_3d',['operator=',['../classStackFrameObj.html#acde6a4c7cc0ac99e8cae82e49b7dd5e1',1,'StackFrameObj::operator=(T *expr) noexcept'],['../classStackFrameObj.html#af5b8645e4a0bf98087077985f625b0d6',1,'StackFrameObj::operator=(StackFrameObj&lt; T &gt; &amp;obj) noexcept']]],
-  ['operator_3d_3d',['operator==',['../classStackFrameObj.html#ae3be04cf9faca5bd5e6e2eed3c31cdc4',1,'StackFrameObj::operator==(T *expr) const noexcept'],['../classStackFrameObj.html#a91a40290e1bb10f482e1281a1ed78506',1,'StackFrameObj::operator==(StackFrameObj&lt; T &gt; &amp;obj) const noexcept']]]
+  ['mark',['mark',['../classGCObj.html#a764a3b96b491926852906865ebf9a943',1,'GCObj::mark()'],['../classEnvironment.html#a9176bf98537f657dcf617c5bd87778bb',1,'Environment::mark()'],['../classExpr.html#a81c40366518452e0f22224464cb1e41e',1,'Expr::mark()'],['../classBiOpExpr.html#aa4526c256e6bf2b712c1241559dcc0ed',1,'BiOpExpr::mark()'],['../classUnOpExpr.html#a216e6a2c8f26303785f8326523cd3df4',1,'UnOpExpr::mark()'],['../classLambdaExpr.html#a09dd8628641ffd4c2f58e7dc46d9ae88',1,'LambdaExpr::mark()'],['../classIfExpr.html#af4b8982d45e4874b518b2a368de6964f',1,'IfExpr::mark()'],['../classLetExpr.html#a9cf9b4c52679fc8c0b735e7feaa5b3a8',1,'LetExpr::mark()'],['../classFunctionExpr.html#ac4019eda4f689e56cec446d29f34a513',1,'FunctionExpr::mark()']]],
+  ['markself',['markSelf',['../classGCObj.html#aa97795406e681c35d2899a29a4cbbf1e',1,'GCObj']]]
 ];

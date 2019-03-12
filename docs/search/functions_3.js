@@ -1,21 +1,6 @@
 var searchData=
 [
-  ['gcobj',['GCObj',['../classGCObj.html#a82f40b5e2c6e26139edbb9b97a134bb7',1,'GCObj']]],
-  ['get',['get',['../classEnvironment.html#a4bcf30670d63df729dc8802f8f9ec812',1,'Environment']]],
-  ['getassignments',['getAssignments',['../classLetExpr.html#a11e856d94989d5b4cdb58e2bf4458c96',1,'LetExpr']]],
-  ['getatomconstructor',['getAtomConstructor',['../classBiOpExpr.html#ad28f6707f6ca2255be07a87b4d01495d',1,'BiOpExpr']]],
-  ['getbody',['getBody',['../classLetExpr.html#a4ef5fef12c68f5ce4c5d65000b08b9ea',1,'LetExpr']]],
-  ['getcondition',['getCondition',['../classIfExpr.html#af168756a2f4e82a13fa44036831ec510',1,'IfExpr']]],
-  ['getexpressiontype',['getExpressionType',['../classExpr.html#ab6fd9b3b8cb3c300356666794dedb9ed',1,'Expr']]],
-  ['getfalse',['getFalse',['../classIfExpr.html#a2e04f122d5b25b61f54918fdb83fa931',1,'IfExpr']]],
-  ['getidentifiers',['getIdentifiers',['../classExpr.html#af72fbb8fee9e5cc20752acad334e8ad3',1,'Expr::getIdentifiers()'],['../classBiOpExpr.html#ab946290ab5bc93516610dffac93bf28d',1,'BiOpExpr::getIdentifiers()'],['../classIdExpr.html#aca5d9722810a2480bda8872dbb460b4a',1,'IdExpr::getIdentifiers()'],['../classLambdaExpr.html#a535ba2c7ad426d98271b5d82647f5924',1,'LambdaExpr::getIdentifiers()'],['../classIfExpr.html#a2beb4e56748e28227797ed114c0df067',1,'IfExpr::getIdentifiers()'],['../classLetExpr.html#ab1ad89ec98822c054338328b3daf9270',1,'LetExpr::getIdentifiers()']]],
-  ['getlhs',['getLHS',['../classBiOpExpr.html#afcf8823420a098db4bc864902e7515cb',1,'BiOpExpr']]],
-  ['getmarkbit',['getMarkBit',['../classGCMain.html#a04861757734ef683dddefa34fd96015c',1,'GCMain']]],
-  ['getname',['getName',['../classFunctionExpr.html#afd464aa8fe384c1e79899c1b5330c4a2',1,'FunctionExpr']]],
-  ['getoperator',['getOperator',['../classBiOpExpr.html#ae83d54198483bc2edd466951faed5a67',1,'BiOpExpr']]],
-  ['getoperatorprecedence',['getOperatorPrecedence',['../lexer_8hpp.html#adffbe38a6948ad2d90c660e152c9439f',1,'lexer.hpp']]],
-  ['getparent',['getParent',['../classEnvironment.html#a861ba5fad18ffd704a8c4be78980a195',1,'Environment']]],
-  ['getrhs',['getRHS',['../classBiOpExpr.html#a79c5955371efca8459bcdd2cf689cbfc',1,'BiOpExpr']]],
-  ['gettokenpos',['getTokenPos',['../classExpr.html#a120d6424e516aa6f8f15caf470bc50b2',1,'Expr']]],
-  ['gettrue',['getTrue',['../classIfExpr.html#aeb6a10dd64d107390f19f0662f0c6ea3',1,'IfExpr']]]
+  ['equals',['equals',['../classExpr.html#ab91b3aaa05410eba1a9e59d737ddc4f3',1,'Expr::equals()'],['../classBiOpExpr.html#adda04b025e3e58b977be1b0b2277c475',1,'BiOpExpr::equals()'],['../classUnOpExpr.html#aedef718afa85b7ea8a43ed79d98a30ac',1,'UnOpExpr::equals()'],['../classNumExpr.html#a9e086256c8a29bd92a00654ec5608ba9',1,'NumExpr::equals()'],['../classIntExpr.html#a630eb4c24eb6f0b79b3fd11dcd51c4fd',1,'IntExpr::equals()'],['../classIdExpr.html#a0c5ff4ab7943724fffa394635a232012',1,'IdExpr::equals()'],['../classLambdaExpr.html#a32c2b3d2899893bde85576831b512c2c',1,'LambdaExpr::equals()'],['../classAtomExpr.html#aba5a9bf36faaf2cbbd70ebf99bdab382',1,'AtomExpr::equals()'],['../classIfExpr.html#aa7e4040e807d3545c3e19db8aad0aa02',1,'IfExpr::equals()'],['../classAnyExpr.html#a1de0b7772f3db4aff9d18118bbd7f477',1,'AnyExpr::equals()'],['../classLetExpr.html#ad5e495aa6b3ed5f388a32cc26df4f3e8',1,'LetExpr::equals()']]],
+  ['eval',['eval',['../classExpr.html#a690c0bb8c75125258cc6f79ed779b3a7',1,'Expr::eval()'],['../classBiOpExpr.html#a73aa8e8a0ebc59b4b65f15f4d12cbed9',1,'BiOpExpr::eval()'],['../classUnOpExpr.html#ad9e1f1d56edc1a4aa62454002694f5f4',1,'UnOpExpr::eval()'],['../classIdExpr.html#a2e4c3008eb01d2587d22cfa5cadfc8d9',1,'IdExpr::eval()'],['../classIfExpr.html#a45894d8f52fe169f37263083802a039d',1,'IfExpr::eval()'],['../classLetExpr.html#a87fd115c260bf849d47393f4a8fbe5bd',1,'LetExpr::eval()'],['../classFunctionExpr.html#a28eaea8e9e7932cf8e8d8ce1edaacabf',1,'FunctionExpr::eval()'],['../syntax_8hpp.html#a0f9938cd76957bee48537f5ad2fada1f',1,'eval():&#160;syntax.hpp']]],
+  ['evalwithlookup',['evalWithLookup',['../classExpr.html#ad1a1f7958b9435107a7b176a5cf6e246',1,'Expr']]]
 ];

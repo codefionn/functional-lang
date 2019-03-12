@@ -9,5 +9,6 @@ var searchData=
   ['expr_5fint',['expr_int',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3afead925b1534c2c775700df41c1cc5eb',1,'syntax.hpp']]],
   ['expr_5flambda',['expr_lambda',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3ad3108f3dfd245f4eef803f7be0c68368',1,'syntax.hpp']]],
   ['expr_5flet',['expr_let',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3abdcf4ec2141a35e33517bb6504f64486',1,'syntax.hpp']]],
-  ['expr_5fnum',['expr_num',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339',1,'syntax.hpp']]]
+  ['expr_5fnum',['expr_num',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3a22bcb7654e596d0bb8e05f971d518339',1,'syntax.hpp']]],
+  ['expr_5funop',['expr_unop',['../syntax_8hpp.html#ac40558a32d8eabc2d4933a043a8cecc3adaaf8ea8b5cea4e139d52e6aea59b4df',1,'syntax.hpp']]]
 ];
