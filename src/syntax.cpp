@@ -65,10 +65,16 @@ static Expr *exprOptimizeList(GCMain &gc,
   switch (expr->getExpressionType()) {
   case expr_biop:
     newexpr = dynamic_cast<BiOpExpr*>(expr)->optimize(gc, exprs);
+    break;
   case expr_unop:
     newexpr = dynamic_cast<UnOpExpr*>(expr)->optimize(gc, exprs);
+    break;
+  case expr_let:
+    newexpr = dynamic_cast<LetExpr*>(expr)->optimize(gc, exprs);
+    break;
   default:
     newexpr = expr->optimize(gc);
+    break;
   }
 
   return biopexprOptimize(gc, exprs, newexpr);
@@ -95,6 +101,66 @@ UnOpExpr *UnOpExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
   if (newexpr == expr) return this;
 
   return new UnOpExpr(gc, getTokenPos(), op, newexpr);
+}
+
+Expr *LetExpr::optimize(GCMain &gc) noexcept {
+  bool allEqual = true; // If all assignments RHS and LHS are equal
+  for (BiOpExpr *asg : assignments) {
+    if (!asg->getLHS().equals(&asg->getRHS()))
+      allEqual = false;
+  }
+
+  if (allEqual) return body; // all assignments are equal. So just the body.
+
+  std::vector<Expr*> exprs;
+  std::vector<BiOpExpr*> newassignments;
+
+  // Optimize assignments LHS
+  bool changedAssignments = false;
+  for (BiOpExpr *asg : assignments) {
+    Expr *newlhs = exprOptimizeList(gc, exprs,
+        const_cast<Expr*>(&asg->getLHS()));
+    if (newlhs != &asg->getLHS()) {
+      changedAssignments = true;
+      newassignments.push_back(new BiOpExpr(gc, asg->getTokenPos(),
+            op_asg, newlhs, const_cast<Expr*>(&asg->getRHS())));
+    } else
+      newassignments.push_back(asg);
+  }
+
+  Expr *newbody = exprOptimizeList(gc, exprs, body);
+  if (!changedAssignments && newbody == body) return this; // No changes
+
+  if (!changedAssignments) return new LetExpr(gc, getTokenPos(),
+      assignments, newbody);
+
+  if (newbody == body) return new LetExpr(gc, getTokenPos(),
+      newassignments, body);
+
+  return new LetExpr(gc, getTokenPos(), newassignments, body);
+}
+
+Expr *LetExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
+  std::vector<BiOpExpr*> newassignments;
+  bool changedAssignments = false;
+
+  // Optimize assignments RHS
+  for (BiOpExpr *asg : assignments) {
+    Expr *newrhs = exprOptimizeList(gc, exprs,
+        const_cast<Expr*>(&asg->getRHS()));
+    if (newrhs != &asg->getRHS()) {
+      changedAssignments = true;
+      newassignments.push_back(new BiOpExpr(gc, asg->getTokenPos(),
+            op_asg, const_cast<Expr*>(&asg->getLHS()), newrhs));
+    } else
+      newassignments.push_back(asg);
+  }
+
+  // No optimization in RHS. Optimize LHS and body.
+  if (!changedAssignments) return optimize(gc);
+
+  // Optimize LHS and boyd of new optimize let expression (optimized RHS)
+  return (new LetExpr(gc, getTokenPos(), newassignments, body))->optimize(gc);
 }
 
 // Environment
@@ -766,7 +832,7 @@ Expr *FunctionExpr::eval(GCMain &gc, Environment &env) noexcept {
       "_x" + std::to_string(i - 1), *result); // Not type-able identifier
   }
 
-  return *result;
+  return result->optimize(gc);
 }
 
 // replace/substitute

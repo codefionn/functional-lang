@@ -677,6 +677,9 @@ public:
 
     return result + " in " + body->toString();
   }
+
+  virtual Expr *optimize(GCMain &gc) noexcept override;
+  virtual Expr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept; 
 };
 
 /*!\brief Represents a named function.
