@@ -225,20 +225,10 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
   // Top level bool is needed because otherwise this would
   // result in a right-associative expression (we want a left associative one)
   if (topLevel) {
-    std::vector<Expr*> primaries { *result };
-primaryLoop:
     while (isPrimaryToken(lexer.currentToken())) {
       StackFrameObj<Expr> primaryExpr(env, parsePrimary(gc, lexer, env, false));
       if (!primaryExpr) return nullptr; // error forwarding
 
-      for (Expr *expr : primaries) {
-        if (expr->equals(*primaryExpr)) {
-          result = new BiOpExpr(gc, op_fn, *result, expr);
-          goto primaryLoop;
-        }
-      }
-
-      primaries.push_back(*primaryExpr);
       result = new BiOpExpr(gc, op_fn, *result, *primaryExpr);
     }
   }

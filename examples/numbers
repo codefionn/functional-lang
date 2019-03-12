@@ -28,9 +28,9 @@ gt (.succ _) .zero     = .true
 gt _         _         = .false
 
 -- check if x is less than y
-le (.succ x) (.succ y) = le x y
-le .zero     (.succ _) = .true
-le _         _         = .false
+lt (.succ x) (.succ y) = lt x y
+lt .zero     (.succ _) = .true
+lt _         _         = .false
 
 -- some numbers
 one   = succ zero
