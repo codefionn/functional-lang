@@ -163,6 +163,20 @@ Expr *LetExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
   return (new LetExpr(gc, getTokenPos(), newassignments, body))->optimize(gc);
 }
 
+Expr *LambdaExpr::optimize(GCMain &gc) noexcept {
+  Expr *newexpr = expr->optimize(gc);
+  if (newexpr == expr) return this; // no changes
+
+  return new LambdaExpr(gc, getTokenPos(), name, newexpr);
+}
+
+LambdaExpr *LambdaExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
+  Expr *newexpr = exprOptimizeList(gc, exprs, expr);
+  if (newexpr == expr) return this; // no changes
+
+  return new LambdaExpr(gc, getTokenPos(), name, newexpr);
+}
+
 // Environment
 
 bool Environment::contains(const std::string &name) const noexcept {

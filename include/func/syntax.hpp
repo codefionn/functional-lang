@@ -481,6 +481,9 @@ public:
     result.push_back(name);
     return result;
   }
+
+  virtual Expr *optimize(GCMain &gc) noexcept override;
+  virtual LambdaExpr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
 };
 
 /*!\brief Atom expression.
