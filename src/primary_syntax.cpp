@@ -201,6 +201,18 @@ Expr *parsePrimary(GCMain &gc, Lexer &lexer, Environment &env, bool topLevel) {
 
         break;
       } // end case tok_let
+    case tok_op: {
+        Operator op = lexer.currentOperator();
+        TokenPos pos = lexer.getTokenPos();
+        lexer.nextToken(); // eat op
+        Expr *primaryExpr = parsePrimary(gc, lexer, env, false);
+        if (!primaryExpr) return nullptr;
+
+        pos = TokenPos(pos, primaryExpr->getTokenPos());
+        result = new UnOpExpr(gc, pos, op, primaryExpr);
+
+        break;
+      }
   }
 
   if (lexer.currentToken() == tok_err)

@@ -59,28 +59,42 @@ static Expr *biopexprOptimize(GCMain &gc,
   return optexpr;
 }
 
+static Expr *exprOptimizeList(GCMain &gc,
+    std::vector<Expr*> &exprs, Expr *expr) {
+  Expr *newexpr;
+  switch (expr->getExpressionType()) {
+  case expr_biop:
+    newexpr = dynamic_cast<BiOpExpr*>(expr)->optimize(gc, exprs);
+  case expr_unop:
+    newexpr = dynamic_cast<UnOpExpr*>(expr)->optimize(gc, exprs);
+  default:
+    newexpr = expr->optimize(gc);
+  }
+
+  return biopexprOptimize(gc, exprs, newexpr);
+}
+
 BiOpExpr *BiOpExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
   if (getOperator() == op_asg)
     return dynamic_cast<BiOpExpr*>(optimize(gc));
 
-  Expr *newlhs;
-  if (lhs->getExpressionType() == expr_biop)
-    newlhs = dynamic_cast<BiOpExpr*>(lhs)->optimize(gc, exprs);
-  else
-    newlhs = lhs->optimize(gc);
+  Expr *newlhs = exprOptimizeList(gc, exprs, lhs);
+  Expr *newrhs = exprOptimizeList(gc, exprs, rhs);
+ if (newrhs == rhs && newlhs == lhs) return this; // no changes
 
-  Expr *newrhs;
-  if (rhs->getExpressionType() == expr_biop)
-    newrhs = dynamic_cast<BiOpExpr*>(rhs)->optimize(gc, exprs);
-  else
-    newrhs = rhs->optimize(gc);
+  return new BiOpExpr(gc, getTokenPos(), getOperator(), newlhs, newrhs);
+}
 
-  Expr *sharednewlhs = biopexprOptimize(gc, exprs, lhs);
-  Expr *sharednewrhs = biopexprOptimize(gc, exprs, rhs);
-  if (sharednewrhs == rhs && sharednewlhs == lhs) return this; // no changes
+Expr *UnOpExpr::optimize(GCMain &gc) noexcept {
+  std::vector<Expr*> exprs;
+  return optimize(gc, exprs);
+}
 
-  return new BiOpExpr(gc, getTokenPos(), getOperator(),
-      sharednewlhs, sharednewrhs);
+UnOpExpr *UnOpExpr::optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept {
+  Expr *newexpr = exprOptimizeList(gc, exprs, expr);
+  if (newexpr == expr) return this;
+
+  return new UnOpExpr(gc, getTokenPos(), op, newexpr);
 }
 
 // Environment
@@ -132,6 +146,15 @@ void Expr::mark(GCMain &gc) noexcept {
 
   markSelf(gc);
   if (lastEval) lastEval->mark(gc);
+}
+
+void UnOpExpr::mark(GCMain &gc) noexcept {
+  if (isMarked(gc)) return;
+
+  markSelf(gc);
+  if (lastEval) lastEval->mark(gc);
+
+  expr->mark(gc);
 }
 
 void FunctionExpr::mark(GCMain &gc) noexcept {
@@ -581,6 +604,32 @@ Expr *BiOpExpr::eval(GCMain &gc, Environment &env) noexcept {
       this->getTokenPos());
 }
 
+Expr *UnOpExpr::eval(GCMain &gc, Environment &env) noexcept {
+  Expr *newexpr = ::eval(gc, env, expr);
+  if (!newexpr) return nullptr;
+
+  if (newexpr->getExpressionType() == expr_num)
+    switch (op) {
+    case op_add:
+      return newexpr;
+    case op_sub:
+      return new NumExpr(gc, newexpr->getTokenPos(),
+          -dynamic_cast<const NumExpr*>(newexpr)->getNumber());
+    }
+  else if (newexpr->getExpressionType() == expr_int)
+    switch (op){
+    case op_add:
+      return newexpr;
+    case op_sub:
+      return new IntExpr(gc, newexpr->getTokenPos(),
+          -dynamic_cast<const IntExpr*>(newexpr)->getNumber());
+    }
+
+  return reportSyntaxError(*env.lexer,
+      "Invalid unary operator expression.",
+      getTokenPos());
+}
+
 Expr *IdExpr::eval(GCMain &gc, Environment &env) noexcept {
   StackFrameObj<Expr> thisObj(env, this);
 
@@ -833,4 +882,14 @@ bool IntExpr::equals(const Expr *expr) const noexcept {
     return round(dynamic_cast<const NumExpr*>(expr)->getNumber()) == getNumber();
 
   return dynamic_cast<const IntExpr*>(expr)->getNumber() == getNumber();
+}
+
+bool UnOpExpr::equals(const Expr *expr) const noexcept {
+  if (expr->getExpressionType() == expr_any) return true;
+  if (expr->getExpressionType() != expr_unop) return false;
+
+  auto unopexpr = dynamic_cast<const UnOpExpr*>(expr);
+
+  return op == unopexpr->getOperator()
+    && expr->equals(&unopexpr->getExpression());
 }

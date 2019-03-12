@@ -25,6 +25,7 @@ class LetExpr;
  */
 enum ExprType : int {
   expr_biop, //!< Binary operator
+  expr_unop, //!< Unary left-operator
   expr_num, //!< Floating-point Number
   expr_int, //!< Integer number
   expr_id,  //!< Identifier
@@ -335,6 +336,25 @@ public:
    * \param exprs Unique expressions to share memory references with.
    */
   BiOpExpr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
+};
+
+class UnOpExpr : public Expr {
+  Operator op;
+  Expr *expr;
+public:
+  UnOpExpr(GCMain &gc, const TokenPos &pos, Operator op, Expr *expr)
+    : Expr(gc, expr_unop, pos), op{op}, expr{expr} {}
+
+  Operator getOperator() const noexcept { return op; }
+  const Expr &getExpression() const noexcept { return *expr; }
+
+  virtual void mark(GCMain &gc) noexcept override;
+
+  virtual Expr *eval(GCMain &gc, Environment &env) noexcept override;
+  virtual bool equals(const Expr *expr) const noexcept override;
+
+  virtual Expr *optimize(GCMain &gc) noexcept override;
+  virtual UnOpExpr *optimize(GCMain &gc, std::vector<Expr*> &exprs) noexcept;
 };
 
 const Expr *assignExpressions(GCMain &gc, Environment &env,
