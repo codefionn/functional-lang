@@ -926,6 +926,15 @@ Expr *eval(GCMain &gc, Environment &env, Expr *pexpr) noexcept {
   StackFrameObj<Expr> expr(env, pexpr);
   StackFrameObj<Expr> oldExpr(env, pexpr);
   while (expr && (expr = expr->evalWithLookup(gc, env)) != oldExpr) {
+    /* Detect endless term */
+    if (expr && expr->getExpressionType() == expr_biop) {
+      if (&dynamic_cast<BiOpExpr*>(*expr)->getRHS() == *oldExpr
+          || &dynamic_cast<BiOpExpr*>(*expr)->getLHS() == *oldExpr)
+        return reportSyntaxError(*env.lexer,
+            "Endless term detected.",
+            expr->getTokenPos());
+    }
+
     oldExpr = expr;
 
     if (gc.getCountNewObjects() < 200)
