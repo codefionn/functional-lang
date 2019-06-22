@@ -6,6 +6,60 @@ static std::string boolToAtom(bool b) {
   return b ? "true" : "false";
 }
 
+const Expr *assignAtomExpressions(GCMain &gc, Environment &env,
+    const Expr *thisExpr, const Expr *lhs, const Expr *rhs) {
+  // Atom constructor (pattern matching)
+
+  // Evaluate rhs and check for right expression type
+  StackFrameObj<Expr> newrhs(env, ::eval(gc, env, const_cast<Expr*>(rhs)));
+  if (!newrhs) return nullptr; // error forwarding
+  if (newrhs->getExpressionType() != expr_biop
+      || dynamic_cast<BiOpExpr*>(*newrhs)->getOperator() != op_fn) {
+    return reportSyntaxError(*env.lexer,
+        "RHS must be a substitution expression!",
+        newrhs->getTokenPos());
+  }
+
+  // Iterator through lhs and rhs till no longer binary function operator.
+  const Expr *exprlhs = lhs;
+  const Expr *exprrhs = *newrhs;
+  while (exprlhs->getExpressionType() == expr_biop
+      && exprrhs->getExpressionType() == expr_biop
+      && dynamic_cast<const BiOpExpr*>(exprlhs)->getOperator() == op_fn
+      && dynamic_cast<const BiOpExpr*>(exprrhs)->getOperator() == op_fn) {
+
+    auto bioplhs = dynamic_cast<const BiOpExpr*>(exprlhs);
+    auto bioprhs = dynamic_cast<const BiOpExpr*>(exprrhs);
+
+    // check if atom
+    if (bioplhs->getLHS().getExpressionType() != expr_atom) {
+      return reportSyntaxError(*env.lexer,
+          "Must be an atom.", exprrhs->getTokenPos());
+    }
+    if (bioprhs->getLHS().getExpressionType() != expr_atom) {
+      return reportSyntaxError(*env.lexer,
+          "Must be an atom.", exprlhs->getTokenPos());
+    }
+    // check if atom names are equal
+    auto atomlhs = dynamic_cast<const AtomExpr&>(bioplhs->getLHS());
+    auto atomrhs = dynamic_cast<const AtomExpr&>(bioprhs->getLHS());
+    if (atomlhs.getName() != atomrhs.getName()) {
+      reportSyntaxError(*env.lexer,
+          "", atomlhs.getTokenPos());
+      return reportSyntaxError(*env.lexer,
+          "The atoms must be equal!", atomrhs.getTokenPos());
+    }
+
+    // reduce
+    exprlhs = &bioplhs->getRHS();
+    exprrhs = &bioprhs->getRHS();
+  }
+
+  assignExpressions(gc, env, thisExpr, exprlhs, exprrhs);
+
+  return thisExpr;
+}
+
 const Expr *assignExpressions(GCMain &gc, Environment &env,
     const Expr *thisExpr,
     const Expr *lhs, const Expr *rhs) noexcept {
@@ -24,68 +78,7 @@ const Expr *assignExpressions(GCMain &gc, Environment &env,
 
   if (lhs->getExpressionType() == expr_biop
       && dynamic_cast<const BiOpExpr*>(lhs)->isAtomConstructor()) {
-    // Atom constructor (pattern matching)
-
-    // Evaluate rhs and check for right expression type
-    StackFrameObj<Expr> newrhs(env, ::eval(gc, env, const_cast<Expr*>(rhs)));
-    if (!newrhs) return nullptr; // error forwarding
-    if (newrhs->getExpressionType() != expr_biop
-        || dynamic_cast<BiOpExpr*>(*newrhs)->getOperator() != op_fn) {
-      return reportSyntaxError(*env.lexer,
-          "RHS must be a substitution expression!",
-          newrhs->getTokenPos());
-    }
-
-    // Cast both sides
-    const BiOpExpr *bioplhs = dynamic_cast<const BiOpExpr*>(lhs);
-    const BiOpExpr *bioprhs = dynamic_cast<const BiOpExpr*>(*newrhs);
-
-    // Assign all statements.
-    // Iterator through lhs and rhs till no longer binary function operator.
-    const Expr *exprlhs = bioplhs;
-    const Expr *exprrhs = bioprhs;
-    while (exprlhs->getExpressionType() == expr_biop
-        && exprrhs->getExpressionType() == expr_biop
-        && dynamic_cast<const BiOpExpr*>(exprlhs)->getOperator() == op_fn
-        && dynamic_cast<const BiOpExpr*>(exprrhs)->getOperator() == op_fn) {
-      if (!assignExpressions(gc, env,
-          thisExpr,
-          &dynamic_cast<const BiOpExpr*>(exprlhs)->getRHS(),
-          &dynamic_cast<const BiOpExpr*>(exprrhs)->getRHS()))
-        return nullptr; // error forwarding
-
-      // assigned, now next expressions (iterator step)
-      exprlhs = &dynamic_cast<const BiOpExpr*>(exprlhs)->getLHS();
-      exprrhs = &dynamic_cast<const BiOpExpr*>(exprrhs)->getLHS();
-    }
-
-    // exprlhs and exprrhs have to be expr_atom
-    if (exprlhs->getExpressionType() != expr_atom) {
-      return reportSyntaxError(*env.lexer,
-        "Most left expression of LHS must be an atom.",
-        exprlhs->getTokenPos());
-    }
-    if (exprrhs->getExpressionType() != expr_atom) {
-      return reportSyntaxError(*env.lexer,
-        "Most left expression of RHS must be an atom.",
-        exprrhs->getTokenPos());
-    }
-
-    // Check if atoms are equal
-    if (dynamic_cast<const AtomExpr*>(exprlhs)->getName()
-        != dynamic_cast<const AtomExpr*>(exprrhs)->getName()) {
-
-      // Print position of atom lhs
-      reportSyntaxError(*env.lexer, "", exprlhs->getTokenPos());
-      // Print error with atom rhs
-      return reportSyntaxError(*env.lexer,
-          "Assignment of atom constructors requires same name. "
-        + dynamic_cast<const AtomExpr*>(exprlhs)->getName() 
-        + " != " + dynamic_cast<const AtomExpr*>(exprrhs)->getName()
-        + ".", exprrhs->getTokenPos());
-    }
-
-    return thisExpr;
+    return assignAtomExpressions(gc, env, thisExpr, lhs, rhs);
   }
 
   if (lhs->getExpressionType() == expr_biop
